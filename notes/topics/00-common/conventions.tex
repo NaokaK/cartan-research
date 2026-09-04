@@ -1,0 +1,477 @@
+%% notes/topics/00-common/conventions.tex
+%%
+%% 用途:
+%%   3テーマ (logarithmic / zp / level) で異なる規約を突き合わせ、
+%%   本リポジトリで採用する規約を一つに確定するための場所。
+%%   ここが未確定のまま統合を進めると主張の真偽が反転しうるため、
+%%   統合作業の最初に固めるべきファイル。
+%%
+%% 現在の状態: 差異の列挙のみ。統一は未了。
+%%
+%% 記入の規則:
+%%   - 各資料の規約を並記し、どれを採用するかを明示する。
+%%   - 採用しなかった規約も、対照表として残す（削除しない）。
+%%   - 規約を変更する場合、影響を受ける箇所を同時に列挙する。
+%%   - 資料の記述と、それを読んだ上での観察を区別する。
+%%     観察には OBS-n を付し、確認が済むまで NEEDS CHECK を外さない。
+
+\section{規約と対照表}
+
+\subsection{この文書の位置づけ}
+
+%% 目的:
+%%   3テーマの規約の差異をすべて列挙すること。
+%%   この段階では統一しない。統一は、下記の NEEDS CHECK が
+%%   解消されてから、NEEDS DECISION として別途行う。
+%%
+%% 原則:
+%%   (P1) 異なる規約を勝手に一つへ統一しない。
+%%   (P2) 資料に書かれている記述と、私（統合作業）の観察を区別する。
+%%        前者は出典を明示し、後者は OBS-n として分離する。
+%%   (P3) 観察が正しく見えても、原典または資料で確認するまで
+%%        NEEDS CHECK を外さない。
+%%   (P4) 規約の選択が数学的主張の意味を変えうる箇所は、
+%%        \S\ref{ss:conv-semantic} に集約する。
+%%
+%% 印:
+%%   NEEDS DECISION ... 判断が必要。数学的には決着済みだが選択が残る。
+%%   NEEDS CHECK    ... 事実確認が必要。原典または資料を見れば決まる。
+%%   OBS-n          ... 統合作業側の観察。資料の記述ではない。
+
+\subsection{レベル規約の候補}\label{ss:conv-level}
+
+%% 候補は現時点で 5 つ確認できる。
+%% (U) は level 資料が言及したうえで不採用としたものだが、
+%% 過去の記述に残っている可能性があるため候補として列挙する。
+%%
+%% ---------------------------------------------------------------
+%% (B) Berthelot 流
+%%   作用素環      : \cD^{(m)}
+%%   曲率          : p^{m+1}-曲率 \nabla_{\langle p^{m+1}\rangle}
+%%   dormant       : p^{m+1}-曲率 = 0
+%%   非対数での意味: F^{(m+1)*} の像
+%%   出典          : handoff/level-chat.md \S2.1 の表;
+%%                   handoff/log-level-opers.tex 付録「規約の対照表」
+%%
+%% (W) Wakabayashi 流   ← level 資料が採用を宣言している規約
+%%   作用素環      : 「レベル N」= \cD^{(N-1)}
+%%   曲率          : 「p^N-曲率」
+%%   dormant       : 「dormant レベル N」
+%%   非対数での意味: F^{(N)*} の像
+%%   radius の値域 : (\bbZ/p^N\bbZ)^\times/\{\pm1\}  （階数 2 の場合）
+%%   出典          : handoff/level-chat.md \S2.1（「以後は必ず
+%%                   Wakabayashi 流で書くこと」と明記）;
+%%                   handoff/log-level-opers.tex 付録
+%%
+%% (Z) zp 資料の書き方
+%%   作用素環      : \cD_U^{(n)} := 位数 < p^n の作用素が生成する部分環
+%%   塔との関係    : E \cong F^{n*}E_n が E を \cD^{(n)}-加群にする
+%%   作用素のラベル: \delta^{(m)} := D_{p^m} を「レベル m の対数作用素」と呼ぶ
+%%   出典          : handoff/zp-chat.md \S2.2, \S2.4;
+%%                   handoff/zp-residues-v2.tex \S Conventions
+%%                   （\S\ref{ss:conv-level-word} も参照）
+%%
+%% (L) logarithmic 資料の書き方
+%%   作用素環      : \cD^{(m)}_{(X,D)} := \cEnd_{\cO_{X^{(m+1)}}}(\cO_X)
+%%   有限レベル    : 「\cD^{(n)}-加群、特に p-曲率 0 の場合 n=0」
+%%   塔との関係    : Frobenius 降下 \cE \cong F^{(n+1)*}\cE_{n+1}
+%%   定義 2.2      : \cD^{(n)}-構造 = 塔の記述で長さ n+1 の有限塔
+%%   出典          : handoff/logarithmic-chat.md \S0（記法）, \S1（テーゼ 1）,
+%%                   定義 2.2
+%%
+%% (U) 当初のユーザ規約   ← level 資料が言及し、不採用としたもの
+%%   内容          : 「レベル n = \cD^{(n)} に持ち上がる、
+%%                    レベル 1 \iff p-曲率 0」
+%%   level 資料の評価: 非対数の場合には (W) と（添字ずれを除いて）整合するが、
+%%                    「\cD^{(1)}-作用の存在」と「p-曲率の消滅」を
+%%                    独立の条件として扱うと混乱する
+%%   出典          : handoff/level-chat.md \S2.1
+%% ---------------------------------------------------------------
+
+\subsubsection*{対照表（作成予定）}
+%% 上記 5 候補を、次の 4 列で 1 枚の表にまとめる:
+%%   作用素環の書き方 / 曲率の呼び方 / Frobenius 降下の回数 / 出典
+%% 表は候補の並記であって、どれかを正しいとする表明ではない。
+
+\subsubsection*{既存の対照表}
+%% handoff/log-level-opers.tex の付録に (B) と (W) の対照表が既にある。
+%% 旧版 研究/log-level-opers.tex の同じ付録と diff を取ったところ
+%% 完全に一致した（2026-09-03 確認）。
+%% すなわちこの対照表は、原稿の版の食い違い
+%% （90-crosscutting/discrepancies.tex の種別 (A)）の影響を受けていない。
+%% (Z) と (L) はこの表に含まれていないので、拡張が要る。
+
+\subsubsection*{観察}
+%% OBS-1  (Z) の \cD^{(n)} は (B) の \cD^{(m)} と n = m+1 で対応するように見える。
+%%        根拠: (Z) は「位数 < p^n」と定義している。(B) の \cD^{(m)} が
+%%        \partial^{[j]} (j < p^{m+1}) を含むかどうかは原典未確認。
+%%        NEEDS CHECK C-1, C-2
+%%
+%% OBS-2  したがって (Z) は (W) と一致するように見える。
+%%        補強材料: (Z) は「E \cong F^{n*}E_n が \cD^{(n)}-加群構造を与える」
+%%        と述べ、(W) は「レベル N \iff F^{(N)*} の像」と述べる。
+%%        降下回数が同じ添字で数えられている点が一致する。
+%%        NEEDS CHECK C-2
+%%
+%% OBS-3  (L) は (B) と一致するように見える。
+%%        根拠: (L) は降下を \cE \cong F^{(n+1)*}\cE_{n+1} と書き、
+%%        p-曲率 0 を n=0 に対応させている。
+%%        NEEDS CHECK C-3
+%%
+%% OBS-4  OBS-2 と OBS-3 が正しければ、zp と level は実質同じ規約を用い、
+%%        logarithmic だけが 1 ずれた規約を用いていることになる。
+%%        統合時に最も事故が起きやすい組合せ。
+%%        NEEDS CHECK C-2, C-3 の両方が済むまで、この観察に依拠しない。
+%%
+%% 注意: level 資料 \S2.1 は「二つの流儀があり、混同すると主張の真偽が
+%%       反転する」と明記し、\S5.1 では実際に当初の予想の誤りが
+%%       規約のズレに起因したと記録している。OBS-1..4 を裏取りなしに
+%%       使わないこと。
+%%
+%% NEEDS DECISION D-1:
+%%   (a) 一つの規約に統一するか、
+%%   (b) テーマごとに元の規約を保持し、変換表のみを共有するか。
+%%   (b) は各テーマの主張を原資料のまま保てるが、
+%%   90-crosscutting/ での照合のたびに変換が要る。
+
+\subsection{各規約の使用箇所}\label{ss:conv-usage}
+
+%% 資料・原稿ごとに、どの規約を使っているか（と根拠）を表にする。
+%%
+%%   handoff/logarithmic-chat.md      → (L)     根拠: \S0 記法, 定義 2.2
+%%   handoff/zp-chat.md               → (Z)     根拠: \S2.2, \S2.4
+%%   handoff/zp-residues-v2.tex       → (Z)     根拠: \S Conventions
+%%   研究/zp-residues.tex（旧・v1）    → (Z)     根拠: notation 節
+%%                                     ただし v1 は \delta^{(m)} の帰属を
+%%                                     明示的に書いている（\S\ref{ss:conv-level-word}）
+%%   handoff/level-chat.md            → (W)     根拠: \S2.1（採用を明記）
+%%   handoff/log-level-opers.tex      → (W)     根拠: 付録の対照表「（本稿）」
+%%   研究/log-level-opers.tex（旧）    → (W)     根拠: 付録は新版と同一
+%%   既存の notes/*.tex               → 記述なし（見出しのみで内容が空）
+%%
+%% NEEDS CHECK C-10:
+%%   上表のうち v1 と旧版 log-level-opers.tex については、
+%%   規約に関する記述が本文全体で一貫しているかを未確認。
+%%   付録・記法節を見ただけである。
+
+\subsection{「レベル」という語の多義性}\label{ss:conv-level-word}
+
+%% zp 資料の内部で、「レベル」が二つの異なる添字に使われている可能性がある。
+%%
+%%   (i)  作用素のラベル: \delta^{(m)} := D_{p^m} を「レベル m の対数作用素」と呼ぶ
+%%        出典: handoff/zp-chat.md \S2.4
+%%   (ii) 環の添字      : \cD_U^{(n)} = 位数 < p^n
+%%        出典: handoff/zp-chat.md \S2.2
+%%   (iii) 格子・塔の添字: \bar E_n, \sigma_n, 「レベル n 格子の r」r_n := r(\bar E_n)
+%%        出典: handoff/zp-chat.md \S2.3, \S2.6
+%%
+%% OBS-5  旧稿 研究/zp-residues.tex は
+%%        「\delta^{(m)} は \cD^{(m+1)} に属し \cD^{(m)} には属さない」
+%%        と明記している。これに従えば (i) と (ii) の添字は 1 ずれる。
+%%        NEEDS CHECK C-4:
+%%          - 同じ記述が handoff/zp-residues-v2.tex にもあるか
+%%            （v2 の Conventions 節の notation では確認できていない）
+%%          - (iii) が (i) と (ii) のどちらの数え方に従うか
+%%
+%% この多義性は zp 資料の内部の問題であり、
+%% 他テーマとの照合（\S\ref{ss:conv-level}）より前に整理する必要がある。
+%%
+%% NEEDS DECISION D-6:
+%%   「レベル」という語を 90-crosscutting/ で横断的に使うか、
+%%   各テーマ内に閉じた語として扱い、横断的な議論では
+%%   「Frobenius 降下の回数」など曖昧さのない言い換えを使うか。
+
+\subsection{主要記号の意味}\label{ss:conv-symbols}
+
+%% 3テーマで中心的な対象どうしが衝突している記号。
+%% 各記号について「各テーマでの意味」「出典」「衝突の深刻度」を記す。
+%% 深刻度: [高] 中心的対象どうしの衝突 / [中] 一方が補助的
+%%         / [低] 文脈で判別可能
+
+\subsubsection*{$\mathscr{P}$, $\mathcal{P}$, $P$ ---［高］}
+%% logarithmic : \mathcal{P} = 幾何の三つ組 (\cE, \Sigma, \cE_P)
+%%               出典: handoff/logarithmic-chat.md 定義 2.1
+%% level       : \mathscr{P} := (\bbP^1; [0], [1], [\infty])（3点付き射影直線）
+%%               出典: handoff/level-chat.md \S2.2
+%% 3テーマ共通  : P \subset G = 放物型部分群
+%%               出典: logarithmic \S0; zp \S2.7; level \S2.7 相当
+%% zp          : \mathcal{P} の使用は未確認  NEEDS CHECK C-7
+%%
+%% 衝突の内容: 幾何そのもの / 特定の曲線 / 放物型部分群 の三者。
+%% 字体（\mathcal と \mathscr）で区別されているが、
+%% 手書きや口頭では区別できず、統合時に混同しやすい。
+
+\subsubsection*{$\rho$ ---［高］}
+%% logarithmic : holonomy 表現 \rho_{\mathcal{P}}: \pi_1^{strat,rs} \to G_k、
+%%               および \bar\rho: \to G^{ad}
+%%               出典: handoff/logarithmic-chat.md 定義 2.3
+%% level       : radius。階数 2 では \rho = (d_1-d_2)/2。
+%%               また \Pi_{2,N,\rho,g,r} の添字として頻出。
+%%               出典: handoff/level-chat.md \S2.3
+%% zp          : \rho の使用は未確認。境界の不変量には r を用いている。
+%%               NEEDS CHECK C-7
+%%
+%% 衝突の内容: 表現 / 局所不変量。意味の距離が大きく、
+%% 一方を他方と読み違えると主張が無意味になる。
+
+\subsubsection*{$r$ ---［高］}
+%% zp          : 留数（\bbZ_p 値、このテーマの中心的不変量）。
+%%               r = -\sum_{n\ge0} a_n p^n、r-スペクトラム、r_i、r_n。
+%%               出典: handoff/zp-chat.md \S2.5, \S2.6
+%% level       : marked point の個数。r 点付き曲線 \mathscr{X}=(X,\{\sigma_i\}_{i=1}^r)、
+%%               D = \sum_{i=1}^r p_i、および (\bbZ/p^N)^{\times r}。
+%%               出典: handoff/level-chat.md \S2.2, \S3.2, \S6.6
+%% logarithmic : 主要記号としての使用は未確認  NEEDS CHECK C-7
+%%
+%% 衝突の内容: 中心的不変量 / 個数。両テーマが同じ式に現れうるため
+%% （境界成分ごとの不変量を扱う場面）、深刻度は最も高い部類。
+
+\subsubsection*{$N$ ---［高］}
+%% level       : レベル。採用規約 (W) の中心。
+%%               出典: handoff/level-chat.md \S2.1
+%% zp          : N_i = D_i の法束（定理 B の捻れ N_i^{\otimes c}）。
+%%               別に \S4.6 で大域 Ext 対象を N と書いている。
+%%               出典: handoff/zp-chat.md \S2.6, \S3.6, \S4.6
+%% logarithmic : \pi_1^{strat,rs} の pro-代数的部分群 N（完全列
+%%               1 \to N \to \pi_1^{strat,rs} \to \pi_1^{tame} \to 1）。
+%%               出典: handoff/logarithmic-chat.md \S3.2
+%%
+%% 衝突の内容: 整数の添字 / 直線束 / 群。三者とも中心的。
+%% zp は内部でも二つの意味に使っている。
+
+\subsection{その他の記号の衝突}\label{ss:conv-symbols2}
+
+%% \sigma, \Sigma ---［中］
+%%   logarithmic: \Sigma = log stratification（定義 2.1 の第 2 成分）
+%%   zp         : \sigma_n = 塔の遷移射 F^*E_{n+1} \isoto E_n
+%%                また \Sigma_n = 水平格子（比較定理の節）
+%%   level      : \sigma_i = marked point
+%%
+%% n ---［中］
+%%   zp         : 階数、および塔・格子の添字
+%%   level      : \mathrm{GL}_n の階数
+%%   logarithmic: レベル（規約 (L)）
+%%
+%% D ---［中］
+%%   3テーマ共通: 境界因子
+%%   zp         : 加えて D_a := t^a \partial_t^{[a]} が作用素
+%%                （出典: handoff/zp-chat.md \S2.4）
+%%   同一資料内で因子と作用素に同じ字を使っている。
+%%
+%% G の定義体 ---［高、ただし記号ではなく仮定の差］
+%%   logarithmic: G/k 連結簡約群（k = \bar\bbF_p）
+%%                出典: handoff/logarithmic-chat.md \S0
+%%   zp         : G は \bbF_p 上分裂簡約
+%%                出典: handoff/zp-chat.md \S2.7
+%%   level      : 定義体の明示は未確認。\pi_1(G)、\mathrm{PGL}_2、\mathrm{GL}_n を用いる。
+%%                NEEDS CHECK C-6
+%%   これは記法ではなく仮定の差である。\S\ref{ss:conv-semantic} 参照。
+%%
+%% E, \cE, \cF ---［中］
+%%   logarithmic: \cE = G-torsor、\cE_P = P-還元
+%%   zp         : E_n = ベクトル束、\bar E_n = 格子、\cE = stratified bundle
+%%   level      : \cF = oper の台となる束
+%%
+%% \theta ---［中］
+%%   zp         : \theta_a := \nabla(D_a)
+%%   level      : \theta_i = x_i\partial_i（対数ベクトル場）
+%%   logarithmic: \theta^{[j]}（\S5.1 の \bbG_m 上の計算）
+%%   同じ字が「作用素の像」と「作用素そのもの」に使われている。
+%%
+%% \mathbb{G}, \mathcal{G} ---［低］
+%%   zp         : \cG = P-束
+%%   level      : \mathbb{G} = clutching data（三価グラフ）
+%%
+%% NEEDS DECISION D-3:
+%%   改名するか、テーマごとの記号を保持して 90-crosscutting/ でのみ
+%%   添字付き（\rho^{\mathrm{log}}, r^{\mathrm{zp}} 等）にするか。
+
+\subsection{共通に採用できる定義・記法}\label{ss:conv-shared}
+
+%% 現時点で、3資料の間に食い違いが見当たらないもの。
+%% ここに挙げたものは、変換なしに共有してよい候補。
+%% ただし「食い違いが見当たらない」は「同値性が確認された」ではない。
+%%
+%%   - 基礎体 k は代数閉、char k = p > 0
+%%     ただし logarithmic と zp には k = \bar\bbF_p を本質的に使う箇所がある
+%%     （logarithmic \S0 は「代数閉であることを本質的に使う箇所は明示する」と述べ、
+%%       定理 D は k = \bar\bbF_p を仮定している）
+%%     level については未確認  NEEDS CHECK C-11
+%%   - F = 絶対 Frobenius
+%%   - 境界付き対象 (X, D) ないし (\bar X, D)、D は SNC、U = X \setminus D
+%%   - 局所設定 R = k[[t]]、K = k((t))
+%%   - Frobenius 降下の塔が存在するという形そのもの
+%%     （降下回数の数え方は \S\ref{ss:conv-level} により未統一）
+%%   - 型 (G,P) という書き方そのもの（定義体は未統一）
+%%   - stratified bundle / F-divided sheaf という語
+%%
+%% 詳細は 00-common/foundations.tex に置き、ここでは
+%% 「共有してよい」という判断のみを記録する。
+
+\subsection{まだ統一できないもの}\label{ss:conv-unresolved}
+
+%%   (1) レベル規約                 \S\ref{ss:conv-level}      NEEDS DECISION D-1
+%%   (2) 「レベル」という語の用法    \S\ref{ss:conv-level-word} NEEDS DECISION D-6
+%%   (3) 符号規約                   下記                       NEEDS DECISION D-2
+%%   (4) 主要記号 P, \rho, r, N     \S\ref{ss:conv-symbols}    NEEDS DECISION D-3
+%%   (5) G の定義体                 \S\ref{ss:conv-symbols2}   NEEDS DECISION D-4
+%%   (6) regular singular の定義     下記                       NEEDS CHECK C-5
+%%   (7) 横断性・Cartan 条件の定式化 下記                       NEEDS CHECK C-12
+%%   (8) 地位タグの語彙             00-common/status-tags.tex で扱う
+%%   (9) 記述言語と LaTeX エンジン   下記                       NEEDS DECISION D-5
+
+\subsubsection*{符号規約}
+%% zp 資料 \S2.6 は次を明示している:
+%%   階数 1 で \sigma_n(1 \otimes e_{n+1}) = c_n t^{a_n} e_n のとき
+%%   r = -\sum_{n\ge0} a_n p^n
+%% さらに \S9 で「符号規約を変更する場合は、留数定理 (7.2)、
+%% Hecke 指数 (8.5)、指数規則 (9.4) の三箇所を同時に直すこと」と警告している。
+%%
+%% level 資料 \S2.3 の exponent は
+%%   \nabla_{a,\langle j\rangle}(t^n) = q_j! \binom{n-\tilde a}{j} t^n
+%% で定義され、Hecke 変形は \S3.2 で a \mapsto a-n。
+%%
+%% logarithmic 資料 \S4.2 は境界で t \mapsto t^\lambda（\lambda \in \bbZ_p）
+%% という形を用いる。
+%%
+%% NEEDS CHECK C-8:
+%%   三者の符号が整合するか。整合しない場合、どこで符号が入れ替わるか。
+%%   照合の作業自体は 90-crosscutting/lattices-and-hecke.tex で行い、
+%%   結論のみをここに反映する。
+
+\subsubsection*{regular singular の定義}
+%% zp \S2.3      : 対数格子系が存在すること
+%%                （「Kindler の定義と同値のはず、要確認」と資料自身が留保）
+%% logarithmic \S0: ある log 拡張 (X,D) を持つ対象からなる充満部分圏
+%%                （Gieseker--Kindler の regular singular）
+%% level          : この語の使用は未確認  NEEDS CHECK C-13
+%%
+%% NEEDS CHECK C-5:
+%%   zp の定義と logarithmic の定義が同値か。
+%%   両資料とも、それぞれの文献確認リストでこの点を未確認としている
+%%   （zp \S7 の 1、logarithmic \S7 の 3）。
+%%   これは 90-crosscutting/semisimplicity.tex の照合の前提でもある。
+
+\subsubsection*{横断性・Cartan 条件}
+%% logarithmic 定義 2.1(4):
+%%   Kodaira--Spencer 写像 \kappa: T_X(-\log D) \to \cE_P \times^P (\fg/\fp)
+%%   が \cO_X-同型であること。
+%% zp \S2.7:
+%%   Cartan 接続 \omega: T\cG(-\log \tilde D) \isoto \fg \otimes \cO。
+%%   加えて資料は「Cartan 接続の非退化性は境界制限の \S8(4) でしか使わない」
+%%   と述べている。
+%%
+%% NEEDS CHECK C-12:
+%%   両者が同値な条件の異なる包装か。同値でない場合、どちらが強いか。
+%%   どちらの資料も同値性を論じていない。
+
+\subsubsection*{記述言語と LaTeX エンジン}
+%% 現状:
+%%   - preamble.tex に日本語組版の設定がない（geometry, amsmath, amssymb,
+%%     amsthm, mathtools, mathrsfs, hyperref のみ）。
+%%   - main.tex は article クラス。
+%%   - 既存の notes/*.tex は英語の見出しのみ。
+%%   - handoff/zp-residues-v2.tex は英語（amsart）。
+%%   - handoff/log-level-opers.tex は日本語（lualatex / ltjsarticle 想定）。
+%%   - notes/topics/ 以下の骨組みは日本語の見出しで作成済み。
+%%
+%% すなわち notes/topics/ は現状の preamble.tex ではコンパイルできない。
+%% main.tex がまだ notes/topics/ を \input していないため実害はない。
+%%
+%% NEEDS DECISION D-5:
+%%   (a) notes/topics/ を英語で書き、現在の main.tex に配線する
+%%   (b) 日本語のまま維持し、lualatex + ltjsarticle 用の別の主文書を作る
+%%   (c) 見出しは英語、コメントは日本語という現状の折衷を明文化する
+%%   zp 資料 \S0 は「原稿は英語、内部資料は日本語」という方針を記録している。
+%%   これを notes/topics/ にも適用するかどうかが判断の中心。
+
+\subsection{統一すると主張の意味が変わりうるもの}\label{ss:conv-semantic}
+
+%% 以下は、規約を揃えること自体が数学的主張の内容を変えうる箇所である。
+%% 機械的な置換をしてはならない。
+%%
+%% ---------------------------------------------------------------
+%% (S1) レベル規約
+%%   なぜ変わりうるか:
+%%     level 資料 \S2.1 が「混同すると主張の真偽が反転する」と明記。
+%%     同 \S5.1 は、当初の予想「log では『レベル 1 \iff p-曲率 0』が崩れる」
+%%     の誤りが、素朴な F^* と \cD^{(1)}-作用への持ち上げの混同、
+%%     すなわち規約のズレに起因したと記録している
+%%     （「規約のズレであって数学的現象ではなかった」）。
+%%   影響範囲:
+%%     「有限レベル vs 無限レベル」を主軸とする 3テーマすべての主張。
+%%     特に logarithmic のテーゼ (1)（stratification の必要性）と
+%%     level の主要主張（反例の非存在）は、どちらもレベルの数え方に依存する。
+%%
+%% (S2) 符号規約
+%%   なぜ変わりうるか:
+%%     zp \S9 が、符号を変えるなら三箇所を同時に直すよう明示的に警告している。
+%%     一箇所だけ揃えると、留数定理・Hecke 指数・指数規則の間の整合が崩れる。
+%%   影響範囲:
+%%     zp の (7.2), (8.5), (9.4)。加えて level の exponent と
+%%     logarithmic の \lambda との照合。
+%%
+%% (S3) regular singular の定義
+%%   なぜ変わりうるか:
+%%     定義を一本化すると、一方の資料の定理が仮定していた条件が、
+%%     もう一方の資料の主張に暗黙に持ち込まれる。
+%%     CLAUDE.md の「決して仮定を黙って強めたり弱めたりしない」に直接抵触する。
+%%   影響範囲:
+%%     とくに 90-crosscutting/semisimplicity.tex の照合。
+%%     zp の局所構造定理が logarithmic \S4.3 の推測を含意するかどうかは、
+%%     この定義の同値性に依存する。同値性が未確認のうちは含意を確定させない。
+%%
+%% (S4) G の定義体（k 上か \bbF_p 上か）
+%%   なぜ変わりうるか:
+%%     logarithmic の完備性の議論（定理 D）は Lang の定理と
+%%     \bbF_q-構造への言い換えに依拠している。
+%%     構造群の定義体を動かすと、この論法が使えるかどうかが変わりうる。
+%%   影響範囲:
+%%     logarithmic \S3.3（定理 D）、\S3.4、\S3.6（Deligne--Lusztig の例）。
+%%   NEEDS CHECK C-6, C-14
+%%
+%% (S5) 横断性・Cartan 条件の定式化
+%%   なぜ変わりうるか:
+%%     zp は「Cartan 接続の非退化性は境界制限でしか使わない」と述べ、
+%%     留数の議論を随伴 tractor 束のみで書けるとしている。
+%%     logarithmic は横断性を定義 2.1 の一部として組み込んでいる。
+%%     定式化を揃えると、「どの定理がどの仮定を使っているか」が変わりうる。
+%%   影響範囲:
+%%     zp \S2.7 の但し書き、logarithmic 定義 2.1(4) を使う全ての主張。
+%%
+%% (S6) 「レベル」という語そのもの
+%%   なぜ変わりうるか:
+%%     \S\ref{ss:conv-level-word} の OBS-5 が正しければ、
+%%     zp 資料の内部でも作用素のラベルと環の添字が 1 ずれる。
+%%     テーマ間で語を共有する前に、テーマ内での用法を確定させる必要がある。
+%% ---------------------------------------------------------------
+
+\subsection{未決事項の一覧}\label{ss:conv-todo}
+
+%% NEEDS DECISION
+%%   D-1  レベル規約を統一するか、変換表のみ持つか        \S\ref{ss:conv-level}
+%%   D-2  符号規約                                        \S\ref{ss:conv-unresolved}
+%%   D-3  主要記号 P, \rho, r, N の改名の要否             \S\ref{ss:conv-symbols2}
+%%   D-4  G の定義体                                      \S\ref{ss:conv-symbols2}
+%%   D-5  notes/topics/ の記述言語と LaTeX エンジン        \S\ref{ss:conv-unresolved}
+%%   D-6  「レベル」を横断的に使うか                       \S\ref{ss:conv-level-word}
+%%
+%% NEEDS CHECK
+%%   C-1  Berthelot の \cD^{(m)} の定義（\partial^{[j]} の範囲）を原典で確認
+%%   C-2  (Z) と (W) が一致するか                          OBS-1, OBS-2
+%%   C-3  (L) が (B) と一致するか                          OBS-3
+%%   C-4  zp 内部の作用素ラベル m と環の添字 n の関係       OBS-5
+%%   C-5  regular singular の定義の同値性（zp / logarithmic）
+%%   C-6  level 資料における G の定義体
+%%   C-7  logarithmic および zp での \rho, r, \mathcal{P} の使用状況の網羅
+%%   C-8  符号規約の三者照合（logarithmic \S4.2 の \lambda を含む）
+%%   C-9  Montagnon の対数版 \cD^{(m)} の presentation がどの添字か
+%%   C-10 v1 と旧版 log-level-opers.tex の規約が本文全体で一貫しているか
+%%   C-11 level 資料が k = \bar\bbF_p を要求する箇所があるか
+%%   C-12 横断性の二つの定式化の同値性
+%%   C-13 level 資料における regular singular の語の使用
+%%   C-14 logarithmic の定理 D が G の定義体に実際にどう依存するか
+%%
+%% C-1, C-9 は文献確認であり 00-common/literature-status.tex にも登録する。
+%% C-5 は 90-crosscutting/semisimplicity.tex の前提でもある。
+%% C-8 は 90-crosscutting/lattices-and-hecke.tex で照合する。
