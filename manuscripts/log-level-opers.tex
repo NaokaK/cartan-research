@@ -1,0 +1,1020 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  正標数 log parabolic geometry における有限レベル現象
+%  作業ドラフト  ver.0.3
+%
+%  コンパイル: lualatex (ltjsarticle)
+%  ※ upLaTeX を使う場合は documentclass を
+%     \documentclass[uplatex,dvipdfmx,a4paper,11pt]{jsarticle}
+%     に差し替える。
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[a4paper,11pt]{ltjsarticle}
+
+\usepackage{amsmath,amssymb,amsthm,mathrsfs}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 定理環境 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\theoremstyle{plain}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{proposition}[theorem]{命題}
+\newtheorem{lemma}[theorem]{補題}
+\newtheorem{corollary}[theorem]{系}
+\newtheorem{conjecture}[theorem]{予想}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{定義}
+\newtheorem{example}[theorem]{例}
+\newtheorem{remark}[theorem]{注意}
+\newtheorem{question}[theorem]{問題}
+
+% ステータスタグ（清書時に削除する）
+\newcommand{\Known}[1]{\marginpar{\footnotesize\textsf{[既知: #1]}}}
+\newcommand{\Todo}[1]{\textcolor{red}{\textsf{[TODO: #1]}}}
+\newcommand{\Unver}{\textsf{[未検証]}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 記号 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\bbA}{\mathbb{A}}
+\newcommand{\bbP}{\mathbb{P}}
+\newcommand{\bbZ}{\mathbb{Z}}
+\newcommand{\bbF}{\mathbb{F}}
+\newcommand{\cD}{\mathcal{D}}
+\newcommand{\cE}{\mathcal{E}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cM}{\mathcal{M}}
+\newcommand{\cN}{\mathcal{N}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\cT}{\mathcal{T}}
+\newcommand{\sX}{\mathscr{X}}
+\newcommand{\sP}{\mathscr{P}}
+\newcommand{\fg}{\mathfrak{g}}
+\newcommand{\fp}{\mathfrak{p}}
+\newcommand{\fS}{\mathfrak{S}}
+\newcommand{\Res}{\operatorname{Res}}
+\newcommand{\Pic}{\operatorname{Pic}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\Hom}{\operatorname{Hom}}
+\newcommand{\Coker}{\operatorname{Coker}}
+\newcommand{\rk}{\operatorname{rk}}
+\newcommand{\Op}{\mathcal{O}p}
+\newcommand{\Zzz}{\mathrm{Zzz\dots}}
+\newcommand{\dlog}{d\!\log}
+\newcommand{\Dlog}[1]{\cD^{(#1)}_{X^{\log}}}
+\newcommand{\Dbr}[1]{\breve{\cD}^{(#1)}_{R}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{正標数における対数的レベル理論と\\有限レベル現象の反例族について\\
+\large ---- 作業ドラフト ver.\,0.3 ----}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+$k$ を標数 $p>0$ の代数閉体、$(X,D)$ を $k$ 上の log smooth pair とする。
+Berthelot--Montagnon の有限レベル対数微分作用素環 $\cD^{(m)}_{X^{\log}}$ に対する
+dormant 加群（$p^{m+1}$-曲率が消える加群）について、
+「有限レベルでは成立するが無限レベルでは成立しない」現象、
+すなわち与えられた dormant 対象がどこまで高いレベルに持ち上がるかという問題を扱う。
+主結果は次の三点である。
+(1) 対数的な場合、dormant 対象の局所不変量 exponent は $\bbZ/p^{N}\bbZ$ に値をとり、
+レベルの上昇は exponent の $p$ 進展開に桁を加えることに他ならない（\S\ref{sec:local}）。
+したがって持ち上げの障害は純粋に大域的であり、
+その障害は行列式束の次数に関する合同式として書ける（命題 \ref{prop:degree}）。
+(2) 3点付き射影直線 $\sP=(\bbP^1;0,1,\infty)$ 上では
+dormant $\mathrm{PGL}_2$-oper の個数はレベル $N=1$ で $p(p^2-1)/24$ であり
+（命題 \ref{prop:count}）、
+かつ制限写像 ${}^{N+1}\Op\to{}^{N}\Op$ は常に全射である（定理 \ref{thm:M03}）。
+すなわち $\sP$ 上には反例が存在しない。
+(3) 反例は marked point が無い場合（$D=\emptyset$）に集中し、
+そこでは $\Pic$ の $p$ 可除性が障害となる。
+$p=5$ における dormant $\mathrm{PGL}_2$-oper 5 個の完全な明示リストを与える（\S\ref{sec:p5}）。
+\end{abstract}
+
+\tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{序}\label{sec:intro}
+
+\subsection{動機}
+
+$k$ を標数 $p>0$ の代数閉体、$X$ を $k$ 上の滑らかな多様体とする。
+$X$ 上の平坦接続 $(\cE,\nabla)$ に対し、
+その $p$-曲率 $\psi_{(\cE,\nabla)}$ が消えることは
+Cartier 降下により $(\cE,\nabla)\cong F^{*}(\cE')$（標準接続つき）と同値である。
+さらに $\cE'$ 上の接続を選び直して降下を繰り返すことができるかを問うと、
+Berthelot の有限レベル微分作用素環の増大列
+\[
+  \cD^{(0)}_X\to\cD^{(1)}_X\to\cdots\to\cD^{(m)}_X\to\cdots,
+  \qquad \varinjlim_m\cD^{(m)}_X=\cD^{(\infty)}_X
+\]
+が現れ、$\cD^{(\infty)}_X$-加群（stratified sheaf）が無限レベルの対象となる。
+
+非対数的な場合、この階層は Frobenius 降下の階層と完全に一致する：
+$\cD^{(m)}_X$-加群で $p^{m+1}$-曲率が消えるもの（dormant なもの）の圏は
+$\cO_{X^{(m+1)}}$-加群の圏と同値である。
+したがって「レベル $N$ まで持ち上がる」とは
+「$F^{(N)*}$ の像に入る」ということに尽きる。
+
+本稿の出発点は、この一致が\textbf{対数的な場合には崩れる}という観察である。
+$X^{\log}=(X,D)$ を log smooth pair とすると、
+対数接ベクトル場は toral である：局所座標で $\theta=x\partial_x$ とすると
+\begin{equation}\label{eq:toral}
+  \theta^{[p]}=\theta .
+\end{equation}
+実際 $\theta(x^n)=nx^n$ より $\theta^p(x^n)=n^px^n=nx^n$（Fermat の小定理）。
+この一点が以下すべての特異性の源である。
+
+\subsection{出発点となる計算}\label{ss:starting}
+
+$X=\bbA^1$、$D=\{0\}$、$\cE=\cO_X$、$\nabla=d+a\,\dlog x$（$a\in k$）とする。
+$\nabla_\theta=\theta+a$ であり、$\theta$ とスカラー $a$ は可換なので
+可換環における Frobenius の加法性から
+\begin{equation}\label{eq:AS}
+  \psi(\theta)=(\theta+a)^p-(\theta+a)
+  =\theta^p+a^p-\theta-a
+  =(\theta^{[p]}-\theta)+a^p-a
+  =a^p-a .
+\end{equation}
+よって
+\[
+  \psi=0\iff a^p=a\iff a\in\bbF_p .
+\]
+対照的に、非対数的な $\bbA^1$ 上で $\nabla=d+a\,dx$ とすると
+$\partial^{[p]}=0$ かつ $\partial^p=0$（$\cO$ 上）だから $\psi(\partial)=a^p$ であり、
+消えるのは $a=0$ のときのみである。
+Artin--Schreier 方程式 $a^p-a=0$ が現れるのは
+toral 性 \eqref{eq:toral} の直接の帰結であり、
+対数構造が \emph{ちょうど $\bbF_p$ 個の} 非自明な dormant 対象を生むことを意味する。
+
+一方、log Frobenius $F$ はモノイド上で $m\mapsto m^p$ なので
+\[
+  F^*(\dlog t)=\dlog(x^p)=p\,\dlog x=0 ,
+\]
+すなわち $F^*\Omega^1_{X'}(\log D')\to\Omega^1_X(\log D)$ は零写像である。
+したがって素朴な Frobenius 引き戻しは留数 $0$ の対象しか生まない。
+$a\neq0$ なる \eqref{eq:AS} の対象は $p$-曲率が消えるにもかかわらず
+$F^*$ の像には入らない。ここに「有限レベル／無限レベル」の分岐の芽がある。
+
+\subsection{本稿の結論の要約}
+
+上の観察を精密化すると、次の描像が得られる（\S\ref{sec:local}）。
+\begin{itemize}[leftmargin=1.6em]
+\item dormant な対数対象の局所不変量は
+      \textbf{exponent} $d\in\bbZ/p^{N}\bbZ$ であり、
+      その $p$ 進展開 $\tilde d=\sum_{l}p^l\tilde d_l$ の第 $l$ 桁が
+      $l$ 段目に降下した対象の留数（モノドロミー）を与える。
+\item レベルを $N$ から $N+1$ に上げることは、
+      exponent を $\bbZ/p^{N}\to\bbZ/p^{N+1}$ に持ち上げることに他ならない。
+      これは\textbf{局所的には常に可能}（各分岐点で $p$ 通りの選択）。
+\item よって障害は大域的であり、
+      行列式束の次数に関する合同式（命題 \ref{prop:degree}）に集約される。
+      marked point が $r\ge1$ 個あれば持ち上げの自由度が $p^r$ 通りあるので
+      合同式は解けることが多く、$r=0$ のときにのみ $\Pic$ の障害が残る。
+\end{itemize}
+これは当初の予想と逆であり、
+\textbf{対数構造は障害を消す方向に働く}というのが本稿の主張である。
+
+\subsection{規約に関する注意}\label{ss:convention}
+
+レベルの添字には二つの流儀があり、混乱の元なので明記する。
+\begin{itemize}[leftmargin=1.6em]
+\item \textbf{Berthelot 流}：$\cD^{(m)}$ の $m$。
+\item \textbf{Wakabayashi 流 \cite{Wak}}：「レベル $N$ の oper」$=$ $\cD^{(N-1)}$-加群構造つき oper、
+      「dormant」$=$ $p^N$-曲率 $\nabla_{\langle p^N\rangle}$ の消滅。
+\end{itemize}
+非対数的な場合、
+$\mathfrak{Mod}(\cD^{(m)}_S)\simeq\mathfrak{Mod}(\cD^{(m-l)}_{S^{(l)}})$ かつ
+$p^{m+1}$-曲率が $p^{m-l+1}$-曲率に対応する \cite[Prop.~2.1.5]{Wak} ので
+\[
+  \text{dormant レベル }N \iff F^{(N)*}(\cO\text{-加群})
+\]
+となり、Wakabayashi 流の「dormant レベル $N$」は
+「$N$ 回 Frobenius 降下できる」という素朴な意味と一致する。
+\textbf{本稿では Wakabayashi 流に統一する。}
+すなわち「レベル $N$」は $\cD^{(N-1)}$-作用を指し、
+「dormant」は $p^N$-曲率の消滅を指す。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{記号と準備}\label{sec:notation}
+
+\subsection{log smooth pair と対数微分作用素}
+
+$k=\bar k$、$\operatorname{char}k=p>0$。
+$(X,D)$ を log smooth pair とし、局所的に $D=\{x_1\cdots x_r=0\}$ と書く。
+$T_X(-\log D)$ の局所基底を
+\[
+  \theta_i=x_i\partial_i\ (i\le r),\qquad \partial_j\ (j>r)
+\]
+とすると、制限 Lie 代数構造は
+\[
+  \theta_i^{[p]}=\theta_i\ \text{(toral)},\qquad \partial_j^{[p]}=0\ \text{(nilpotent)} .
+\]
+
+$X^{\log}$ を対応する fs log scheme とし、
+$\Dlog{m}$ で Montagnon \cite{Mon} によるレベル $m$ の対数微分作用素環を表す。
+$\cD^{(m)}$-加群構造は、$\nabla_{\langle j\rangle}:=\nabla(\partial_{\langle j\rangle})$
+（$j\in\bbZ_{\ge0}$）の族で記述される \cite[\S1.3]{Wak}。
+$\Dlog{0}$-加群構造を与えることは対数接続を与えることと同値である。
+
+\begin{definition}[$p^N$-曲率、dormant]
+$\Dlog{N-1}$-加群 $(\cE,\nabla)$ に対し
+${}^p\psi_{(\cE,\nabla)}:=\nabla\circ{}^p\psi_{X^{\log}}$
+を $p^N$-曲率とよび、これが消えるとき $(\cE,\nabla)$ は \textbf{dormant} であるという。
+$N=1$ のとき、これは対応する対数接続の $p$-曲率の消滅と一致する。
+\end{definition}
+
+\subsection{局所モデル}
+
+$R$ を離散付値環、$t$ を素元、$K=\operatorname{Frac}(R)$、$k$ を剰余体とする。
+Wakabayashi \cite[\S2.1]{Wak} に従い、$R$ 上の
+extended $m$-log derivation を
+\begin{equation}\label{eq:logderiv}
+  \breve\partial_{\langle j\rangle}(t^n):=q_j!\cdot\binom{n}{j}\cdot t^n,
+  \qquad q_j:=\lfloor j/p^m\rfloor
+\end{equation}
+で定め、対応する環を $\Dbr{m}$ と書く。
+$X^{\log}$ の marked point $\sigma$ における $\Dlog{N-1}$ の局所化は
+$\breve\cD^{(N-1)}_{\cO_{X,\sigma}}$ と同一視される \cite[Lemma 2.3.3]{Mon}。
+
+\begin{remark}\label{rem:binom}
+$\bbZ_p$ における恒等式
+$\prod_{j=0}^{p-1}(\theta-j)=p!\binom{\theta}{p}$
+の左辺は $\bmod\,p$ で $\theta^p-\theta$ である。
+すなわち $\theta^p-\theta^{[p]}$ は $\cD^{(1)}$ の基底元 $\binom{\theta}{p}$ の
+$p!$ 倍として持ち上がる。
+これがレベル上昇と $p$-曲率の関係の環論的な出所である。
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{留数の強制的半単純性}\label{sec:residue}
+
+まずレベル $1$（通常の対数接続）における基本的な制約を述べる。
+
+\begin{lemma}[留数の toral 性]\label{lem:toral}
+$(\cE,\nabla)$ を $(X,D)$ 上の対数接続、
+$R_i=\Res_{D_i}(\nabla)\in\End(\cE|_{D_i})$ とする。
+$p$-曲率 $\psi$ が消えるならば $R_i^{\,p}=R_i$ である。
+特に $R_i$ は半単純であり、その固有値は $\bbF_p$ に属する。
+\end{lemma}
+
+\begin{proof}
+$\nabla_{\theta_i}(x_ie)=x_i(\nabla_{\theta_i}+1)e$ より
+$\nabla_{\theta_i}$ は $x_i\cE$ を保つ。
+よって $\cE/x_i\cE$ 上で $\nabla_{\theta_i}^{\,p}$ は $R_i^{\,p}$ を誘導する。
+$\psi(\theta_i)=\nabla_{\theta_i}^{\,p}-\nabla_{\theta_i}$ を $D_i$ に制限すれば
+$R_i^{\,p}-R_i=0$。
+$T^p-T$ は分離多項式なので $R_i$ は対角化可能で、固有値は $\bbF_p$ に属する。
+\end{proof}
+
+\begin{corollary}\label{cor:nilpotent}
+$\psi=0$ かつ $R_i$ が冪単（すなわち $R_i-\mathrm{id}$ が冪零）ならば $R_i=0$。
+特に、非自明な冪零留数をもつ対数接続の $p$-曲率は消えない。
+\end{corollary}
+
+\begin{proof}
+冪零元 $N$ に対し $N^p=0$ なので $R^p=R$ から $R=0$。
+\end{proof}
+
+\begin{example}
+$\nabla_\theta=\theta+N$、$N$ を定数冪零行列とすると
+$\psi(\theta)=N^p-N=-N\neq0$。
+\end{example}
+
+\begin{remark}[主束版]
+主 $G$ 束の場合、$\Res\in\fg_{E}$ が $\Res^{[p]}=\Res$ を満たす、
+すなわち $\Res$ は toral 元であり、これは準同型 $\mu_p\to G$ を与える。
+共役類として
+\[
+  \Res\in\mathfrak{c}(\bbF_p)=\bigl(X_*(T)\otimes\bbF_p\bigr)/W .
+\]
+$G=\mathrm{PGL}_2$ では $\mathfrak{c}(\bbF_p)=\bbF_p/\{\pm1\}$ であり、
+これが \S\ref{sec:opers} の radius の概念的な正体である。
+\end{remark}
+
+\begin{remark}[注意点への回答]
+系 \ref{cor:nilpotent} により、
+「留数が半単純か冪単かで挙動が分かれる」という当初の予想は、
+dormant な世界では\textbf{半単純の場合しか存在しない}という形で決着する。
+冪単留数の対象は $p$-曲率が非零な世界（Mochizuki の nilpotent indigenous bundle）
+に属し、本稿の理論とは交わらない。
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{局所理論：exponent と $p$ 進展開}\label{sec:local}
+
+本節の内容は Wakabayashi \cite[\S2--3]{Wak} による。
+本稿の視点からの再解釈を加えて述べる。
+
+\subsection{非対数の場合との対比}
+
+\begin{proposition}[{\cite[Cor.~2.1.6]{Wak}}]\label{prop:nonlog}
+$S\in\{R,K\}$ とする。関手 $\Xi^{\downarrow(m+1)}$, $\Xi^{\uparrow(m+1)}$ は圏同値
+\[
+  \bigl\{\text{dormant }\cD^{(m)}_S\text{-加群}\bigr\}
+  \ \xrightarrow{\ \sim\ }\
+  \bigl\{S^{(m+1)}\text{-加群}\bigr\}
+\]
+を与える。
+\end{proposition}
+
+すなわち非対数的な場合、dormant 対象は $F^{(m+1)*}$ の像に尽きる。
+Wakabayashi は \cite[\S2.1 の Prop.~2.1.5 直後]{Wak} で
+「しかし対数的な場合、すなわち $\breve\cD_R$-加群についてはこれは成り立たない」
+と明示している。差を測る不変量が次の exponent である。
+
+\subsection{階数 $1$ の分類}
+
+\begin{proposition}[{\cite[Prop.~3.2.1]{Wak}}]\label{prop:rank1}
+$a\in\bbZ/p^{m+1}\bbZ$ に対し $\tilde a$ を $0\le\tilde a<p^{m+1}$ なる代表とする。
+\begin{equation}\label{eq:nabla_a}
+  \nabla_{a,\langle j\rangle}(t^n):=q_j!\cdot\binom{n-\tilde a}{j}\cdot t^n
+\end{equation}
+は $R$ 上に $\Dbr{m}$-加群構造を定め、$p^{m+1}$-曲率は消える。
+逆に、$E=R$ なる dormant $\Dbr{m}$-加群は
+ただ一つの $a\in\bbZ/p^{m+1}\bbZ$ に対する $(R,\nabla_a)$ に同型である。
+さらに
+\[
+  (R,\nabla_a)\otimes(R,\nabla_b)\cong(R,\nabla_{a+b}),\qquad
+  (R,\nabla_a)^\vee\cong(R,\nabla_{-a}),
+\]
+\[
+  \Hom\bigl((R,\nabla_a),(R,\nabla_b)\bigr)=
+  \begin{cases}
+    \{\mu_s\mid s\in R^{(m+1)}\} & (a=b),\\
+    0 & (a\neq b).
+  \end{cases}
+\]
+\end{proposition}
+
+$m=0$ のとき $a\in\bbZ/p=\bbF_p$ であり、
+$(R,\nabla_a)$ は \S\ref{ss:starting} の $\nabla=d+a'\dlog t$（$a'\in\bbF_p$）に対応する。
+補題 \ref{lem:toral} が与える「留数は $\bbF_p$ 値」がここで
+「exponent は $\bbZ/p$ 値」として再現される。
+
+\begin{definition}[exponent]\label{def:exponent}
+$(E,\nabla)$ を dormant $\Dbr{m}$-加群で $E$ が階数 $n$ の自由 $R$ 加群であるものとする。
+$t$ 進完備化は
+\[
+  \xi:(\widehat E,\widehat\nabla)\xrightarrow{\ \sim\ }
+  \bigoplus_{i=1}^n\bigl(k[\![t]\!],\widehat\nabla_{d_i}\bigr),
+  \qquad d_i\in\bbZ/p^{m+1}\bbZ
+\]
+と分解する。多重集合 $[d_1,\dots,d_n]$ を $(E,\nabla)$ の \textbf{exponent} とよぶ。
+\end{definition}
+
+\subsection{$p$ 進展開としてのレベル}
+
+次が本稿の描像の核心である。
+
+\begin{proposition}[{\cite[Rem.~3.3.3]{Wak}}]\label{prop:padic}
+$(E,\nabla)$ を dormant $\Dbr{m}$-加群、その exponent を $[d_1,\dots,d_n]$ とし、
+$\tilde d_i=\sum_{l=0}^{m}p^l\,\tilde d_{il}$（$0\le\tilde d_{il}<p$）を $p$ 進展開とする。
+$E^l:=\bigcap_{j=0}^{l-1}\operatorname{Ker}(\nabla_{\langle p^j\rangle})$、
+$\overline\nabla^l:=\nabla_{\langle p^l\rangle}|_{E^l}$ とおくと、
+$\breve\cD^{(0)}_{R^{(l)}}$-加群 $(E^l,\overline\nabla^l)$ のモノドロミーは対角化可能で、
+その固有値は
+\[
+  -\tilde d_{1l},\ \dots,\ -\tilde d_{nl} \pmod p
+\]
+である。
+\end{proposition}
+
+\begin{corollary}[レベル上昇 $=$ 桁の追加]\label{cor:lifting-local}
+局所的には、レベル $N$ の dormant 対象をレベル $N+1$ に持ち上げることは、
+exponent $d\in\bbZ/p^{N}\bbZ$ の
+$\bbZ/p^{N+1}\bbZ$ への持ち上げを選ぶことと同値であり、
+各分岐点で $p$ 通りの選択肢がある。特に\textbf{局所的な障害は存在しない}。
+\end{corollary}
+
+\begin{remark}\label{rem:res-zero}
+Wakabayashi \cite[Prop.~3.3.4]{Wak} により、次は同値である：
+(a) 留数 $\Res(\nabla):=\Coker(\tau^{\downarrow\uparrow(m+1)}_{(E,\nabla)})$ が消える；
+(b) exponent が $[0,\dots,0]$；
+(c) $(E,\nabla)$ が非対数的な $\cD^{(m)}_R$-加群から $\eta_R$ を通じて来る。
+すなわち\textbf{非対数的な理論とは exponent $=0$ の部分に他ならない}。
+系 \ref{cor:lifting-local} の $p^r$ 通りの自由度は、
+非対数的な世界では丸ごと消える。これが log と非 log の差の全てである。
+\end{remark}
+
+\subsection{cyclic vector と正則性}
+
+\begin{proposition}[{\cite[Prop.~3.4.1]{Wak}}]\label{prop:cyclic}
+dormant $\Dbr{m}$-加群 $(E,\nabla)$（$E$ は階数 $n$ の自由加群）に対し、
+$m$-cyclic vector が存在することと、
+exponent $d_1,\dots,d_n\in\bbZ/p^{m+1}\bbZ$ が互いに相異なることは同値である。
+\end{proposition}
+
+$m$-cyclic vector をもつ $\cD^{(m)}$-加群は局所的に $\mathrm{GL}_n$-oper に他ならない
+\cite[Prop.~4.2.3]{Wak}。
+したがって命題 \ref{prop:cyclic} は
+「oper $\Rightarrow$ 留数は正則」という古典的命題の高次レベル版である。
+$n=2$ の場合、$d_1\neq d_2$ は次節の $\rho\neq0$ に対応する。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{格子の取り替えと次数障害}\label{sec:lattice}
+
+\subsection{Hecke 変形は局所的には無力}
+
+\begin{lemma}\label{lem:hecke}
+$\nabla_\theta(x^{-n}f)=x^{-n}(\theta f+(a-n)f)$ より、
+$D$ に沿った格子の取り替えは exponent を $a\mapsto a-n$（$n\in\bbZ$）だけずらす。
+特にレベル $N$ では exponent は $\bbZ/p^N$ 全体を動きうる。
+\end{lemma}
+
+したがって階数 $1$ では、局所的に exponent を常に $0$ にできる。
+格子に依存しない不変量は $\nabla|_{X\setminus D}$ の同型類のみである。
+「持ち上がらない」ことを主張するには、
+\textbf{格子が剛的である}状況、すなわち oper のような構造が必要になる。
+
+\subsection{階数 $1$・曲線の場合の完全な答え}
+
+\begin{proposition}\label{prop:rank1curve}
+$X$ を固有滑らかな曲線、$D=\sum_{i=1}^r p_i$（$r\ge1$）、
+$(\cL,\nabla)$ を階数 $1$ の dormant 対数接続とする。
+このとき $(\cL,\nabla)$ は任意のレベルに持ち上がる。
+すなわち stratification をもつ。
+\end{proposition}
+
+\begin{proof}
+命題 \ref{prop:rank1} と系 \ref{cor:lifting-local} により、
+レベル $N$ をもつことは、ある直線束 $\cN$ と整数 $j_i$（$0\le j_i<p^N$、
+$j_i$ は与えられた exponent の持ち上げ）に対し
+\[
+  \cL\cong F^{(N)*}\cN\otimes\cO\Bigl(\sum_i j_i\,p_i\Bigr)
+\]
+と書けることと同値。次数をとると
+$\deg\cL=p^N\deg\cN+\sum_i j_i$、すなわち
+\[
+  \sum_i j_i\equiv\deg\cL \pmod{p^N} .
+\]
+$r\ge1$ なので $j_1$ を $\bmod\,p^N$ で自由に選べ、この合同式は解ける。
+残りは $\Pic^0(X)$ が $p$ 可除であること（$X$ は固有滑らかな曲線）から従う。
+\end{proof}
+
+\begin{remark}
+$r=0$ のときは $j_i$ の自由度が無く、
+$\deg\cL\equiv0\bmod p^N$ が必要になる。
+これが古典的な障害であり、次の例を与える。
+\end{remark}
+
+\begin{example}[ちょうどレベル $N$ の例、非対数]\label{ex:exactN}
+$X$ を種数 $\ge1$ の曲線、$D=\emptyset$、
+$\cM$ を $p\nmid\deg\cM$ なる直線束とし、$\cL:=F^{(N)*}\cM$（標準接続つき）とする。
+$\cL$ は dormant レベル $N$ であるが、
+$\deg\cL=p^N\deg\cM$ は $p^{N+1}$ で割れないのでレベル $N+1$ ではない。
+すなわち\textbf{ちょうどレベル $N$}である。
+\end{example}
+
+\subsection{一般の次数障害}
+
+\begin{proposition}[次数障害]\label{prop:degree}
+$(X,D)$ を $r$ 点付き固有滑らかな曲線（種数 $g$、$D=\sum_{i=1}^r\sigma_i$）とし、
+$(\cF,\nabla,\cL)$ を dormant レベル $N$ の $\mathrm{GL}_2$-oper とする。
+$\det\cF$ の exponent を $e_i\in\bbZ/p^N\bbZ$、
+$\tilde e_i\in[0,p^N)$ をその代表とすると
+\[
+  \det\cF\cong F^{(N)*}\cM\otimes\cO\Bigl(\sum_i\tilde e_i\,\sigma_i\Bigr)
+\]
+なる直線束 $\cM$ が存在し、
+\begin{equation}\label{eq:degcong}
+  \boxed{\ \sum_{i=1}^r\tilde e_i\equiv\deg\det\cF \pmod{p^N}\ }
+\end{equation}
+が成り立つ。さらに Kodaira--Spencer 同型により
+$\cL^{\otimes2}\cong\Omega^1_X(\log D)\otimes\det\cF$、
+したがって
+\[
+  2\deg\cL=(2g-2+r)+\deg\det\cF .
+\]
+\end{proposition}
+
+\begin{proof}
+$\det\cF$ は階数 $1$ の dormant $\Dlog{N-1}$-加群なので
+命題 \ref{prop:rank1} と remark \ref{rem:res-zero} により
+$\det\cF\otimes\cO(-\sum\tilde e_i\sigma_i)$ の留数が消え、
+命題 \ref{prop:nonlog} の大域版により $F^{(N)*}$ の像に入る。
+次数を取れば \eqref{eq:degcong} を得る。
+KS 同型は oper の定義から。
+\end{proof}
+
+\begin{corollary}[持ち上げの障害の所在]\label{cor:obstruction}
+レベル $N$ から $N+1$ への持ち上げは、
+各 $e_i$ を $\bbZ/p^{N+1}$ に持ち上げて \eqref{eq:degcong} を
+$\bmod\,p^{N+1}$ で満たすことに帰着する。
+\begin{itemize}[leftmargin=1.6em]
+\item $r\ge1$：$\tilde e_1$ の持ち上げだけで $\bmod\,p$ の自由度があるので、
+      合同式は常に解ける。
+\item $r=0$：自由度が無く、$\deg\det\cF\equiv0\bmod p^{N}$ が必要。
+      これが $\Pic$ の $p$ 可除性に関する障害を与える。
+\end{itemize}
+\end{corollary}
+
+\begin{remark}
+ただし \eqref{eq:degcong} は必要条件であって十分条件ではない。
+oper の存在にはさらに幾何的な条件（\S\ref{sec:opers} の三角不等式に相当するもの）
+が課される。$\sP=(\bbP^1;0,1,\infty)$ の場合には
+定理 \ref{thm:M03} でこれを完全に処理する。
+一般の $(g,r)$ で十分性を論じることは未解決である（\S\ref{sec:open}）。
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{$\mathrm{PGL}_2$-oper、radius、被覆}\label{sec:opers}
+
+\subsection{定義と radius}
+
+$\sX=(X,\{\sigma_i\}_{i=1}^r)$ を $r$ 点付き滑らかな曲線とする。
+
+\begin{definition}[{\cite[Def.~4.2.1, 4.2.5]{Wak}}]
+レベル $N$ の $\mathrm{GL}_2$-oper とは、
+$\Dlog{N-1}$-加群 $(\cF,\nabla)$（$\cF$ は階数 $2$）と直線部分束 $\cL\subset\cF$ の組で、
+合成
+\[
+  \cL\hookrightarrow\cF\xrightarrow{\ \overline\nabla\ }
+  \Omega_{X^{\log}}\otimes\cF\twoheadrightarrow\Omega_{X^{\log}}\otimes(\cF/\cL)
+\]
+が同型となるものをいう。
+$\mathrm{PGL}_2$-oper は、階数 $1$ の $\Dlog{N-1}$-加群による捻りを法とした同値類である。
+$p^N$-曲率が消えるとき dormant という。
+${}^N\Op^{\Zzz}_{2,\sX}$ で dormant $\mathrm{PGL}_2$-oper（レベル $N$）の集合を表す。
+\end{definition}
+
+\begin{definition}[radius, {\cite[Def.~4.3.2, Rem.~4.3.1]{Wak}}]
+$\sigma_i$ における exponent $[d_1,d_2]\subset\bbZ/p^N\bbZ$ の
+$\Delta$（対角）による類を radius とよぶ。$n=2$ のとき
+$a\mapsto[a,-a]$ により
+\[
+  \fS_2\backslash(\bbZ/p^N\bbZ)^{\times2}/\Delta\ \cong\ (\bbZ/p^N\bbZ)/\{\pm1\}
+\]
+と同一視し、$\rho_i=\tfrac12(d_1-d_2)\in(\bbZ/p^N\bbZ)/\{\pm1\}$ と書く。
+\end{definition}
+
+\begin{proposition}[{\cite[Rem.~4.3.3]{Wak}}, {\cite[Chap.~II, Prop.~1.4, 1.5]{Moc}}]
+\label{prop:radius-unit}
+$N=1$ のとき radius は $\bbF_p$ に属し、
+${}^1\Op^{\Zzz}_{2,\sX,\vec\rho}$ は
+$\rho_i\in\bbF_p^\times/\{\pm1\}$（すべての $i$）でない限り空である。
+\end{proposition}
+
+これは補題 \ref{lem:toral} と命題 \ref{prop:cyclic} の組み合わせでもある：
+$\psi=0$ より留数は半単純、oper より正則、
+ゆえに二つの指数は相異なり $\rho\in\bbF_p^\times$。
+
+\subsection{被覆との対応}
+
+\begin{theorem}[{\cite[Thm.~C]{Wak}}, $N=1$ は {\cite[Introduction, Thm.~1.3]{Moc}}]
+\label{thm:covering}
+$\sP=(\bbP^1;[0],[1],[\infty])$ とする。
+$\mathrm{Cov}^{\mathrm{tame}}_{\sP}$ を、
+分岐点の集合が $\{[0],[1],[\infty]\}$ に一致し、
+分岐指数 $\lambda_0,\lambda_1,\lambda_\infty$ がすべて奇数で
+$\lambda_0+\lambda_1+\lambda_\infty<2p^N$ を満たす
+有限・分離的・従順分岐被覆 $\phi:\bbP^1\to\bbP^1$ の
+（$\mathrm{PGL}_2(k)$ を左から合成する同値による）類の集合とする。
+このとき標準的な全単射
+\[
+  \Upsilon_{\sP}:\mathrm{Cov}^{\mathrm{tame}}_{\sP}
+  \xrightarrow{\ \sim\ }{}^N\Op^{\Zzz}_{2,\sP}
+\]
+があり、radius は $\bigl(\tfrac12\overline{\lambda_0},
+\tfrac12\overline{\lambda_1},\tfrac12\overline{\lambda_\infty}\bigr)$ の像に一致する。
+\end{theorem}
+
+\subsection{被覆側の初等的な言い換え}
+
+$p$-曲率が消えることは、$\cE^\nabla$ が $\cO_{X'}$ 上階数 $2$ であること、
+すなわち対応する $2$ 階線型微分方程式が
+$k(x)$ 内に $k(x^p)$ 上一次独立な解 $y_1=f$, $y_2=g$ をもつことと同値である。
+このとき $\phi=f/g$ が定理 \ref{thm:covering} の被覆であり、
+Wronskian $W=f'g-fg'$ が $\phi'=W/g^2$ を通じて分岐を支配する：
+\begin{equation}\label{eq:wronskian}
+  \operatorname{ord}_{x_0}W=\lambda_{x_0}-1,\qquad
+  \deg W=2d-2-(\lambda_\infty-1),\qquad d=\deg\phi .
+\end{equation}
+Riemann--Hurwitz から $\sum_x\lambda_x=2d+1$、したがって
+$\lambda_{x}\le d$ は
+\begin{equation}\label{eq:triangle}
+  \lambda_0<\lambda_1+\lambda_\infty
+  \quad\text{（および巡回置換）}
+\end{equation}
+と同値である。すなわち\textbf{厳密三角不等式は被覆の次数条件に他ならない}。
+
+\subsection{数え上げ}
+
+\begin{lemma}\label{lem:lambda-unique}
+$p^N$ は奇数なので、$0<a<p^N$ なる $a$ に対し $\{a,p^N-a\}$ のちょうど一方が奇数である。
+したがって radius $\rho\in(\bbZ/p^N\bbZ)^\times/\{\pm1\}$ に対し、
+$\lambda\equiv\pm2\rho\pmod{p^N}$、$\lambda$ 奇数、$0<\lambda<p^N$
+なる $\lambda$ は一意に定まる。
+\end{lemma}
+
+\begin{proposition}\label{prop:count}
+\[
+  \#\,{}^N\Op^{\Zzz}_{2,\sP}
+  =\#\Bigl\{(\lambda_0,\lambda_1,\lambda_\infty)\ \Big|\
+  \begin{array}{l}
+  \lambda_x\ \text{奇数},\ 0<\lambda_x<p^N,\ p\nmid\lambda_x,\\[2pt]
+  \text{\eqref{eq:triangle} の三角不等式},\ \sum_x\lambda_x<2p^N
+  \end{array}\Bigr\} .
+\]
+特に $N=1$ のとき
+\begin{equation}\label{eq:count1}
+  \#\,{}^1\Op^{\Zzz}_{2,\sP}=\frac{p(p^2-1)}{24}
+  =\frac{|\mathrm{PSL}_2(\bbF_p)|}{12} .
+\end{equation}
+\end{proposition}
+
+\begin{proof}[証明（の概略）]
+前半は定理 \ref{thm:covering} と補題 \ref{lem:lambda-unique}。
+後半：$N=1$ のとき $\lambda_x$ は $(0,p)$ 内の奇数（$p\nmid\lambda_x$ は自動）。
+三角不等式から $2\lambda_0<\sum\lambda_x<2p$ すなわち $\lambda_x<p$ は自動的に満たされる。
+$\lambda_x=2m_x+1$、$0\le m_x\le(p-3)/2$ と置き、
+$n:=(p-1)/2$ とすると、条件は
+$m_x\le m_y+m_z$（巡回）かつ $\sum m_x\le n-1$ 相当に翻訳され、
+数え上げは四角錐数 $n(n+1)(2n+1)/6=p(p^2-1)/24$ を与える。
+\Todo{この組合せ論的同一視をきちんと書く。現状は下表の数値実験による確認。}
+\end{proof}
+
+\begin{table}[htbp]
+\centering
+\caption{命題 \ref{prop:count} の数値確認（計算機による直接列挙）}
+\label{tab:count}
+\begin{tabular}{lrrrrr}
+\toprule
+$p$ & 3 & 5 & 7 & 11 & 13\\
+\midrule
+$\#\,{}^1\Op^{\Zzz}_{2,\sP}$（列挙）& 1 & 5 & 14 & 55 & 91\\
+$p(p^2-1)/24$ & 1 & 5 & 14 & 55 & 91\\
+\midrule
+$\#\,{}^2\Op^{\Zzz}_{2,\sP}$（列挙）& --- & 610 & 2262 & --- & ---\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}
+$N=2$ の個数には $p\nmid\lambda_x$ の条件が効くため、
+\eqref{eq:count1} で $p\to p^N$ と置き換えた式にはならない
+（$p=5$：$25\cdot624/24=650\neq610$、差 $40$）。
+閉じた公式は未解決（\S\ref{sec:open}）。
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{$p=5$ の明示計算}\label{sec:p5}
+
+$p=5$、$\sP=(\bbP^1;0,1,\infty)$ とする。
+$\bbF_5^\times/\{\pm1\}=\{[1],[2]\}$ であり、
+$\lambda\mapsto\rho=\lambda/2=3\lambda$ により
+$\lambda=1\mapsto[2]$、$\lambda=3\mapsto[1]$。
+$(0,5)$ 内の奇数は $1,3$ のみなので、
+条件 \eqref{eq:triangle} と $\sum\lambda_x<10$ を満たす三つ組は
+\[
+  (1,1,1),\quad(3,1,3),\quad(1,3,3),\quad(3,3,1),\quad(3,3,3)
+\]
+の $5$ 個である。除外されるのは $(1,1,3)$ 型（$3<1+1$ に反する）。
+radius 三つ組 $8$ 通りのうち $(2,2,1)$, $(2,1,2)$, $(1,2,2)$ は実現されない。
+
+\begin{table}[htbp]
+\centering
+\caption{$p=5$ における dormant $\mathrm{PGL}_2$-oper の完全リスト（レベル $1$）}
+\label{tab:p5}
+\small
+\begin{tabular}{clcclc}
+\toprule
+\# & $(\lambda_0,\lambda_1,\lambda_\infty)$ & $(\rho_0,\rho_1,\rho_\infty)$ & $d$
+   & 被覆 $\phi$ / ODE & ${}_2F_1(a,b;c)$\\
+\midrule
+1 & $(1,1,1)$ & $(2,2,2)$ & 1 & $\phi=x$;\quad $y''=0$ & $(4,0;0)$\\[2pt]
+2 & $(3,1,3)$ & $(1,2,1)$ & 3 & $\phi=x^3$;\quad $xy''-2y'=0$ & ---\\[2pt]
+3 & $(1,3,3)$ & $(2,1,1)$ & 3 & $\phi=(x-1)^3$;\quad $(x-1)y''-2y'=0$ & ---\\[2pt]
+4 & $(3,3,1)$ & $(1,1,2)$ & 3 & $\phi=\dfrac{x^3}{(x-1)^3}$;\quad
+      $x(x-1)y''+(x+2)y'+y=0$ & $(2,3;3)$\\[8pt]
+5 & $(3,3,3)$ & $(1,1,1)$ & 4 & $\phi=\dfrac{x^3(2x+1)}{x+2}$;\quad
+      $x(x-1)y''+(x+2)y'+4y=0$ & $(1,4;3)$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{\#5 の構成（詳細）}\label{ss:no5}
+
+$\lambda=(3,3,3)$、$d=4$。\eqref{eq:wronskian} より $W=c\,x^2(x-1)^2$（次数 $4$）で、
+$2d-2=6$ からの次数落ち $2$ が $\lambda_\infty-1=2$ に対応する。
+$\infty$ での指数が $3$ なので $\deg f=4$, $\deg g=1$。
+$g=x-t$、$f=\sum_{i=0}^4a_ix^i$ とおくと
+\[
+  W=f'g-fg'=\sum_i(i-1)a_ix^i-t\sum_i ia_ix^{i-1} .
+\]
+係数比較（$\bbF_5$）：
+\[
+  \begin{array}{ll}
+  x^4:&3a_4=c\\
+  x^3:&2a_3-4ta_4=-2c/3\\
+  x^2:&a_2-3ta_3=c/3\\
+  x^1:&-2ta_2=0\\
+  x^0:&-a_0-ta_1=0 .
+  \end{array}
+\]
+$a_4=2$（よって $c=6=1$）と正規化する。
+$x^1$ の式から $t=0$ または $a_2=0$。$t=0$ は $g$ の零点が分岐点 $x=0$ と衝突するので
+$a_2=0$ を採る。$x^3$ の式から $a_3=4-t$、
+$x^2$ の式 $-3ta_3=1$ に代入して
+\[
+  t(4-t)=3\ \Longleftrightarrow\ t^2-4t+3=(t-1)(t-3)=0 .
+\]
+$t=1$ は分岐点 $x=1$ と衝突するので $t=3$、$a_3=1$。
+$a_1$ は $f\mapsto f+a_1g$（$=\phi\mapsto\phi+a_1$、Möbius）の自由度なので $a_1=a_0=0$。
+よって
+\[
+  f=2x^4+x^3,\qquad g=x+2 .
+\]
+検算：$f'=3x^3+3x^2$、
+\[
+  W=(3x^3+3x^2)(x+2)-(2x^4+x^3)=x^4+3x^3+x^2=x^2(x-1)^2 .\quad\checkmark
+\]
+
+微分方程式は
+$\det\bigl(\begin{smallmatrix}y&f&g\\ y'&f'&g'\\ y''&f''&g''\end{smallmatrix}\bigr)=0$、
+すなわち
+\[
+  (fg'-f'g)\,y''+(f''g-fg'')\,y'+(f'g''-f''g')\,y=0 .
+\]
+$f''=4x^2+x$、$g''=0$ より係数はそれぞれ
+$4x^2(x-1)^2$、$4x(x-1)(x+2)$、$x(x-1)$。
+$x(x-1)$ で割り $4$ 倍して
+\[
+  x(x-1)y''+(x+2)y'+4y=0 .
+\]
+検算：$y=x+2$ で $(x+2)+4(x+2)=5(x+2)=0$；
+$y=2x^4+x^3$ で $5x^4+5x^3=0$。\quad$\checkmark$
+
+超幾何形 $x(1-x)y''+[c-(a+b+1)x]y'-aby=0$ と比較すると
+$c=3$、$a+b=0$、$ab=4$、すなわち $(a,b,c)=(1,4;3)$。
+指数は $0$ で $\{0,1-c\}=\{0,3\}$、$1$ で $\{0,c-a-b\}=\{0,3\}$、
+$\infty$ で $\{a,b\}=\{1,4\}$（差 $3$）。
+三点とも指数差 $3$、すなわち $\lambda=(3,3,3)$。\quad$\checkmark$
+
+\subsection{\#4 の構成}
+
+$\phi=x^3/(x-1)^3$、$f=x^3$、$g=(x-1)^3$。
+$W=3x^2(x-1)^3-3x^3(x-1)^2=-3x^2(x-1)^2=2x^2(x-1)^2$、
+$\deg W=4=2d-2$ より $\infty$ では不分岐（$\lambda_\infty=1$）。
+同様の計算で
+\[
+  x(x-1)y''+(x+2)y'+y=0,\qquad (a,b,c)=(2,3;3),
+\]
+指数は $0,1$ で差 $3$、$\infty$ で $\{2,3\}$（差 $1$）。
+すなわち $\lambda=(3,3,1)$。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{$\sP$ 上には反例が存在しない}\label{sec:M03}
+
+\begin{theorem}\label{thm:M03}
+$\sP=(\bbP^1;0,1,\infty)$ とする。
+$\cD^{(N-1)}\subset\cD^{(N)}$ による制限写像
+\[
+  \mathrm{res}_N:\ {}^{N+1}\Op^{\Zzz}_{2,\sP}\longrightarrow{}^{N}\Op^{\Zzz}_{2,\sP}
+\]
+は全射である。特に $\sP$ 上のすべての dormant $\mathrm{PGL}_2$-oper は
+任意に高いレベルに持ち上がり、stratification に延びる。
+\end{theorem}
+
+\begin{proof}
+定理 \ref{thm:covering} により、レベル $N$ の対象は
+「$\lambda_x$ 奇数、$p\nmid\lambda_x$、三角不等式 \eqref{eq:triangle}、
+$\sum\lambda_x<2p^N$」を満たす三つ組と一対一に対応する。
+制限写像は radius を $\bmod\,p^N$ に落とす、
+すなわち補題 \ref{lem:lambda-unique} により
+$\lambda'\mapsto$「$\pm\lambda'$ の $(0,p^N)$ 内の奇代表」を与える。
+レベル $N$ で許容な $(\lambda_0,\lambda_1,\lambda_\infty)$ に対し、
+$\lambda'_x:=\lambda_x$ とおけば
+$\sum\lambda'_x<2p^N<2p^{N+1}$ であり、
+他の条件も不変なのでレベル $N+1$ で許容であり、
+かつ $\mathrm{res}_N$ で元に戻る。
+\end{proof}
+
+\begin{example}
+表 \ref{tab:p5} の \#5（$\lambda=(3,3,3)$）のレベル $2$ への持ち上げ先は、
+$\lambda'_x\equiv\pm3\pmod5$、$\lambda'_x$ 奇数、$5\nmid\lambda'_x$、$0<\lambda'_x<25$
+から $\lambda'_x\in\{3,13,23\}\cup\{7,17\}$ を選び、
+三角不等式と $\sum\lambda'_x<50$ を満たすものすべて。
+$\lambda'=(3,3,3)$（すなわち同じ被覆）が常に候補となる。
+\end{example}
+
+\begin{remark}
+定理 \ref{thm:M03} は系 \ref{cor:obstruction} の $r\ge1$ の場合の
+完全な実現である。命題 \ref{prop:rank1curve}（階数 $1$）と合わせ、
+\textbf{対数構造（marked point）は持ち上げの障害を消す方向に働く}
+という本稿の主張を支持する。
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{反例族のリストと分類}\label{sec:list}
+
+\begin{table}[htbp]
+\centering
+\caption{反例および非反例の一覧}
+\label{tab:examples}
+\small
+\begin{tabular}{clllcl}
+\toprule
+\# & $(X,D)$ & 対象 & exponent/radius & 最大レベル & 障害の型\\
+\midrule
+1 & $(\bbP^1,\{0,\infty\})$ & $(\cO,d+a\,\dlog x)$, $a\in\bbF_p^\times$
+  & $a\in\bbZ/p$ & $\infty$ & なし（命題 \ref{prop:rank1curve}）\\[2pt]
+2 & 同上 & $a\in k\setminus\bbF_p$ & --- & $0$ & Artin--Schreier \eqref{eq:AS}\\[2pt]
+3 & $(\bbA^1,\{0\})$ & $\nabla_\theta=\theta+N$, $N$ 冪零 $\neq0$
+  & --- & $0$ & 留数の冪零成分（系 \ref{cor:nilpotent}）\\[2pt]
+4 & $g\ge1$, $D=\emptyset$ & $\cL=F^{(N)*}\cM$, $p\nmid\deg\cM$
+  & $0$ に強制 & ちょうど $N$ & $\Pic$ の非 $p$ 可除性（例 \ref{ex:exactN}）\\[2pt]
+5 & $(\bbP^1;0,1,\infty)$, $p=5$ & 表 \ref{tab:p5} の $5$ 個
+  & $\lambda=(3,3,3)$ 等 & $\infty$ & \textbf{なし}（定理 \ref{thm:M03}）\\[2pt]
+6 & $g\ge2$, $r=0$ & dormant $\mathrm{PGL}_2$-oper（$F^N$-射影構造）
+  & --- & \textbf{未決定} & 系 \ref{cor:obstruction} の $r=0$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{proposition}[反例が存在しないための十分条件]\label{prop:sufficient}
+次のいずれかが成り立つとき、dormant 対象は任意のレベルに持ち上がる。
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item 階数 $1$、$X$ 固有滑らかな曲線、$r\ge1$（命題 \ref{prop:rank1curve}）。
+\item $\mathrm{PGL}_2$-oper、$(g,r)=(0,3)$（定理 \ref{thm:M03}）。
+\item 留数が冪単：系 \ref{cor:nilpotent} により $\Res=0$ となり、
+      非対数的な理論に帰着する（remark \ref{rem:res-zero}）。
+\end{enumerate}
+\end{proposition}
+
+\begin{remark}[当初の予想の訂正]
+本研究の出発点では
+「対数格子の取り替え（$D$ での Hecke 変形）で回避できないことを示す」
+ことが目標であった。
+しかし補題 \ref{lem:hecke} と命題 \ref{prop:rank1curve} が示すとおり、
+階数 $1$ ではむしろ\textbf{常に回避できる}。
+反例の存在には格子の剛性（oper 構造）と、
+系 \ref{cor:obstruction} が要求する $r=0$ という条件の両方が必要である。
+\end{remark}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{非可換 Hodge 対応との関係}\label{sec:NAHT}
+
+命題 \ref{prop:padic} の構造は、
+$\psi=0$ なる対数接続が $(\bbZ/p)^r$-次数付き $\cO_X$ 加群、
+すなわち $\mu_p^r$-同変層として記述されることを意味する。
+実際、$\nabla_{\theta_i}^{\,p}=\nabla_{\theta_i}$（補題 \ref{lem:toral}）から
+固有分解 $\cE=\bigoplus_{a\in(\bbZ/p)^r}\cE_a$ が得られ、
+$\nabla_{\theta_i}(x_ie)=x_i(\nabla_{\theta_i}+1)e$ より
+$x_i$ は次数 $e_i$ をもつ。
+
+\begin{conjecture}[root stack による Cartier 降下]\label{conj:rootstack}
+$\mathcal{X}'_N:=\sqrt[p^N]{(X^{(N)},D^{(N)})}$（root stack）とおくと、
+自然な log étale 射 $\widetilde F^{(N)}:X\to\mathcal{X}'_N$ が存在し、
+\[
+  \widetilde F^{(N)*}:\ \mathrm{QCoh}(\mathcal{X}'_N)
+  \xrightarrow{\ \sim\ }\bigl\{\text{dormant レベル }N\text{ の }\Dlog{N-1}\text{-加群}\bigr\}
+\]
+が圏同値を与える。特に
+$\widetilde F^{(N)*}\Omega^1_{\mathcal{X}'_N}(\log)\cong\Omega^1_X(\log D)$
+であり（素朴な $F^*$ と異なり零にならない）、oper 構造は $\widetilde F^{(N)*}$ で保たれる。
+\end{conjecture}
+
+命題 \ref{prop:rank1} は予想 \ref{conj:rootstack} の階数 $1$・局所版であり、
+$\cO(-\tilde a\,\mathcal{D})$（$\mathcal{D}$ は $p^N\mathcal{D}=D^{(N)}$ なる普遍因子）
+の引き戻しが $(R,\nabla_a)$ に対応する。
+
+この定式化は文献上、Lorenzon--Montagnon の
+\emph{indexed algebra} $A^{gp}_X$, $\mathcal{B}^{(m+1)}_{X/S}$ として
+既に与えられていると思われる。
+Ohkawa \cite{Ohk} は、$X'\to S$ の $\bmod\,p^2$ 持ち上げの下で
+$\cD^{(m)}$-作用つき indexed $A^{gp}_X$-加群と
+Higgs 場つき indexed $\mathcal{B}^{(m+1)}_{X/S}$-加群の圏同値を構成しており、
+これは Ogus--Vologodsky \cite{OV} と Schepler \cite{Sch} の結果のレベル $m$ 版である。
+\Todo{予想 \ref{conj:rootstack} が Ohkawa の定理の言い換えに過ぎないのか、
+それとも独立な主張なのかを確定する。}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{未解決問題}\label{sec:open}
+
+\begin{question}[本命：$r=0$ の場合]\label{q:main}
+種数 $g\ge2$ の非点付き曲線上で、
+$F^1$-射影構造であって $F^2$-射影構造に持ち上がらないものを構成せよ。
+系 \ref{cor:obstruction} は $r=0$ で自由度が消えることを示しているが、
+実際に $\mathrm{res}_1$ が非全射となる $(g,p)$ を特定する必要がある。
+$F^N$-射影構造の個数公式（Joshi--Vologodsky 型、Hoshi, Wakabayashi）を
+比較し $|{}^2\Op|<|{}^1\Op|$ となる場合を探すのが最短と思われる。
+\end{question}
+
+\begin{question}[次数障害の十分性]
+命題 \ref{prop:degree} の合同式 \eqref{eq:degcong} は必要条件である。
+$g\ge1$, $r\ge1$ において、これが（適当な安定性の下で）十分条件となるか。
+$(g,r)=(0,3)$ では定理 \ref{thm:M03} が肯定的に答える。
+\end{question}
+
+\begin{question}[レベル $N$ の数え上げ公式]
+$\#\,{}^N\Op^{\Zzz}_{2,\sP}$ の閉じた公式を求めよ。
+$N=1$ では $p(p^2-1)/24$（命題 \ref{prop:count}）。
+$N=2$, $p=5$ では $610$、$p=7$ では $2262$（表 \ref{tab:count}）。
+$p\nmid\lambda_x$ の条件が包除原理的な補正項を生む。
+\end{question}
+
+\begin{question}[高次元]
+$D$ が SNC のとき exponent は $(\bbZ/p^N)^r$ に値をとる。
+交差 $D_i\cap D_j$ における両立条件が新しい障害を生むか。
+Ohkawa の indexed algebra の枠組みで定式化できるはず。
+\end{question}
+
+\begin{question}[一般 $(G,P)$]
+radius は $\mu_{p^N}\to T$ の $W$-共役類として定義されるべきである。
+$\pi_1(G)$ の $p$-捩れが命題 \ref{prop:degree} の次数障害に相当するものを与えるか。
+$\mathrm{PGL}_n$ では $\pi_1=\bbZ/n$ であり、$\gcd(n,p)$ による場合分けが予想される。
+\end{question}
+
+\begin{question}[中間領域]
+系 \ref{cor:nilpotent} により、dormant な世界（留数 toral）と
+nilpotent indigenous bundle の世界（留数冪単）は交わらない。
+$p^N$-曲率が冪零だが非零であるクラスに、両者を繋ぐ構造があるか。
+\end{question}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+\section{規約の対照表}
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{lll}
+\toprule
+& Berthelot & Wakabayashi \cite{Wak}（本稿）\\
+\midrule
+作用素環 & $\cD^{(m)}$ & 「レベル $N$」$=\cD^{(N-1)}$\\
+曲率 & $p^{m+1}$-曲率 $\nabla_{\langle p^{m+1}\rangle}$ & 「$p^N$-曲率」\\
+dormant & $p^{m+1}$-曲率 $=0$ & 「dormant レベル $N$」\\
+非対数での意味 & $F^{(m+1)*}$ の像 & $F^{(N)*}$ の像\\
+radius の値域 & --- & $(\bbZ/p^N\bbZ)^\times/\{\pm1\}$（$n=2$）\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{thebibliography}{99}
+
+\bibitem{Ber1} P.~Berthelot,
+\emph{$\mathcal{D}$-modules arithmétiques.\ I.\ Opérateurs différentiels de niveau fini},
+Ann.\ Sci.\ École Norm.\ Sup.\ (4) \textbf{29} (1996), 185--272.
+
+\bibitem{Ber2} P.~Berthelot,
+\emph{$\mathcal{D}$-modules arithmétiques.\ II.\ Descente par Frobenius},
+Mém.\ Soc.\ Math.\ Fr.\ (N.S.) \textbf{81} (2000).
+
+\bibitem{Kat} N.~Katz,
+\emph{Nilpotent connections and the monodromy theorem: applications of a result of Turrittin},
+Publ.\ Math.\ IHÉS \textbf{39} (1970), 175--232.
+
+\bibitem{Moc} S.~Mochizuki,
+\emph{Foundations of $p$-adic Teichmüller theory},
+AMS/IP Studies in Advanced Mathematics \textbf{11}, AMS, 1999.
+
+\bibitem{Mon} C.~Montagnon,
+\emph{Généralisation de la théorie arithmétique des $\mathcal{D}$-modules à la géométrie logarithmique},
+Thèse, Université de Rennes I, 2002.
+
+\bibitem{Ohk} S.~Ohkawa,
+\emph{On logarithmic nonabelian Hodge theory of higher level in characteristic $p$},
+Rend.\ Sem.\ Mat.\ Univ.\ Padova \textbf{134} (2015), 47--91.
+
+\bibitem{Ohk2} S.~Ohkawa,
+\emph{On log local Cartier transform of higher level in characteristic $p$},
+arXiv:1410.0535.
+
+\bibitem{OV} A.~Ogus and V.~Vologodsky,
+\emph{Nonabelian Hodge theory in characteristic $p$},
+Publ.\ Math.\ IHÉS \textbf{106} (2007), 1--138.
+
+\bibitem{Oss} B.~Osserman,
+\emph{Frobenius-unstable bundles and $p$-curvature},
+Trans.\ Amer.\ Math.\ Soc.\ \textbf{360} (2008), 273--305.
+\Todo{正確な巻号を確認}
+
+\bibitem{Sch} D.~Schepler,
+\emph{Logarithmic nonabelian Hodge theory in characteristic $p$},
+arXiv:0802.1977.
+
+\bibitem{Wak} Y.~Wakabayashi,
+\emph{Differential modules and dormant opers of higher level},
+arXiv:2201.11266.
+
+\bibitem{Wak2} Y.~Wakabayashi,
+\emph{Arithmetic liftings and 2d TQFT for dormant opers of higher level},
+arXiv:2209.08528.
+
+\bibitem{Wak3} Y.~Wakabayashi,
+\emph{A theory of dormant opers on pointed stable curves},
+Astérisque \textbf{432} (2022).
+
+\end{thebibliography}
+
+\end{document}
