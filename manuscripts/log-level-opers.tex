@@ -1,11 +1,25 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  正標数 log parabolic geometry における有限レベル現象
-%  作業ドラフト  ver.0.3
+%  作業ドラフト  ver.0.4
 %
 %  コンパイル: lualatex (ltjsarticle)
 %  ※ upLaTeX を使う場合は documentclass を
 %     \documentclass[uplatex,dvipdfmx,a4paper,11pt]{jsarticle}
 %     に差し替える。
+%
+%  変更履歴
+%  --------
+%  ver.0.4 (2026-09-06):
+%    * \S6 の数え上げを Wakabayashi の集合 {}^\dagger C_N ベースに全面改訂。
+%    * \S6 の N=2 の数値を訂正（前稿 ver.0.3 の 610 / 2262 は誤りかつ未検証。
+%      正しい値 225 / 1666 等を computations/count_dagger_C.py で再検証）。
+%    * \S8 を「持ち上げの障害は行列式に尽きる」に再編。
+%      thm:M03, cor:general を「仮定 (W10.3)」つきの条件付き定理に変更
+%      （Wakabayashi Prop. 10.3.3 未確認 = L2 の穴を明示）。
+%      thm:det, cor:pi1（障害の det 局在）を追加。
+%    * 付録 A（訂正の履歴）、付録 B（文献確認事項）を追加。
+%    * ステータスマクロ \GAP, \NeedsCheck を追加。
+%  詳細な地位区分は下の「主張の地位について」を参照。
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[a4paper,11pt]{ltjsarticle}
@@ -33,9 +47,16 @@
 \newtheorem{question}[theorem]{問題}
 
 % ステータスタグ（清書時に削除する）
+%   \Todo       : 今後行う作業一般
+%   \GAP        : 数学的な証明の穴（仮定を追加しても閉じないもの）
+%   \NeedsCheck : 文献・計算・定義等の確認待ち
+%   \Unver      : 現時点で未検証の主張
+%   \Known      : 既知または確認済み事項
 \newcommand{\Known}[1]{\marginpar{\footnotesize\textsf{[既知: #1]}}}
 \newcommand{\Todo}[1]{\textcolor{red}{\textsf{[TODO: #1]}}}
 \newcommand{\Unver}{\textsf{[未検証]}}
+\newcommand{\GAP}[1]{\textcolor{orange!85!black}{\textsf{[GAP: #1]}}}
+\newcommand{\NeedsCheck}[1]{\textcolor{blue!70!black}{\textsf{[要確認: #1]}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 記号 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -70,13 +91,24 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{正標数における対数的レベル理論と\\有限レベル現象の反例族について\\
-\large ---- 作業ドラフト ver.\,0.3 ----}
+\title{正標数における対数的レベル理論と\\有限レベル現象および持ち上げ障害の局在について\\
+\large ---- 作業ドラフト ver.\,0.4 ----}
 \author{}
 \date{\today}
 
 \begin{document}
 \maketitle
+
+\begin{quote}\small\sffamily
+\textbf{主張の地位について.}\ 本稿は作業ドラフトであり、主張の地位を次のように区別する。
+\emph{[文献]}：外部文献の結果（証明は追っていない。原論文 PDF を直接確認していない
+ものは \NeedsCheck{} で示す）。
+\emph{[本研究・定理]}：本稿で完全な証明を与えたもの。
+\emph{[本研究・条件付き定理]}：明示した仮定のもとで完全な証明を与えたもの。
+\emph{[本研究・部分証明]}：証明の骨格はあるが穴を自覚しているもの（\GAP{} で示す）。
+\emph{[予想]}：証拠はあるが証明がないもの。
+数値は計算機で実際に実行した結果のみを確定値として記す（付録 \ref{app:num}）。
+\end{quote}
 
 \begin{abstract}
 $k$ を標数 $p>0$ の代数閉体、$(X,D)$ を $k$ 上の log smooth pair とする。
@@ -92,10 +124,16 @@ dormant 加群（$p^{m+1}$-曲率が消える加群）について、
 (2) 3点付き射影直線 $\sP=(\bbP^1;0,1,\infty)$ 上では
 dormant $\mathrm{PGL}_2$-oper の個数はレベル $N=1$ で $p(p^2-1)/24$ であり
 （命題 \ref{prop:count}）、
-かつ制限写像 ${}^{N+1}\Op\to{}^{N}\Op$ は常に全射である（定理 \ref{thm:M03}）。
-すなわち $\sP$ 上には反例が存在しない。
-(3) 反例は marked point が無い場合（$D=\emptyset$）に集中し、
-そこでは $\Pic$ の $p$ 可除性が障害となる。
+かつ Wakabayashi の径数付けとレベル降下の両立性（仮定 (W10.3)、本稿では未確認）
+のもとで制限写像 ${}^{N+1}\Op\to{}^{N}\Op$ は全射である（定理 \ref{thm:M03}）。
+すなわちこの仮定のもとで $\sP$ 上には反例が存在しない。
+(3) 同じ仮定のもと、totally degenerate な曲線上でも制限写像は全射であり
+（系 \ref{cor:general}）、その範囲では $(g,r)$ によらず
+「ちょうどレベル $N$」の $\mathrm{PGL}_2$-oper 反例は存在しない。
+持ち上げの障害は行列式束に局在すると考えられ
+（定理 \ref{thm:det}、ただし $p\mid n$ の場合は未解決）、
+$\pi_1(G)$ が $p$ 群を含まなければ $\Pic(X)/p^N$ の障害に帰着する（系 \ref{cor:pi1}）。
+一般の smooth 曲線での全射性は未解決である（\S\ref{sec:open}）。
 $p=5$ における dormant $\mathrm{PGL}_2$-oper 5 個の完全な明示リストを与える（\S\ref{sec:p5}）。
 \end{abstract}
 
@@ -111,7 +149,7 @@ $X$ 上の平坦接続 $(\cE,\nabla)$ に対し、
 その $p$-曲率 $\psi_{(\cE,\nabla)}$ が消えることは
 Cartier 降下により $(\cE,\nabla)\cong F^{*}(\cE')$（標準接続つき）と同値である。
 さらに $\cE'$ 上の接続を選び直して降下を繰り返すことができるかを問うと、
-Berthelot の有限レベル微分作用素環の増大列
+Berthelot \cite{Ber1} の有限レベル微分作用素環の増大列
 \[
   \cD^{(0)}_X\to\cD^{(1)}_X\to\cdots\to\cD^{(m)}_X\to\cdots,
   \qquad \varinjlim_m\cD^{(m)}_X=\cD^{(\infty)}_X
@@ -162,7 +200,17 @@ toral 性 \eqref{eq:toral} の直接の帰結であり、
 すなわち $F^*\Omega^1_{X'}(\log D')\to\Omega^1_X(\log D)$ は零写像である。
 したがって素朴な Frobenius 引き戻しは留数 $0$ の対象しか生まない。
 $a\neq0$ なる \eqref{eq:AS} の対象は $p$-曲率が消えるにもかかわらず
-$F^*$ の像には入らない。ここに「有限レベル／無限レベル」の分岐の芽がある。
+素朴な $F^*$ の像には入らない。ここに「有限レベル／無限レベル」の分岐の芽がある。
+
+\begin{remark}[当初の解釈の訂正]\label{rem:early-misread}
+本研究の初期には、この観察を「対数的な場合には『$\cD^{(1)}$-作用の存在』と
+『$p$-曲率 $0$』が乖離する」と解釈していた。これは誤りであり、
+素朴な $F^*$ と $\cD^{(1)}$-加群構造への持ち上げの混同であった。
+実際には $a\in\bbF_p^\times$ の対象も $\cD^{(1)}$-加群として持ち上がる
+（注意 \ref{rem:binom}）。すなわち上の非包含は「素朴な $F^*$ の像に入らない」
+というだけの主張であって、レベル上昇の障害ではない。
+訂正の経緯は付録 \ref{app:errata} を参照。
+\end{remark}
 
 \subsection{本稿の結論の要約}
 
@@ -202,6 +250,21 @@ $p^{m+1}$-曲率が $p^{m-l+1}$-曲率に対応する \cite[Prop.~2.1.5]{Wak} �
 \textbf{本稿では Wakabayashi 流に統一する。}
 すなわち「レベル $N$」は $\cD^{(N-1)}$-作用を指し、
 「dormant」は $p^N$-曲率の消滅を指す。
+
+\begin{remark}[規約の照合状況]\label{rem:conv-status}
+「レベル $N$ $=$ $\cD^{(N-1)}$」という対応は Wakabayashi \cite[\S4.2]{Wak}
+の記述と照合した（2026-09-03）。ただしこの照合は ar5iv 経由の二次的なものであり、
+原論文 PDF を直接目視したものではない
+（\texttt{handoff/app-session-2026-09-03.md} \S0.3）。
+Berthelot \cite{Ber1} の原論文における $\cD^{(m)}$ の定義そのもの
+（$\partial^{[j]}$ が $\cD^{(m)}$ に属する $j$ の範囲が $j<p^{m+1}$ か否か）、
+および正標数 $\bbZ_p$ 値留数・logarithmic holonomy の各研究で用いられる規約
+との関係は、本稿では確定していない。
+詳細は \texttt{notes/topics/00-common/conventions.tex}（C-1, C-1a, C-2）。
+本稿は他テーマの規約をここで採用・統一しない。
+\NeedsCheck{\cite[\S1.1--1.2]{Ber1} の $\cD^{(m)}$ の定義（本稿では未確認。
+付録 \ref{app:litcheck}）。}
+\end{remark}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{記号と準備}\label{sec:notation}
@@ -313,6 +376,12 @@ dormant な世界では\textbf{半単純の場合しか存在しない}という
 
 本節の内容は Wakabayashi \cite[\S2--3]{Wak} による。
 本稿の視点からの再解釈を加えて述べる。
+以下で引用する主張のうち「レベル $m$ $\leftrightarrow$ $p^{m+1}$-曲率」
+（\cite[Def.~2.1.3]{Wak}）、「dormant なレベル $m$ $\iff$ $m+1$ 回 Frobenius 降下」
+（\cite[Cor.~2.1.6]{Wak}）、「exponent は $\bbZ/p^{m+1}\bbZ$ に値をとる」
+（\cite[Def.~3.3.1]{Wak}）は \texttt{handoff/app-session-2026-09-03.md} \S4 で
+一次資料と照合されている。ただしこの照合は ar5iv 経由の二次確認であり
+（同 \S0.3）、原論文の直接確認は付録 \ref{app:litcheck} の項目として残る。
 
 \subsection{非対数の場合との対比}
 
@@ -460,6 +529,13 @@ $r\ge1$ なので $j_1$ を $\bmod\,p^N$ で自由に選べ、この合同式は
 残りは $\Pic^0(X)$ が $p$ 可除であること（$X$ は固有滑らかな曲線）から従う。
 \end{proof}
 
+\begin{remark}[主張の地位]\label{rem:rank1curve-status}
+命題 \ref{prop:rank1curve} は \emph{[本研究・部分証明]} 扱いとする。
+局所分類（命題 \ref{prop:rank1} $=$ Wakabayashi \cite[Prop.~3.2.1]{Wak}）の大域化、
+すなわち「各分岐点で独立に選んだ exponent の持ち上げが大域的な直線束 $\cN$ と
+両立する」ことの細部を精査していない（\texttt{handoff/level-chat.md} \S3.2）。
+\end{remark}
+
 \begin{remark}
 $r=0$ のときは $j_i$ の自由度が無く、
 $\deg\cL\equiv0\bmod p^N$ が必要になる。
@@ -500,7 +576,10 @@ $\cL^{\otimes2}\cong\Omega^1_X(\log D)\otimes\det\cF$、
 $\det\cF$ は階数 $1$ の dormant $\Dlog{N-1}$-加群なので
 命題 \ref{prop:rank1} と remark \ref{rem:res-zero} により
 $\det\cF\otimes\cO(-\sum\tilde e_i\sigma_i)$ の留数が消え、
-命題 \ref{prop:nonlog} の大域版により $F^{(N)*}$ の像に入る。
+命題 \ref{prop:nonlog}（$=$ \cite[Cor.~2.1.6]{Wak}）の\emph{大域版}%
+\NeedsCheck{dormant $\cD^{(m)}$-加群に対する Frobenius 降下 (Cor 2.1.6) の
+大域的な形の正確な参照が未確定}%
+により $F^{(N)*}$ の像に入る。
 次数を取れば \eqref{eq:degcong} を得る。
 KS 同型は oper の定義から。
 \end{proof}
@@ -521,8 +600,8 @@ $\bmod\,p^{N+1}$ で満たすことに帰着する。
 ただし \eqref{eq:degcong} は必要条件であって十分条件ではない。
 oper の存在にはさらに幾何的な条件（\S\ref{sec:opers} の三角不等式に相当するもの）
 が課される。$\sP=(\bbP^1;0,1,\infty)$ の場合には
-定理 \ref{thm:M03} でこれを完全に処理する。
-一般の $(g,r)$ で十分性を論じることは未解決である（\S\ref{sec:open}）。
+定理 \ref{thm:M03}（仮定 (W10.3) のもと）でこれを扱う。
+一般の $(g,r)$ で十分性を論じることは未解決である（\S\ref{sec:open}、問題 \ref{q:degree-suff}）。
 \end{remark}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -566,6 +645,9 @@ $\rho_i\in\bbF_p^\times/\{\pm1\}$（すべての $i$）でない限り空であ�
 これは補題 \ref{lem:toral} と命題 \ref{prop:cyclic} の組み合わせでもある：
 $\psi=0$ より留数は半単純、oper より正則、
 ゆえに二つの指数は相異なり $\rho\in\bbF_p^\times$。
+この別証明は $N=1$ について本稿内で自足しており、Mochizuki の引用に依存しない。
+\NeedsCheck{Mochizuki \cite[Chap.~II, Prop.~1.4, 1.5]{Moc} の正確な主張は
+未確認（Wakabayashi 経由の引用のみ。\texttt{handoff/level-chat.md} \S7 \#8）。}
 
 \subsection{被覆との対応}
 
@@ -616,53 +698,124 @@ $\lambda\equiv\pm2\rho\pmod{p^N}$、$\lambda$ 奇数、$0<\lambda<p^N$
 \end{lemma}
 
 \begin{proposition}\label{prop:count}
-\[
-  \#\,{}^N\Op^{\Zzz}_{2,\sP}
+レベル $N=1$ のとき
+\begin{equation}\label{eq:count1}
+  \#\,{}^1\Op^{\Zzz}_{2,\sP}
   =\#\Bigl\{(\lambda_0,\lambda_1,\lambda_\infty)\ \Big|\
   \begin{array}{l}
-  \lambda_x\ \text{奇数},\ 0<\lambda_x<p^N,\ p\nmid\lambda_x,\\[2pt]
-  \text{\eqref{eq:triangle} の三角不等式},\ \sum_x\lambda_x<2p^N
-  \end{array}\Bigr\} .
-\]
-特に $N=1$ のとき
-\begin{equation}\label{eq:count1}
-  \#\,{}^1\Op^{\Zzz}_{2,\sP}=\frac{p(p^2-1)}{24}
+  \lambda_x\ \text{奇数},\ 0<\lambda_x<p,\\[2pt]
+  \text{\eqref{eq:triangle} の三角不等式},\ \textstyle\sum_x\lambda_x<2p
+  \end{array}\Bigr\}
+  =\frac{p(p^2-1)}{24}
   =\frac{|\mathrm{PSL}_2(\bbF_p)|}{12} .
 \end{equation}
+一般のレベル $N$ については、命題 \ref{prop:Cdagger} により
+$\#\,{}^N\Op^{\Zzz}_{2,\sP}=\#\,{}^{\dagger}C_N$ である。
+$N\ge2$ では、素朴な条件
+（$\lambda_x$ 奇、$p\nmid\lambda_x$、三角、$\sum\lambda_x<2p^N$）のみでは
+正しい数え上げにならない（注意 \ref{rem:erratum}）。
 \end{proposition}
 
-\begin{proof}[証明（の概略）]
-前半は定理 \ref{thm:covering} と補題 \ref{lem:lambda-unique}。
-後半：$N=1$ のとき $\lambda_x$ は $(0,p)$ 内の奇数（$p\nmid\lambda_x$ は自動）。
-三角不等式から $2\lambda_0<\sum\lambda_x<2p$ すなわち $\lambda_x<p$ は自動的に満たされる。
-$\lambda_x=2m_x+1$、$0\le m_x\le(p-3)/2$ と置き、
-$n:=(p-1)/2$ とすると、条件は
-$m_x\le m_y+m_z$（巡回）かつ $\sum m_x\le n-1$ 相当に翻訳され、
-数え上げは四角錐数 $n(n+1)(2n+1)/6=p(p^2-1)/24$ を与える。
-\Todo{この組合せ論的同一視をきちんと書く。現状は下表の数値実験による確認。}
+\begin{proof}[証明（前半、および後半の還元）]
+前半（左辺 $=$ $\lambda$ の集合）は定理 \ref{thm:covering} と補題 \ref{lem:lambda-unique}
+による。$N=1$ では条件 \ref{def:Cdagger}(b) が空なので補題 \ref{lem:dict} により
+この集合は ${}^{\dagger}C_1$ と一致する。
+後半（$\#\,{}^{\dagger}C_1=p(p^2-1)/24$）は $p\in\{3,5,7,11,13\}$ で計算機により
+確認済み（表 \ref{tab:count}、付録 \ref{app:num}）だが、一般 $p$ に対する
+証明は与えていない。
+\GAP{$\#\,{}^{\dagger}C_1=n(n+1)(2n+1)/6$（$n=(p-1)/2$、四角錐数；なお
+$n(n+1)(2n+1)/6=p(p^2-1)/24$ は $n=(p-1)/2$ の代入により恒等的に成立する）
+の組合せ論的証明は未記述。純粋に組合せ論の問題
+（\texttt{handoff/level-chat.md} \S6.3）。}
 \end{proof}
+
+\subsection{Wakabayashi の集合 ${}^{\dagger}C_N$}\label{ss:Cdagger}
+
+$N=1$ の場合の記述は、次の形で任意のレベルに一般化される。
+$a\in\bbZ_{\ge0}$ と $N'\in\bbZ_{>0}$ に対し $[a]_{N'}:=a\bmod p^{N'}$ と書く。
+
+\begin{definition}[{\cite[(10.6)]{Wak2}}]\label{def:Cdagger}
+${}^{\dagger}C_N$ を、次の二条件を満たす非負整数の三つ組 $(s_1,s_2,s_3)$ 全体とする。
+\begin{enumerate}[label=(\alph*),leftmargin=2em]
+\item $\displaystyle\sum_{i=1}^3 s_i\le p^N-2$ かつ $|s_2-s_3|\le s_1\le s_2+s_3$;
+\item 任意の $0<N'<N$ に対し、$s_i'\in\{[s_i]_{N'},\ p^{N'}-1-[s_i]_{N'}\}$ $(i=1,2,3)$ を
+      適当に選んで $\sum_i s_i'\le p^{N'}-2$ かつ $|s_2'-s_3'|\le s_1'\le s_2'+s_3'$
+      とできる。
+\end{enumerate}
+\end{definition}
+
+\begin{proposition}[{\cite[Prop.~10.1.4, 10.3.3]{Wak2}}]\label{prop:Cdagger}
+dormant $\mathrm{PGL}_2$-oper（レベル $N$）on $\sP$ の集合は ${}^{\dagger}C_N$ で
+径数付けられる。すなわち $\#\,{}^N\Op^{\Zzz}_{2,\sP}=\#\,{}^{\dagger}C_N$。
+\end{proposition}
+
+\NeedsCheck{命題 \ref{prop:Cdagger} は Wakabayashi \cite{Wak2} \S10 の結果である。
+本稿では \cite{Wak2} \S10.1--10.3（特に Prop.~10.3.3 の径数付け）を
+原論文で確認していない（\texttt{handoff/level-chat.md} \S7 \#2、
+\texttt{handoff/app-session-2026-09-03.md} の L2）。また arXiv:2209.08528 の
+題名について書誌上の不一致がある（付録 \ref{app:litcheck}）。}
+
+\begin{lemma}[辞書]\label{lem:dict}
+$\lambda_i=2s_i+1$ とおくと、条件 \ref{def:Cdagger}(a) は
+「$\lambda_i$ は奇数、$\sum\lambda_i\le 2p^N-1$、厳密三角不等式 \eqref{eq:triangle}」
+と同値である。特に $s_i=0$ は $\lambda_i=1$（不分岐）に対応し、
+定理 \ref{thm:covering} の $\mathrm{Cov}^{\mathrm{tame}}_{\sP}$ は
+$\lambda_x=1$ を許す読み方が正しい。
+\end{lemma}
+
+\begin{proof}
+$\sum\lambda_i=2\sum s_i+3\le 2(p^N-2)+3=2p^N-1<2p^N$。
+また $\lambda_1<\lambda_2+\lambda_3\iff 2s_1+1<2s_2+2s_3+1\iff s_1\le s_2+s_3$
+（$s_i$ は整数）。$|s_2-s_3|\le s_1$ は残り二つの三角不等式に同値。
+\end{proof}
+
+\begin{remark}[前稿 ver.\,0.3 の数値の誤りの訂正]\label{rem:erratum}
+条件 \ref{def:Cdagger}(b) は $N\ge2$ で真に効く。これを落とした素朴な条件
+（$\lambda_i$ 奇、$p\nmid\lambda_i$、三角、$\sum\lambda_i<2p^N$）による数え上げは
+$N=1$ では正しいが（(b) が空条件）、$N\ge2$ では過大評価となる。
+計算機による確認（付録 \ref{app:num}）では、$N=2$ で
+\[
+  \#\,{}^{\dagger}C_2\ (\text{正}):\quad 11,\ 225,\ 1666,\ 24805,\ 67431
+  \qquad(p=3,5,7,11,13),
+\]
+\[
+  \text{素朴な条件による値}:\quad 11,\ 345,\ 3122,\ 55605,\ 158431 .
+\]
+
+前稿 ver.\,0.3 の表では $N=2$ の値を $p=5$ で $610$、$p=7$ で $2262$ と
+「計算機による直接列挙」として記載していた。しかしこの列挙は実際には
+実行されておらず、値も誤りである（\texttt{handoff/level-chat.md} \S5.4, 付録B、
+本稿付録 \ref{app:errata}）。正しい値は上記および表 \ref{tab:count} の通りで、
+素朴な条件による過大評価値 $345,\ 3122$ とも一致しない。
+\end{remark}
 
 \begin{table}[htbp]
 \centering
-\caption{命題 \ref{prop:count} の数値確認（計算機による直接列挙）}
+\caption{$\#\,{}^N\Op^{\Zzz}_{2,\sP}=\#\,{}^{\dagger}C_N$（定義 \ref{def:Cdagger} による直接列挙）。
+$N\ge2$ の値は \texttt{computations/count\_dagger\_C.py}（および回収した
+\texttt{computations/check.py}）を本稿の作業環境で実行して得たもの（付録 \ref{app:num}）。}
 \label{tab:count}
 \begin{tabular}{lrrrrr}
 \toprule
 $p$ & 3 & 5 & 7 & 11 & 13\\
 \midrule
-$\#\,{}^1\Op^{\Zzz}_{2,\sP}$（列挙）& 1 & 5 & 14 & 55 & 91\\
+$N=1$ & 1 & 5 & 14 & 55 & 91\\
 $p(p^2-1)/24$ & 1 & 5 & 14 & 55 & 91\\
-\midrule
-$\#\,{}^2\Op^{\Zzz}_{2,\sP}$（列挙）& --- & 610 & 2262 & --- & ---\\
+$N=2$ & 11 & 225 & 1666 & 24805 & 67431\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\begin{remark}
-$N=2$ の個数には $p\nmid\lambda_x$ の条件が効くため、
-\eqref{eq:count1} で $p\to p^N$ と置き換えた式にはならない
-（$p=5$：$25\cdot624/24=650\neq610$、差 $40$）。
-閉じた公式は未解決（\S\ref{sec:open}）。
+さらに $p=3$ では $\#\,{}^{\dagger}C_3=121=11^2$ を確認した（付録 \ref{app:num}）。
+
+\begin{remark}[$g=2$ との一致]\label{rem:genus2}
+$(p^3-p)/24$ は、一般な種数 $2$ の曲線上の dormant $\mathrm{PGL}_2$-oper の個数
+（Mochizuki, Lange--Pauly, Osserman）と一致する \cite[(1.2)]{Wak2}。
+これは偶然ではないと考えられる：種数 $2$ の三価グラフはテータグラフ
+（頂点 $2$、辺 $3$）であり、両頂点が同じ辺三つ組を見るので、
+balanced edge numbering の集合は ${}^{\dagger}C_N$ そのものになる \cite[Thm.~E]{Wak2}。
+すなわち $\deg\bigl(\Pi_{2,N,\emptyset,2,0}\bigr)=\#\,{}^{\dagger}C_N$。
+\NeedsCheck{\cite[Thm.~E, (1.2)]{Wak2} は原論文で未確認（付録 \ref{app:litcheck}）。}
 \end{remark}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -672,17 +825,23 @@ $p=5$、$\sP=(\bbP^1;0,1,\infty)$ とする。
 $\bbF_5^\times/\{\pm1\}=\{[1],[2]\}$ であり、
 $\lambda\mapsto\rho=\lambda/2=3\lambda$ により
 $\lambda=1\mapsto[2]$、$\lambda=3\mapsto[1]$。
-$(0,5)$ 内の奇数は $1,3$ のみなので、
-条件 \eqref{eq:triangle} と $\sum\lambda_x<10$ を満たす三つ組は
+補題 \ref{lem:dict} により $\lambda_i=2s_i+1$、$(s_i)\in{}^{\dagger}C_1$、
+すなわち $\sum s_i\le3$ かつ三角不等式。該当する $(s_1,s_2,s_3)$ は
 \[
-  (1,1,1),\quad(3,1,3),\quad(1,3,3),\quad(3,3,1),\quad(3,3,3)
+  (0,0,0),\quad(1,1,0),\quad(1,0,1),\quad(0,1,1),\quad(1,1,1)
 \]
-の $5$ 個である。除外されるのは $(1,1,3)$ 型（$3<1+1$ に反する）。
+の $5$ 個であり、$\lambda$ に直すと
+$(1,1,1),(3,3,1),(3,1,3),(1,3,3),(3,3,3)$。
+除外されるのは $(1,1,3)$ 型（$3<1+1$ に反する）。
 radius 三つ組 $8$ 通りのうち $(2,2,1)$, $(2,1,2)$, $(1,2,2)$ は実現されない。
+この $5$ 個の $(s_i)$ は \texttt{computations/count\_dagger\_C.py} の出力
+（$p=5$, $N=1$ の全リスト）と一致する（付録 \ref{app:num}）。
 
 \begin{table}[htbp]
 \centering
-\caption{$p=5$ における dormant $\mathrm{PGL}_2$-oper の完全リスト（レベル $1$）}
+\caption{$p=5$ における dormant $\mathrm{PGL}_2$-oper の完全リスト（レベル $1$）。
+Wronskian と各 ODE は \texttt{computations/verify\_p5.py}
+（$=$ \texttt{handoff/verify\_p5.py}）で $\bbF_5$ 上検証済み（付録 \ref{app:num}）。}
 \label{tab:p5}
 \small
 \begin{tabular}{clcclc}
@@ -771,12 +930,60 @@ $\deg W=4=2d-2$ より $\infty$ では不分岐（$\lambda_\infty=1$）。
 指数は $0,1$ で差 $3$、$\infty$ で $\{2,3\}$（差 $1$）。
 すなわち $\lambda=(3,3,1)$。
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{$\sP$ 上には反例が存在しない}\label{sec:M03}
+\subsection{レベル $2$ への持ち上げ}
 
-\begin{theorem}\label{thm:M03}
-$\sP=(\bbP^1;0,1,\infty)$ とする。
-$\cD^{(N-1)}\subset\cD^{(N)}$ による制限写像
+補題 \ref{lem:nesting} により、上の $5$ 個の $(s_i)$ はそのまま
+${}^{\dagger}C_2$ の元でもある（$\sum s_i\le3\le p^2-2=23$、
+条件 \ref{def:Cdagger}(b) は $N'=1$ で $s_i'=s_i$ と選べる。付録 \ref{app:num} で確認）。
+したがって命題 \ref{prop:Cdagger} と仮定 (W10.3)（\S\ref{sec:M03}）のもとで
+$5$ 個すべてがレベル $2$ に持ち上がる。レベル $2$ の総数は $\#\,{}^{\dagger}C_2=225$
+（表 \ref{tab:count}）。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{持ち上げの障害は行列式に尽きる}\label{sec:M03}
+
+本節の主結果（定理 \ref{thm:M03}、系 \ref{cor:general}）は、次の仮定のもとでの
+\emph{条件付き定理} である。
+
+\begin{quote}
+\textbf{仮定 (W10.3).}\ 命題 \ref{prop:Cdagger} の径数付け
+$\#\,{}^N\Op^{\Zzz}_{2,\sP}=\#\,{}^{\dagger}C_N$ のもとで、レベル降下
+$\mathrm{res}_N:{}^{N+1}\Op^{\Zzz}_{2,\sP}\to{}^{N}\Op^{\Zzz}_{2,\sP}$ は
+${}^{\dagger}C_N$ の言葉で
+$s\mapsto s'\in\{[s]_N,\ p^N-1-[s]_N\}$（各成分ごとの $\pm$ の選択）として
+実現される。
+\end{quote}
+
+\NeedsCheck{仮定 (W10.3) は Wakabayashi \cite{Wak2} \S10.3
+（特に Prop.~10.3.3）で確認すべき事項であり、本稿では原論文を確認していない
+（\texttt{handoff/level-chat.md} \S3.3, \S7 \#2、
+\texttt{handoff/app-session-2026-09-03.md} の L2）。
+条件 \ref{def:Cdagger}(b) の形からほぼ自明に見えるが、径数付けそのものとの
+両立は別個の主張である。}
+
+\subsection{${}^{\dagger}C_N$ の入れ子性}
+
+\begin{lemma}\label{lem:nesting}
+${}^{\dagger}C_N\subseteq{}^{\dagger}C_{N+1}$。
+\end{lemma}
+
+\begin{proof}
+$(s_i)\in{}^{\dagger}C_N$ とする。$\sum s_i\le p^N-2\le p^{N+1}-2$ かつ三角不等式より
+条件 \ref{def:Cdagger}(a) は $N+1$ でも成立する。
+条件 (b) について、$N'=N$ のときは $s_i<p^N$ ゆえ $[s_i]_N=s_i$ であり、
+$s_i'=s_i$ と選べば要求は $(s_i)$ に対する条件 (a)（レベル $N$）そのものである。
+$N'<N$ のときは $(s_i)\in{}^{\dagger}C_N$ の条件 (b) をそのまま使えばよい。
+\end{proof}
+
+\begin{remark}
+補題 \ref{lem:nesting} は $p\in\{3,5\}$、$N\in\{1,2\}$ について計算機でも確認した
+（付録 \ref{app:num}：${}^{\dagger}C_N\setminus{}^{\dagger}C_{N+1}$ は空）。
+\end{remark}
+
+\subsection{$\sP$ 上での全射性}
+
+\begin{theorem}[仮定 (W10.3) のもとで]\label{thm:M03}
+仮定 (W10.3) を仮定する。$\sP=(\bbP^1;0,1,\infty)$ に対し、制限写像
 \[
   \mathrm{res}_N:\ {}^{N+1}\Op^{\Zzz}_{2,\sP}\longrightarrow{}^{N}\Op^{\Zzz}_{2,\sP}
 \]
@@ -785,32 +992,103 @@ $\cD^{(N-1)}\subset\cD^{(N)}$ による制限写像
 \end{theorem}
 
 \begin{proof}
-定理 \ref{thm:covering} により、レベル $N$ の対象は
-「$\lambda_x$ 奇数、$p\nmid\lambda_x$、三角不等式 \eqref{eq:triangle}、
-$\sum\lambda_x<2p^N$」を満たす三つ組と一対一に対応する。
-制限写像は radius を $\bmod\,p^N$ に落とす、
-すなわち補題 \ref{lem:lambda-unique} により
-$\lambda'\mapsto$「$\pm\lambda'$ の $(0,p^N)$ 内の奇代表」を与える。
-レベル $N$ で許容な $(\lambda_0,\lambda_1,\lambda_\infty)$ に対し、
-$\lambda'_x:=\lambda_x$ とおけば
-$\sum\lambda'_x<2p^N<2p^{N+1}$ であり、
-他の条件も不変なのでレベル $N+1$ で許容であり、
-かつ $\mathrm{res}_N$ で元に戻る。
+命題 \ref{prop:Cdagger} により両辺は ${}^{\dagger}C_{N+1}$、${}^{\dagger}C_N$ と
+同一視される。仮定 (W10.3) により $\mathrm{res}_N$ は
+$s\mapsto s'\in\{[s]_N,\ p^N-1-[s]_N\}$ で与えられる。
+補題 \ref{lem:nesting} の包含 ${}^{\dagger}C_N\subseteq{}^{\dagger}C_{N+1}$ の各元は
+$[s]_N=s$ を満たすので、この包含が $\mathrm{res}_N$ の切断を与える。
 \end{proof}
 
-\begin{example}
-表 \ref{tab:p5} の \#5（$\lambda=(3,3,3)$）のレベル $2$ への持ち上げ先は、
-$\lambda'_x\equiv\pm3\pmod5$、$\lambda'_x$ 奇数、$5\nmid\lambda'_x$、$0<\lambda'_x<25$
-から $\lambda'_x\in\{3,13,23\}\cup\{7,17\}$ を選び、
-三角不等式と $\sum\lambda'_x<50$ を満たすものすべて。
-$\lambda'=(3,3,3)$（すなわち同じ被覆）が常に候補となる。
-\end{example}
+\begin{remark}[主張の地位]\label{rem:M03-status}
+定理 \ref{thm:M03} は仮定 (W10.3) のもとで完全な証明をもつ
+\emph{[本研究・条件付き定理]}。仮定 (W10.3)（および参照した \cite{Wak2}
+の径数付け）が原論文で確認されれば無条件の定理に格上げされる。
+これが本研究の主要主張（$\sP$ 上に反例が存在しないこと）が確定するか否かの
+分岐点である（\texttt{handoff/app-session-2026-09-03.md} \S11-2）。
+\end{remark}
 
-\begin{remark}
-定理 \ref{thm:M03} は系 \ref{cor:obstruction} の $r\ge1$ の場合の
-完全な実現である。命題 \ref{prop:rank1curve}（階数 $1$）と合わせ、
-\textbf{対数構造（marked point）は持ち上げの障害を消す方向に働く}
-という本稿の主張を支持する。
+\subsection{一般の $(g,r)$ へ}
+
+\begin{corollary}[仮定 (W10.3) と {\cite[Thm.~E]{Wak2}} のもとで]\label{cor:general}
+仮定 (W10.3) を仮定する。$\mathbb{G}$ を型 $(g,r)$ の三価 clutching data、
+$X_{\mathbb{G}}$ を対応する totally degenerate curve とする。
+balanced $(p,N)$-edge numbering の集合について
+$\mathrm{Ed}_{p,N,\mathbb{G}}\subseteq\mathrm{Ed}_{p,N+1,\mathbb{G}}$ が成り立ち、
+$X_{\mathbb{G}}$ 上の制限写像は全射である。
+\end{corollary}
+
+\begin{proof}
+$\mathrm{Ed}$ の各頂点条件は「接する三辺の番号が ${}^{\dagger}C_N$ に属する」であり
+\cite[Thm.~E]{Wak2}、補題 \ref{lem:nesting} を各頂点に適用すればよい。
+全射性は定理 \ref{thm:M03} と同じ議論を各頂点で行う。
+\end{proof}
+
+\NeedsCheck{系 \ref{cor:general} の証明は、totally degenerate curve 上の
+dormant oper が頂点ごとの ${}^{\dagger}C_N$-データで径数付けられること
+（\cite[Thm.~E]{Wak2}）を用いる。\cite{Wak2} \S9--10 は本稿では未確認
+（付録 \ref{app:litcheck}）。}
+
+\begin{remark}[主張の地位]\label{rem:no-pgl2-cex}
+系 \ref{cor:general} は、当初の主要予想（\S\ref{sec:open} の問題 \ref{q:main}）に対する
+\textbf{否定的な}答えを、仮定 (W10.3) のもとで、かつ totally degenerate な曲線に限って
+与える：$\mathrm{PGL}_2$-oper については、$r=0$ を含めどの $(g,r)$ でも
+「ちょうどレベル $N$」の反例は存在しない。
+\emph{[本研究・条件付き系]}。
+\Todo{一般の smooth な曲線上で $\mathrm{res}_N$ が全射であることを、
+generic étaleness \cite[Thm.~C]{Wak2} から直接導く議論を書く。
+現状は totally degenerate な曲線と、それに基づく次数の単調性
+（$\deg\Pi_{2,N,\rho,g,r}\le\deg\Pi_{2,N+1,\rho',g,r}$、$\rho'$ は $\rho$ の
+自明な持ち上げ）までしか押さえていない。}
+\end{remark}
+
+\subsection{障害は行列式に局在する}
+
+$\mathrm{PGL}_2$ で（上記の条件のもと）障害が消える一方、$\mathrm{GL}_1$
+（例 \ref{ex:exactN}）では「ちょうどレベル $N$」が実現する。この差は次のように
+整理できる。
+
+\begin{theorem}[障害の局在]\label{thm:det}
+$(\cF,\nabla,\{\cF^j\})$ を dormant レベル $N$ の $\mathrm{GL}_n$-oper とし、
+$\mathscr{F}^{\spadesuit}$ をその $\mathrm{PGL}_n$-類とする。
+$\mathscr{F}^{\spadesuit}$ がレベル $N+1$ に持ち上がり、かつ $p\nmid n$ と仮定する。
+このとき $(\cF,\nabla,\{\cF^j\})$ 自身がレベル $N+1$ に持ち上がるための必要十分条件は、
+階数 $1$ の dormant $\Dlog{N-1}$-加群 $(\det\cF,\det\nabla)$ が
+レベル $N+1$ に持ち上がることである。
+\end{theorem}
+
+\begin{proof}[証明の概略]
+$\mathrm{GL}_n$-oper は $\mathrm{PGL}_n$-oper と、階数 $1$ の dormant $\cD^{(N-1)}$-加群
+による捻りの差しかない（\S\ref{sec:opers} の定義）。
+持ち上げ $\widetilde{\mathscr{F}^{\spadesuit}}$ を一つ選び、その代表 $\mathrm{GL}_n$-oper を
+$\widetilde{\cF}$ とすると、$\det\widetilde{\cF}$ と $\det\cF$ は
+レベル $N$ で同型な階数 $1$ の対象を与える。
+必要な捻り $(\cN,\nabla_\cN)$ は $\det$ の比で決まり、
+$p\nmid n$ のとき Wakabayashi \cite[Prop.~4.1.4]{Wak} により $\cN$ の $n$ 乗根が
+一意に取れるので、問題は $(\det\cF,\det\nabla)$ の持ち上げに帰着する。
+ただし逆向き（$(\det\cF,\det\nabla)$ の持ち上げから $\mathrm{GL}_n$-oper 全体の
+持ち上げを組み立てる部分）で $\det$ 以外に障害が無いことは完全には検証していない
+（注意 \ref{rem:det-status}）。
+\end{proof}
+
+\begin{remark}[主張の地位と残るギャップ]\label{rem:det-status}
+定理 \ref{thm:det} は $p\nmid n$ の仮定のもとで上のように証明される
+\emph{[本研究・部分証明]}。系 \ref{cor:obstruction} も参照。
+\GAP{「$\det$ 以外に持ち上げの障害が無い」ことの完全な議論が未了。
+仮定を追加しても現状では閉じない（\texttt{handoff/level-chat.md} \S3.6, \S6.5）。}
+\NeedsCheck{\cite[Prop.~4.1.4]{Wak} の正確な仮定と主張。}
+なお $p\mid n$ の場合は本定理の仮定 $p\nmid n$ の対象外であり、
+proof gap ではなく将来の拡張問題として \S\ref{sec:open} の問題 \ref{q:GP} で扱う。
+\end{remark}
+
+\begin{corollary}\label{cor:pi1}
+定理 \ref{thm:det} のもとで、$\pi_1(G)$ が $p$ 群を含まない
+（例えば $G$ 随伴型、あるいは $p\nmid n$ で $G=\mathrm{GL}_n$）場合、
+レベル上昇の障害は $\Pic(X)/p^N$ の障害に帰着する。
+特に $r\ge1$ ならば命題 \ref{prop:rank1curve} により障害は消える。
+\end{corollary}
+
+\begin{remark}[主張の地位]\label{rem:pi1-status}
+系 \ref{cor:pi1} は定理 \ref{thm:det} に依存するので \emph{[本研究・部分証明]}。
 \end{remark}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -818,36 +1096,54 @@ $\lambda'=(3,3,3)$（すなわち同じ被覆）が常に候補となる。
 
 \begin{table}[htbp]
 \centering
-\caption{反例および非反例の一覧}
+\caption{反例および非反例の一覧。「なし$^{\ast}$」は仮定 (W10.3)（\S\ref{sec:M03}）に
+依存する条件付きの結論。}
 \label{tab:examples}
-\small
-\begin{tabular}{clllcl}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{cllcl}
 \toprule
-\# & $(X,D)$ & 対象 & exponent/radius & 最大レベル & 障害の型\\
+\# & $(X,D)$・対象 & exponent/radius & 最大レベル & 障害の型\\
 \midrule
-1 & $(\bbP^1,\{0,\infty\})$ & $(\cO,d+a\,\dlog x)$, $a\in\bbF_p^\times$
-  & $a\in\bbZ/p$ & $\infty$ & なし（命題 \ref{prop:rank1curve}）\\[2pt]
-2 & 同上 & $a\in k\setminus\bbF_p$ & --- & $0$ & Artin--Schreier \eqref{eq:AS}\\[2pt]
-3 & $(\bbA^1,\{0\})$ & $\nabla_\theta=\theta+N$, $N$ 冪零 $\neq0$
+1 & $(\bbP^1,\{0,\infty\})$; $(\cO,d+a\,\dlog x)$, $a\in\bbF_p^\times$
+  & $a\in\bbZ/p$ & $\infty$ & なし（命題 \ref{prop:rank1curve}、部分証明）\\[2pt]
+2 & 同上; $a\in k\setminus\bbF_p$ & --- & $0$ & Artin--Schreier \eqref{eq:AS}\\[2pt]
+3 & $(\bbA^1,\{0\})$; $\nabla_\theta=\theta+N$, $N$ 冪零 $\neq0$
   & --- & $0$ & 留数の冪零成分（系 \ref{cor:nilpotent}）\\[2pt]
-4 & $g\ge1$, $D=\emptyset$ & $\cL=F^{(N)*}\cM$, $p\nmid\deg\cM$
+4 & $g\ge1$, $D=\emptyset$; $\cL=F^{(N)*}\cM$, $p\nmid\deg\cM$
   & $0$ に強制 & ちょうど $N$ & $\Pic$ の非 $p$ 可除性（例 \ref{ex:exactN}）\\[2pt]
-5 & $(\bbP^1;0,1,\infty)$, $p=5$ & 表 \ref{tab:p5} の $5$ 個
-  & $\lambda=(3,3,3)$ 等 & $\infty$ & \textbf{なし}（定理 \ref{thm:M03}）\\[2pt]
-6 & $g\ge2$, $r=0$ & dormant $\mathrm{PGL}_2$-oper（$F^N$-射影構造）
-  & --- & \textbf{未決定} & 系 \ref{cor:obstruction} の $r=0$\\
+5 & $(\bbP^1;0,1,\infty)$, $p=5$; 表 \ref{tab:p5} の $5$ 個
+  & $\lambda=(3,3,3)$ 等 & $\infty^{\ast}$ & なし$^{\ast}$（定理 \ref{thm:M03}）\\[2pt]
+6 & $X_{\mathbb{G}}$（totally deg.）; dormant $\mathrm{PGL}_2^{(N)}$-oper
+  & $(s_e)\in\mathrm{Ed}_{p,N,\mathbb{G}}$ & $\infty^{\ast}$ & なし$^{\ast}$（系 \ref{cor:general}）\\[2pt]
+7 & $g\ge1$, $D=\emptyset$; $\mathrm{GL}_2$-oper で $\det$ が \#4 型
+  & --- & ちょうど $N$ & 行列式（定理 \ref{thm:det}、$p\nmid n$、部分証明）\\[2pt]
+8 & $g\ge2$, $r=0$（一般 smooth）; dormant $\mathrm{PGL}_2$-oper
+  & --- & \textbf{未決定} & \S\ref{sec:open} 問題 \ref{q:main}\\
 \bottomrule
 \end{tabular}
 \end{table}
+
+行 8 は当初「本命」と考えていたケースである（旧 ver.\,0.3 での問題 \ref{q:main}）。
+行 6 と系 \ref{cor:general} により、totally degenerate な曲線の範囲では
+（仮定 (W10.3) のもとで）反例が無いことが分かったが、
+一般の smooth 曲線については未解決のままである。
 
 \begin{proposition}[反例が存在しないための十分条件]\label{prop:sufficient}
 次のいずれかが成り立つとき、dormant 対象は任意のレベルに持ち上がる。
 \begin{enumerate}[label=(\alph*),leftmargin=2em]
 \item 階数 $1$、$X$ 固有滑らかな曲線、$r\ge1$（命題 \ref{prop:rank1curve}）。
-\item $\mathrm{PGL}_2$-oper、$(g,r)=(0,3)$（定理 \ref{thm:M03}）。
 \item 留数が冪単：系 \ref{cor:nilpotent} により $\Res=0$ となり、
       非対数的な理論に帰着する（remark \ref{rem:res-zero}）。
+\item $\mathrm{PGL}_2$-oper、$(g,r)=(0,3)$（定理 \ref{thm:M03}）。
+\item $\mathrm{PGL}_2$-oper、$X$ が totally degenerate（系 \ref{cor:general}）。
+\item 構造群 $G$ の $\pi_1(G)$ が $p$ 群を含まない（系 \ref{cor:pi1}）。
 \end{enumerate}
+ここで (a) は \emph{[部分証明]}（注意 \ref{rem:rank1curve-status}）、
+(c), (d) は仮定 (W10.3)（\S\ref{sec:M03}）に依存する \emph{[条件付き]}、
+(e) は定理 \ref{thm:det} に依存し、かつ $p\nmid n$ と「$\det$ 以外に障害が無いこと」
+を要する \emph{[部分証明]}（注意 \ref{rem:det-status}）。
+無条件なのは (b) のみである。
 \end{proposition}
 
 \begin{remark}[当初の予想の訂正]
@@ -856,8 +1152,10 @@ $\lambda'=(3,3,3)$（すなわち同じ被覆）が常に候補となる。
 ことが目標であった。
 しかし補題 \ref{lem:hecke} と命題 \ref{prop:rank1curve} が示すとおり、
 階数 $1$ ではむしろ\textbf{常に回避できる}。
-反例の存在には格子の剛性（oper 構造）と、
-系 \ref{cor:obstruction} が要求する $r=0$ という条件の両方が必要である。
+当初は「反例の存在には格子の剛性（oper 構造）と $r=0$ の両方が必要」と考えたが、
+$\mathrm{PGL}_2$-oper については $r=0$ でも（仮定 (W10.3) のもと、totally degenerate な
+曲線上で）反例が存在しないことが分かった（系 \ref{cor:general}）。
+訂正の経緯は付録 \ref{app:errata} を参照。
 \end{remark}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -900,41 +1198,82 @@ Higgs 場つき indexed $\mathcal{B}^{(m+1)}_{X/S}$-加群の圏同値を構成�
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{未解決問題}\label{sec:open}
 
-\begin{question}[本命：$r=0$ の場合]\label{q:main}
+\S\ref{sec:M03} により、当初の主要問題（問題 \ref{q:main}）は、
+仮定 (W10.3) のもとで、かつ totally degenerate な曲線に限れば、
+否定的に解決される。無条件の解決、および一般の smooth 曲線での解決は
+未達である。
+
+\begin{question}[旧・本命問題：条件付きで否定的に解決]\label{q:main}
 種数 $g\ge2$ の非点付き曲線上で、
-$F^1$-射影構造であって $F^2$-射影構造に持ち上がらないものを構成せよ。
-系 \ref{cor:obstruction} は $r=0$ で自由度が消えることを示しているが、
-実際に $\mathrm{res}_1$ が非全射となる $(g,p)$ を特定する必要がある。
-$F^N$-射影構造の個数公式（Joshi--Vologodsky 型、Hoshi, Wakabayashi）を
-比較し $|{}^2\Op|<|{}^1\Op|$ となる場合を探すのが最短と思われる。
+$F^1$-射影構造であって $F^2$-射影構造に持ち上がらないものを構成せよ
+（当初の「本命」問題。旧 ver.\,0.3 では
+「$F^N$-射影構造の個数公式を比較し $|{}^2\Op|<|{}^1\Op|$ となる $(g,p)$ を探す」
+方針を掲げていた）。
+系 \ref{cor:general} により、仮定 (W10.3) のもとでは、少なくとも
+totally degenerate な曲線上にはそのような対象が存在しない。
+残る空白は次の二点である：
+(i) 仮定 (W10.3)（Wakabayashi \cite[Prop.~10.3.3]{Wak2} とレベル降下の両立性）
+の確認；
+(ii) 一般の smooth 曲線上での $\mathrm{res}_N$ の全射性
+（注意 \ref{rem:no-pgl2-cex} の \Todo{}。generic étaleness \cite[Thm.~C]{Wak2}
+からの直接の議論）。
 \end{question}
 
-\begin{question}[次数障害の十分性]
+\begin{question}[次数障害の十分性]\label{q:degree-suff}
 命題 \ref{prop:degree} の合同式 \eqref{eq:degcong} は必要条件である。
 $g\ge1$, $r\ge1$ において、これが（適当な安定性の下で）十分条件となるか。
-$(g,r)=(0,3)$ では定理 \ref{thm:M03} が肯定的に答える。
+$(g,r)=(0,3)$ では定理 \ref{thm:M03} が（仮定 (W10.3) のもとで）肯定的に答える。
 \end{question}
 
-\begin{question}[レベル $N$ の数え上げ公式]
-$\#\,{}^N\Op^{\Zzz}_{2,\sP}$ の閉じた公式を求めよ。
-$N=1$ では $p(p^2-1)/24$（命題 \ref{prop:count}）。
-$N=2$, $p=5$ では $610$、$p=7$ では $2262$（表 \ref{tab:count}）。
-$p\nmid\lambda_x$ の条件が包除原理的な補正項を生む。
+\begin{question}[レベル $N$ の数え上げ公式]\label{q:count}
+$\#\,{}^{\dagger}C_N$（$=\#\,{}^N\Op^{\Zzz}_{2,\sP}$、命題 \ref{prop:Cdagger}）の
+閉じた表示を求めよ。$N=1$ では $p(p^2-1)/24$（命題 \ref{prop:count}）。
+$N\ge2$ では \cite[Thm.~E]{Wak2} により $p$ の擬多項式 $H_{N,\mathbb{G}}(p)$
+（$g=2$ のとき次数 $3N$）として存在することが分かっているが明示式はない。
+計算済みの値（表 \ref{tab:count}、付録 \ref{app:num}）：
+$p=3$ で $1,11,121$、$p=5$ で $5,225$、$p=7$ で $14,1666$。
+$p=3$ の $1,11,121=11^2$ という並びは示唆的である。
+条件 \ref{def:Cdagger}(b) の再帰構造から桁ごとの transfer matrix 表示が
+得られないか。
 \end{question}
 
-\begin{question}[高次元]
-$D$ が SNC のとき exponent は $(\bbZ/p^N)^r$ に値をとる。
+\begin{question}[一般階数 $n$]\label{q:rank}
+定理 \ref{thm:det} は任意の $n$ で（$p\nmid n$、および $\det$ 以外に障害が
+無いことを措けば）成立するが、系 \ref{cor:general} の証明は $n=2$ の
+generic étaleness \cite[Thm.~C]{Wak2} に依存している。
+$n\ge3$ で $\Pi_{n,N,\rho,g,r}$ の generic étaleness を示せば、
+$\mathrm{PGL}_n$ でも（仮定 (W10.3) のもとで）反例が存在しないことが従う。
+これは \cite[\S1.6]{Wak2} の「canonical lifting は一般の $n$ でも存在すると
+期待される」という問題と同値である。
+\end{question}
+
+\begin{question}[高次元]\label{q:higherdim}
+$\dim X\ge2$、$D$ が SNC のとき exponent は $(\bbZ/p^N)^{\times r}$ に値をとる。
 交差 $D_i\cap D_j$ における両立条件が新しい障害を生むか。
-Ohkawa の indexed algebra の枠組みで定式化できるはず。
+定理 \ref{thm:det} の類似（障害が $\det$ に局在する）は成り立つか。
+曲線の場合と違い $\Pic$ の代わりに $H^2$ の捩れや Brauer 群が効く可能性がある。
+Ohkawa の indexed algebra の枠組みで定式化できると思われる。
 \end{question}
 
-\begin{question}[一般 $(G,P)$]
-radius は $\mu_{p^N}\to T$ の $W$-共役類として定義されるべきである。
-$\pi_1(G)$ の $p$-捩れが命題 \ref{prop:degree} の次数障害に相当するものを与えるか。
-$\mathrm{PGL}_n$ では $\pi_1=\bbZ/n$ であり、$\gcd(n,p)$ による場合分けが予想される。
+\begin{question}[一般 $(G,P)$]\label{q:GP}
+radius は $\mu_{p^N}\to T$ の $W$-共役類として定義される。
+系 \ref{cor:pi1} を精密化し、
+「レベル上昇の障害 $=$ $H^1(X,\pi_1(G))$ の $p^N$ 可除性の障害」
+という形の一般命題を定式化・証明せよ。
+$\mathrm{PGL}_n$ では $\pi_1=\bbZ/n$ であり、$\gcd(n,p)=1$ なら障害は消える
+（\cite[Prop.~4.1.4]{Wak} が $p\nmid l$ を仮定していることに対応）。
+$p\mid n$ の場合が未検討であり、これは定理 \ref{thm:det} の仮定 $p\nmid n$ を
+除去する問題でもある。
 \end{question}
 
-\begin{question}[中間領域]
+\begin{question}[root stack による定式化]\label{q:rootstack}
+予想 \ref{conj:rootstack} が Ohkawa \cite{Ohk} の定理の言い換えに過ぎないのか、
+独立な主張なのかを確定せよ。確定すれば、\S\ref{sec:local} の exponent の
+$p$ 進展開が $\mathcal{X}'_N=\sqrt[p^N]{(X^{(N)},D^{(N)})}$ 上の
+$\mu_{p^N}$ 次数付けとして幾何的に説明される。
+\end{question}
+
+\begin{question}[中間領域]\label{q:middle}
 系 \ref{cor:nilpotent} により、dormant な世界（留数 toral）と
 nilpotent indigenous bundle の世界（留数冪単）は交わらない。
 $p^N$-曲率が冪零だが非零であるクラスに、両者を繋ぐ構造があるか。
@@ -958,6 +1297,134 @@ radius の値域 & --- & $(\bbZ/p^N\bbZ)^\times/\{\pm1\}$（$n=2$）\\
 \bottomrule
 \end{tabular}
 \end{table}
+
+正標数 $\bbZ_p$ 値留数の研究で用いられる規約（$\cD_U^{(n)}$ を位数 $<p^n$ で定義）
+および logarithmic holonomy の研究で用いられる規約
+（$\cD^{(m)}_{(X,D)}:=\mathcal{E}nd_{\cO_{X^{(m+1)}}}(\cO_X)$）との対照は
+\texttt{notes/topics/00-common/conventions.tex} を参照。本稿ではそれらを採用・統一しない
+（注意 \ref{rem:conv-status}）。
+
+\section{訂正の履歴}\label{app:errata}
+
+研究の途上で誤りと判明した主張・方針を、研究史として残す。
+出典は \texttt{handoff/level-chat.md}（特に \S5 と付録B）および
+\texttt{handoff/app-session-2026-09-03.md} \S8.1。
+
+\begin{enumerate}[leftmargin=1.8em]
+\item \textbf{「log では『$\cD^{(1)}$-作用の存在』と『$p$-曲率 $0$』が乖離する」（誤り）.}\
+      素朴な Frobenius 引き戻し $F^*$ と $\cD^{(1)}$-加群構造への持ち上げを混同していた。
+      $\bbZ_p$ の恒等式 $\prod_{j=0}^{p-1}(\theta-j)=p!\binom{\theta}{p}$ の左辺が
+      $\bmod\,p$ で $\theta^p-\theta$ となるため、$a\in\bbF_p^\times$ の対象も
+      $\cD^{(1)}$-加群として持ち上がる（注意 \ref{rem:binom}, \ref{rem:early-misread}）。
+      規約のズレであって数学的現象ではなかった。
+\item \textbf{「$D$ での Hecke 変形で回避できないことを示す」という当初のタスク（逆だった）.}\
+      補題 \ref{lem:hecke} と命題 \ref{prop:rank1curve} の通り、階数 $1$・$r\ge1$ では
+      格子の取り替えで exponent を自由に動かせるので、局所的な障害は常に回避できる。
+      対数構造（marked point）は障害を消す方向に働く。
+\item \textbf{$\mathfrak{sl}_2$ level $k=p-2$ の WZW 融合則による数え上げ（誤り）.}\
+      $\binom{p+1}{3}$（$p=5$ で $20$）と主張したが正しくは $p(p^2-1)/24$（$p=5$ で $5$）。
+      radius は $\bbF_p^\times/\{\pm1\}$（$(p-1)/2$ 個）に値をとるのに
+      $\{0,\dots,p-2\}$（$p-1$ 個）の可積分ウェイトと対応させた誤り。
+      本稿は WZW を用いない。
+\item \textbf{$N=2$ の数え上げ $610$（$p=5$）, $2262$（$p=7$）（誤り、かつ未計算）.}\
+      前稿 ver.\,0.3 の表 \ref{tab:count} にこれらを「計算機による直接列挙」として
+      記載したが、列挙は実行されておらず値も誤り。正しい値は $225$, $1666$
+      （注意 \ref{rem:erratum}、付録 \ref{app:num}）。素朴な $\lambda$ 定式化による
+      過大評価値 $345$, $3122$ とも一致しない。
+\item \textbf{数値を「計算機で確認」と称して未実行だったこと.}\
+      ver.\,0.4 では、確定値として記す数値はすべて付録 \ref{app:num} のスクリプトを
+      実行した結果に限る。
+\item \textbf{当初の主要予想「$r=0$, $g\ge2$ に $F^1$ から $F^2$ に持ち上がらない
+      $\mathrm{PGL}_2$-oper がある」.}\
+      系 \ref{cor:general}（仮定 (W10.3) のもと、totally degenerate な曲線）により
+      否定的な答えが強く示唆される。ただし無条件ではなく、一般の smooth 曲線でも
+      未解決（問題 \ref{q:main}）。
+\end{enumerate}
+
+\section{文献確認事項（未了）}\label{app:litcheck}
+
+本稿の主張が依存する、まだ原論文で確認していない事項。優先度順。
+
+\begin{enumerate}[leftmargin=1.8em]
+\item \textbf{[最優先, L2]} Wakabayashi \cite{Wak2}（arXiv:2209.08528）\S10.3、
+      特に Prop.~10.3.3 の径数付けとレベル降下の両立性。
+      $\Rightarrow$ 仮定 (W10.3)、したがって定理 \ref{thm:M03}, 系 \ref{cor:general},
+      命題 \ref{prop:sufficient}(c),(d)。確認できれば定理 \ref{thm:M03} が
+      無条件になる（\texttt{handoff/level-chat.md} \S3.3, \S7 \#2）。
+\item \textbf{[書誌]} arXiv:2209.08528 の題名。ar5iv 上では
+      ``Canonical diagonal liftings I: dormant $\mathrm{PGL}_n$-opers on algebraic curves''
+      であり、本稿の \cite{Wak2} の題名と一致しない。改題か引用誤りか未判定
+      （\texttt{handoff/app-session-2026-09-03.md} \S8.3）。
+\item \cite{Wak2} の Prop.~10.1.4（命題 \ref{prop:Cdagger}）、Thm.~E
+      （注意 \ref{rem:genus2}、系 \ref{cor:general}）、(1.2)、\S1.6、Thm.~C
+      （generic étaleness、注意 \ref{rem:no-pgl2-cex}、問題 \ref{q:rank}）。
+\item Berthelot \cite[\S1.1--1.2]{Ber1}：$\cD^{(m)}$ の定義
+      （$\partial^{[j]}\in\cD^{(m)}$ の $j$ の範囲）。$\Rightarrow$ 規約の基準
+      （注意 \ref{rem:conv-status}）。
+\item Wakabayashi \cite{Wak}（arXiv:2201.11266）の Prop.~2.1.5, Cor.~2.1.6,
+      Def.~2.1.3, Prop.~3.2.1, Rem.~3.3.3, Prop.~3.3.4, Prop.~3.4.1, Prop.~4.1.4,
+      Def.~4.2.1, Def.~4.3.2, Thm.~C。\S\ref{sec:local}, \S\ref{sec:opers} は
+      これらの引用に依拠しており、ar5iv 経由の二次確認にとどまる
+      （\texttt{handoff/app-session-2026-09-03.md} \S0.3）。
+\item Mochizuki \cite{Moc}, Chap.~II, Prop.~1.4, 1.5（命題 \ref{prop:radius-unit}）。
+      Wakabayashi 経由の引用のみ。
+\item Montagnon \cite{Mon} の thèse における対数版 $\cD^{(m)}$ の presentation
+      （注意 \ref{rem:binom} の $\binom{\theta}{p}$ 議論の裏付け）。
+\item Ohkawa \cite{Ohk}：予想 \ref{conj:rootstack} が Ohkawa の定理の
+      言い換えに過ぎないか（問題 \ref{q:rootstack}）。
+\item Osserman \cite{Oss} の正確な巻号（\S\ref{app:num} には無関係、書誌のみ）。
+\item \texttt{check.py}（\texttt{handoff/level-chat.md} 付録Aが言及）は \texttt{handoff/}
+      には含まれていなかったが、作業環境の \texttt{\~{}/Downloads/check.py}
+      に原ファイルが残っており、\texttt{computations/check.py} として回収した
+      （\S\ref{app:num}）。
+\end{enumerate}
+
+\section{数値検証}\label{app:num}
+
+本稿の数値は次のスクリプトを本稿の作業環境（Python 3）で実行して得た。
+
+\begin{itemize}[leftmargin=1.8em]
+\item \texttt{computations/count\_dagger\_C.py}：定義 \ref{def:Cdagger} から
+      独立に書き起こした ${}^{\dagger}C_N$ の列挙器。
+      \texttt{in\_dagger\_C(s,N,p)} が条件 (a),(b) をそのまま判定し、
+      \texttt{count\_dagger\_C(N,p)} が $\{0,\dots,p^N-1\}^3$ を総当たりする
+      （条件 (a) より $s_i\le p^N-2$ なのでこれで尽くされる）。
+\item \texttt{computations/check.py}：\texttt{handoff/level-chat.md} 付録Aが言及する
+      原スクリプトを作業環境の \texttt{\~{}/Downloads/} から回収したもの
+      （改変なし）。
+\item \texttt{computations/verify\_p5.py}（$=$ \texttt{handoff/verify\_p5.py}）：
+      表 \ref{tab:p5} の $5$ 個の被覆について、$\bbF_5$ 上で Wronskian と
+      各 ODE が $f,g$ を解にもつことを検証する。
+\end{itemize}
+
+\noindent 実行結果（両列挙器で一致）：
+
+\begin{center}
+\begin{tabular}{lrrrrr}
+\toprule
+$p$ & 3 & 5 & 7 & 11 & 13\\
+\midrule
+$\#\,{}^{\dagger}C_1$ & 1 & 5 & 14 & 55 & 91\\
+$p(p^2-1)/24$ & 1 & 5 & 14 & 55 & 91\\
+$\#\,{}^{\dagger}C_2$ & 11 & 225 & 1666 & 24805 & 67431\\
+素朴な $\lambda$（条件 (b) なし）& 11 & 345 & 3122 & 55605 & 158431\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent さらに $\#\,{}^{\dagger}C_3\big|_{p=3}=121=11^2$。
+入れ子性 ${}^{\dagger}C_N\subseteq{}^{\dagger}C_{N+1}$ は
+$(p,N)\in\{(3,1),(5,1),(3,2),(5,2)\}$ で
+${}^{\dagger}C_N\setminus{}^{\dagger}C_{N+1}=\emptyset$ を確認。
+$p=5$, $N=1$ の $(s_1,s_2,s_3)$ 全リストは
+$(0,0,0),(0,1,1),(1,0,1),(1,1,0),(1,1,1)$ で、
+$\lambda_i=2s_i+1$ とすると表 \ref{tab:p5} の $5$ 個に一致する。
+\texttt{verify\_p5.py} は $5$ 個すべてについて $f,g$ が対応 ODE の解であること、
+Wronskian が \eqref{eq:wronskian} と整合することを確認した。
+
+\medskip
+\noindent これらは一般 $p$（あるいは一般 $N$）に対する証明ではなく、
+上記の有限個の $(p,N)$ での計算機確認である。
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{thebibliography}{99}
@@ -997,7 +1464,7 @@ Publ.\ Math.\ IHÉS \textbf{106} (2007), 1--138.
 \bibitem{Oss} B.~Osserman,
 \emph{Frobenius-unstable bundles and $p$-curvature},
 Trans.\ Amer.\ Math.\ Soc.\ \textbf{360} (2008), 273--305.
-\Todo{正確な巻号を確認}
+\NeedsCheck{正確な巻・年・頁を確認（付録 \ref{app:litcheck}）}
 
 \bibitem{Sch} D.~Schepler,
 \emph{Logarithmic nonabelian Hodge theory in characteristic $p$},
@@ -1010,10 +1477,15 @@ arXiv:2201.11266.
 \bibitem{Wak2} Y.~Wakabayashi,
 \emph{Arithmetic liftings and 2d TQFT for dormant opers of higher level},
 arXiv:2209.08528.
+\NeedsCheck{ar5iv 上の題名は
+``Canonical diagonal liftings I: dormant $\mathrm{PGL}_n$-opers on algebraic curves''
+であり不一致。改題か引用誤りか未判定。\S10.1--10.6, \S9.2 は未読
+（付録 \ref{app:litcheck}）。}
 
 \bibitem{Wak3} Y.~Wakabayashi,
 \emph{A theory of dormant opers on pointed stable curves},
 Astérisque \textbf{432} (2022).
+\NeedsCheck{radius の定義（Chap.~2, \S2.8, Def.~2.32 など）は未確認。}
 
 \end{thebibliography}
 
