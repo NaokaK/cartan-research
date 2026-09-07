@@ -1,6 +1,23 @@
 %% ---------------------------------------------------------------
 %%  Z_p-valued residues for regular singular stratified bundles
 %%  Working draft.  Compile with pdflatex.
+%%
+%%  This draft supersedes the version reflected in handoff/zp-chat.md's
+%%  "v1"; several of the errors that memo records had already been fixed
+%%  here (see \Cref{sec:corrections}).  This revision folds in, from
+%%  handoff/zp-residues-v2.tex:
+%%    * \S8 rewritten (coordinate independence, Hecke-exponent form of the
+%%      boundary twist, replacing the digit-exponent formula, which was
+%%      wrong -- see \Cref{sec:corrections}).
+%%    * New \S9, p-adic middle convolution, kept explicitly conditional /
+%%      conjectural (see status remarks throughout \S9 and
+%%      \Cref{sec:corrections}).
+%%    * \Cref{thm:localstructure}(2) corrected to "modulo Z" (see
+%%      \Cref{sec:corrections}).
+%%  \S1--\S7 are otherwise the pre-existing text of this manuscript; where
+%%  v2 had simplified a proof that this draft already had in more detail
+%%  (e.g.\ \Cref{thm:functoriality}\eqref{it:pullback}), the existing,
+%%  more detailed proof was kept.
 %% ---------------------------------------------------------------
 \documentclass[11pt,reqno]{amsart}
 
@@ -16,6 +33,8 @@
 \newcommand{\TODO}[1]{{\color{red}\textsf{[TODO: #1]}}}
 \newcommand{\GAP}[1]{{\color{orange}\textsf{[GAP: #1]}}}
 \newcommand{\CHECK}[1]{{\color{blue!70!black}\textsf{[check: #1]}}}
+\newcommand{\NEEDSLITERATURECHECK}[1]{{\color{green!40!black}\textsf{[NEEDS
+LITERATURE CHECK: #1]}}}
 
 %% ---- notation --------------------------------------------------
 \newcommand{\Zp}{\mathbb{Z}_p}
@@ -33,6 +52,7 @@
 \newcommand{\cG}{\mathcal{G}}
 \newcommand{\cL}{\mathcal{L}}
 \newcommand{\cM}{\mathcal{M}}
+\newcommand{\cH}{\mathcal{H}}
 \newcommand{\cA}{\mathcal{A}}
 \newcommand{\cR}{\mathcal{R}}
 \newcommand{\cT}{\mathcal{T}}
@@ -59,8 +79,11 @@
 \newcommand{\id}{\mathrm{id}}
 \newcommand{\im}{\mathrm{im}}
 \newcommand{\tr}{\mathrm{tr}}
+\newcommand{\MC}{\mathrm{MC}}
+\newcommand{\rig}{\mathrm{rig}}
 \newcommand{\Xst}{X_*(T)}
 \newcommand{\isoto}{\xrightarrow{\ \sim\ }}
+\newcommand{\dR}{\mathrm{dR}}
 
 %% ---- theorem environments --------------------------------------
 \theoremstyle{plain}
@@ -86,7 +109,7 @@
 \begin{document}
 
 \title[$\Zp$-valued residues]{$\Zp$-valued residues for regular singular
-stratified bundles and log parabolic geometry}
+stratified bundles, boundary restriction, and $p$-adic middle convolution}
 
 \author{}
 \address{}
@@ -108,19 +131,40 @@ residues in $\Fp$ which are precisely the $p$-adic digits of $r_i$.
 Our main local result (\Cref{thm:localstructure}) is that the category of
 regular singular stratified bundles over $k((t))$ is semisimple and
 tannakian-equivalent to the representation category of the diagonalisable
-group $\Spec k[\Zp/\ZZ]$; the $\Zp$-valued residue is a complete
-invariant.  In particular the local monodromy of a regular singular
-stratified bundle carries no unipotent part, and any ``limit'' or
-``weight'' structure at the boundary must be of global origin.
+group $\Spec k[\Zp/\ZZ]$; the $\Zp$-valued residue, taken \emph{modulo
+$\ZZ$}, is a complete invariant of the underlying stratified bundle over
+$k((t))$ (\Cref{rem:completemodZ}; an earlier draft omitted the ``modulo
+$\ZZ$'', which is corrected in \Cref{sec:corrections}).  In particular the
+local monodromy of a regular singular stratified bundle carries no
+unipotent part, and any ``limit'' or ``weight'' structure at the boundary
+must be of global origin.
 
 Globally we construct a boundary restriction functor
 (\Cref{thm:boundary}) decomposing $\bar E_0|_{D_i}$ into $\Zp$-eigen\-com\-po\-nents,
 each of which is a regular singular stratified bundle on $D_i$
 \emph{twisted by $N_i^{\otimes c}$}, where $N_i$ is the normal bundle and
-$c\in\Zp$ the corresponding residue.  This identifies the $\Zp$-valued
-residue with a conformal weight and makes precise an analogy with
-conformal infinity in Poincar\'e--Einstein geometry.  The functor is
-dimension-decreasing and provides an inductive framework.
+$c\in\Zp$ the corresponding residue, with the twist governed by an
+intrinsic \emph{Hecke exponent} at each level (\Cref{sec:boundary}; an
+earlier draft used the wrong, digit-based, exponent here -- see
+\Cref{sec:corrections}).  This identifies the $\Zp$-valued residue with a
+conformal weight and makes precise an analogy with conformal infinity in
+Poincar\'e--Einstein geometry.  The functor is dimension-decreasing and
+provides an inductive framework; the argument closes an earlier proof gap
+by a coordinate-independence computation that is correct in outline but
+still needs a formal write-up (\Cref{sec:boundary}).
+
+Finally, \Cref{sec:MC} sketches a candidate $p$-adic middle convolution
+$\MC_c$, $c\in\Zp$, built from Gauss--Manin cohomology.  Because local
+monodromy is always semisimple, the classical Jordan-block bookkeeping
+disappears from the local invariants entering the construction.  This
+part of the paper is exploratory: the rank formula for $\MC_c(\cE)$ is
+stated as a \emph{conditional} proposition, made precise on the explicit
+hypothesis that $\MC_c$ preserves regular singularity and that a
+positive-characteristic Euler-characteristic/middle-extension formula
+holds (\Cref{prop:MCrank}); the exponent rules and rigidity invariance of
+$\MC_c$ are recorded only as conjectures, verified so far by explicit
+low-rank examples (\Cref{sec:MC}).  Whether $\MC_c$ preserves regular
+singularity at all is the open \Cref{prob:MCrs}.
 \end{abstract}
 
 \maketitle
@@ -185,18 +229,34 @@ $\sum_x r_x=-\deg$).  None of these are visible on the level of digits.
       all choices; higher-level lattices do not affect it.
 \item \Cref{thm:localstructure} (Local structure theorem): over $k((t))$,
       $\Strat^{\rs}$ is semisimple, equivalent to
-      $\Rep\bigl(\Spec k[\Zp/\ZZ]\bigr)$, and $r$ is a complete invariant.
+      $\Rep\bigl(\Spec k[\Zp/\ZZ]\bigr)$, and $r$ \emph{modulo $\ZZ$} is a
+      complete invariant (\Cref{rem:completemodZ}).
 \item \Cref{thm:comparison}: $r$ is the limit of the \emph{Iwasawa}
       (flag-wise) Hecke invariants $\nu_n^{\Iw}$; the naive Cartan
       invariants do \emph{not} converge to $r$
       (\Cref{ex:cartanfails}).
-\item \Cref{thm:boundary} (Boundary restriction): a canonical
-      $\Zp$-graded decomposition of $\bar E_0|_{D_i}$ into
+\item \Cref{thm:boundary} (Boundary restriction, \Cref{sec:boundary}): a
+      canonical $\Zp/\ZZ$-graded decomposition of $\bar E_0|_{D_i}$ into
       $N_i^{\otimes c}$-twisted regular singular stratified bundles on
-      $D_i$.
+      $D_i$, with the twist at each level given by an intrinsic Hecke
+      exponent (\Cref{cor:heckeexp}).  The argument rests on a
+      coordinate-independence statement (\Cref{prop:coordfree}) that is
+      correct in outline but not yet fully polished; see the status
+      remarks in \Cref{sec:boundary}.
 \item \Cref{cor:extension}: $\cE$ extends across $D_i$ as a genuine
       stratified bundle if and only if $r_i\in\Xst$.
+\item \Cref{sec:MC} (exploratory): a candidate $p$-adic middle
+      convolution $\MC_c$.  \Cref{prop:MCrank} is a conditional
+      proposition (rank formula, given \Cref{prob:MCrs} and a
+      positive-characteristic Euler-characteristic hypothesis);
+      \Cref{prop:MCrules,prop:rigMC} are conjectures, checked only on
+      examples; \Cref{prob:MCrs} (does $\MC_c$ preserve regular
+      singularity?) is open and is the load-bearing question for all of
+      \Cref{sec:MC}.
 \end{itemize}
+
+See \Cref{sec:corrections} for a record of corrections to claims made in
+earlier drafts of this manuscript.
 
 \subsection{Relation to conformal infinity}
 \Cref{thm:boundary} says that the residue eigenvalue $c$ is precisely the
@@ -598,7 +658,8 @@ Consequently:
       $\Rep\bigl(\cT_p\bigr)$ where
       $\cT_p:=\Spec k[\Zp/\ZZ]$ is diagonalisable with character group
       $\Zp/\ZZ$;
-\item the $r$-spectrum is a complete invariant;
+\item the $r$-spectrum \emph{modulo $\ZZ$} is a complete invariant
+      (\Cref{rem:completemodZ});
 \item $\Ext^1_{\Strat^{\rs}(K)}(\cL_c,\cL_{c'})=0$ for all $c,c'$.
 \end{enumerate}
 \end{theorem}
@@ -614,11 +675,21 @@ a filtration of $\cE$ by $\cD(\log)$-stable saturated stratified
 subbundles with single-valued graded pieces
 \CHECK{write out the lifting of the eigenprojectors; they are polynomials
 in the $\theta_a$, hence generate $R$-submodules, and commute with all
-$\sigma_n$}.  For $c\ne c'$ we have $\Hom(\cL_c,\cL_{c'})=0$ since
-$\cL_{c'-c}$ has nonzero residue.  For $c=c'$,
-$\Ext^1(\cL_c,\cL_c)=\Ext^1(\cO,\cO)$, which vanishes by
+$\sigma_n$}.  For $c\not\equiv c'\pmod\ZZ$ we have $\Hom(\cL_c,\cL_{c'})=0$:
+a nonzero such map, being a nonzero $K$-linear map between rank-one
+objects, is an isomorphism $\cO\cong\cL_{c'-c}$; transporting the lattice
+of $\cL_{c'-c}$ along it gives a logarithmic lattice of the trivial bundle
+$\cO$ with $r$-spectrum $\{c'-c\}$, but any two $R$-lattices in a
+$1$-dimensional $K$-vector space differ by a power of $t$, i.e.\ every
+logarithmic lattice of $\cO$ is a Hecke modification of the standard one
+by some $\nu\in\Xst=\ZZ$, so by \Cref{thm:welldef}(2) its $r$-spectrum
+lies in $\ZZ$ -- contradicting $c'-c\notin\ZZ$.  For $c\equiv c'\pmod\ZZ$
+(including $c=c'$), $\cL_{c'-c}\cong\cO$ (\Cref{rem:completemodZ}), so
+$\Ext^1(\cL_c,\cL_{c'})\cong\Ext^1(\cO,\cO)$, which vanishes by
 \Cref{cor:allzero}: a self-extension has $r=0$, hence is trivial.
-Therefore the filtration splits.
+Therefore the filtration splits, with graded pieces belonging to the same
+class mod $\ZZ$ merged into isomorphic copies of a single $\cL_c$ as in
+\Cref{rem:completemodZ}.
 
 Statement (1): the resulting fibre functor identifies $\Strat^{\rs}(K)$
 with $\Zp/\ZZ$-graded vector spaces, i.e.\ $\Rep(\cT_p)$; note
@@ -626,6 +697,42 @@ $\Zp/\ZZ$ has no $p$-torsion (its torsion subgroup is
 $\ZZ_{(p)}/\ZZ$, of order prime to $p$), so $\cT_p$ is a genuine
 diagonalisable group and its representations are semisimple.
 \end{proof}
+
+\begin{remark}[Isomorphisms among the $\cL_c$, and consistency with
+\Cref{prop:Gm}]\label{rem:completemodZ}
+For $n\in\ZZ=\Xst$ (rank one) we have $\cO\cong\cL_n$: equip $\cO$ with the
+Hecke-modified lattice, $t^{-n}$ times the standard generator at level
+$0$, leaving the higher lattices unchanged; by \Cref{thm:welldef}(2) this
+lattice has $r$-spectrum $\{n\}$, and since $\cO$ has rank one this is the
+single-eigenvalue case handled in the first paragraph of the proof above,
+so $\cO\cong\cL_n$.  Tensoring by $\cL_c$ and applying the same
+single-eigenvalue case to $\cL_c\otimes\cL_n$ (whose $r$-spectrum is
+$\{c+n\}$ by \Cref{thm:functoriality}\eqref{it:additive}) gives
+\[
+   \cL_c\ \cong\ \cL_c\otimes\cO\ \cong\ \cL_c\otimes\cL_n\ \cong\ \cL_{c+n},
+   \qquad n\in\ZZ .
+\]
+So the $\cL_c$, $c\in\Zp$, are pairwise isomorphic exactly along
+$\ZZ$-cosets.  This is why item (2) above must read ``modulo $\ZZ$'' and
+not literally $\Zp$: it is the same phenomenon, one dimension down, as
+$\Pic^{\strat}(\GG_m)\cong\Zp/\ZZ$ in \Cref{prop:Gm} -- an integral shift
+of the level-$0$ lattice generator, over a field where $t$ is invertible,
+is already an isomorphism of the underlying object, not merely a change
+of some auxiliary integral structure.  It is also forced by item (1) of
+the theorem: representations of the diagonalisable group
+$\cT_p=\Spec k[\Zp/\ZZ]$ are graded by characters valued in $\Zp/\ZZ$, not
+$\Zp$, so a complete invariant for $\Strat^{\rs}(K)\simeq\Rep(\cT_p)$ can
+only be the $r$-spectrum read modulo $\ZZ$; item (2) as originally stated
+(without ``modulo $\ZZ$'') was inconsistent with item (1) of the very same
+theorem.  See \Cref{sec:corrections} for the correction history.
+
+None of this affects the decomposition
+$\cE\cong\bigoplus_{c\in\Zp}\cL_c^{\oplus n_c}$ itself, which remains a
+valid (if redundant, since $c$ and $c+n$ give the same summand up to
+isomorphism) way of exhibiting $\cE$, nor does it affect
+\Cref{cor:extension}, which concerns a fixed lattice attaining residue
+exactly $0$, not the isomorphism class of $\cE$ over $K$.
+\end{remark}
 
 \begin{corollary}[No local unipotent part]\label{cor:nounipotent}
 The local monodromy of a regular singular stratified bundle is semisimple.
@@ -864,69 +971,280 @@ which \Cref{cor:nosection} forbids.
 
 Let $D_i\subset D$ be a smooth irreducible component,
 $N_i:=\cO_{D_i}(D_i)$ its normal bundle, and $D^{(i)}:=\sum_{j\ne i}D_j$.
+Write $\widehat\cO$ for the formal completion of $\cO_{\bar X}$ along
+$D_i$; \emph{Zariski-locally} on $D_i$, $\widehat\cO\cong\cO_{D_i}[[t]]$
+for a local equation $t$ of $D_i$ (there is in general no such
+trivialisation \emph{globally} on $D_i$, precisely because $N_i$ need not
+be trivial; this is the reason a coordinate-independence statement is
+needed below before anything can be said globally on $D_i$).
 
-\begin{lemma}\label{lem:coordfree}
-The simultaneous eigendecomposition of the $R^{(m)}$ on $\bar E_0|_{D_i}$
-is independent of the choice of local coordinate $t$.
+\begin{remark}[On the status of this section]\label{rem:sec8status}
+An earlier draft of \Cref{sec:boundary} proved the decomposition below
+only pointwise on $D_i$ (via \Cref{thm:localstructure} applied at each
+closed point) and left an explicit gap, marked at the time as
+\[
+   \texttt{GAP: a relative version of \Cref{thm:localstructure} over }D_i
+   \texttt{ is needed to make the pointwise isomorphisms globally coherent,}
+\]
+to globalise it.  That gap is \textbf{not} present in the current proof
+below -- it is superseded by the route described in this remark, not
+silently dropped; \Cref{sec:corrections} records why the relative
+statement above is hard (\Cref{lem:res0}'s Cartier-descent step does not
+relativise).  The route taken here avoids the relative structure theorem
+entirely, working instead directly with the diagonal.  Its logical
+dependency chain is:
+\[
+   \Cref{prop:coordfree}\ \Longrightarrow\ \Cref{cor:globaldecomp}\
+   \Longrightarrow\ \Cref{prop:blocks}\ \Longrightarrow\
+   \Cref{thm:boundary},
+\]
+and separately \Cref{prop:jump}$\Longrightarrow$\Cref{cor:heckeexp} feeds
+into \Cref{thm:boundary} as well.  \Cref{prop:jump}, \Cref{cor:heckeexp}
+and \Cref{lem:normalise} are complete, elementary proofs with no gap.
+\Cref{prop:coordfree}, however, is \textbf{correct in outline but not yet
+formally polished} (the log PD-envelope computation needs to be written
+out rigorously); consequently \Cref{cor:globaldecomp},
+\Cref{prop:blocks} and \Cref{thm:boundary} all inherit that same
+``proved / needs polish'' status, \emph{not} unconditional-theorem
+status, until \Cref{prop:coordfree} is written up in full.  The old
+relative-structure-theorem GAP is not needed any more and is not being
+silently dropped: it is superseded by this route, as recorded in
+\Cref{sec:corrections}.
+\end{remark}
+
+\subsection{Coordinate independence}
+
+\begin{proposition}[\CHECK{outline correct; log PD-envelope computation
+needs a formal write-up}]\label{prop:coordfree}
+The operators $R_a\in\End_{\cO_{D_i}}(\bar E_0|_{D_i})$, hence the
+decomposition of \Cref{def:rspec}, are independent of the choice of local
+equation $t$ for $D_i$.
+\end{proposition}
+\begin{proof}[Proof sketch]
+The $D_a$ are the dual basis of the log divided-power coordinate on the
+diagonal.  Precisely, let $p_1,p_2$ be the projections of the formal
+logarithmic divided-power neighbourhood of the diagonal in
+$\bar X\times\bar X$, put $t_j:=p_j^*t$ and
+\[
+   w:=\frac{t_2}{t_1}-1 ,
+\]
+a well-defined element of the log-PD-envelope with divided powers
+$w^{[a]}$; the logarithmic stratification is
+$\epsilon(1\otimes x)=\sum_aD_a(x)\otimes w^{[a]}$.
+
+Let $t'=ut$ with $u$ a unit.  Then
+$w'=\tfrac{t'_2}{t'_1}-1=\tfrac{u_2}{u_1}(1+w)-1$.  Now $u_2-u_1$ lies in
+the ideal of the diagonal, and modulo the ideal generated by $t_1$
+together with the conormal directions along $D_i$ we have
+$t_2-t_1=t_1w\equiv0$ and $u_2-u_1\equiv0$.  Restricting the
+stratification to $D_i$ -- which is exactly the operation computing the
+residues -- therefore gives $w'=w$, hence $D'_a=D_a$ on $\bar E_0|_{D_i}$.
+
+\CHECK{this sketch needs a rigorous account of the log PD envelope and of
+what ``restricting to $D_i$'' means precisely at the level of the
+divided-power neighbourhood, e.g.\ a direct verification of
+$D'_a-D_a\in t\,\cD(\log D)+\cD(\log D)\cdot\mathrm{Der}_{D_i}$; see
+\Cref{rem:sec8status}.}
+\end{proof}
+
+\begin{corollary}\label{cor:globaldecomp}
+$\bar E_0|_{D_i}=\bigoplus_{c\in\Zp}(\bar E_0|_{D_i})^c$ is a canonical
+decomposition into $\cO_{D_i}$-subbundles, defined globally on $D_i$
+(status as in \Cref{rem:sec8status}).
+\end{corollary}
+\begin{proof}
+The $R_a$ are global $\cO_{D_i}$-linear endomorphisms
+(\Cref{lem:leibniz,prop:coordfree}) with $R_a^p=R_a$, so the spectral
+idempotents $\prod_{c'\ne c}(R_a-c')/(c-c')$ are global; multiplicities
+are constant by \Cref{lem:constant}.
+\end{proof}
+
+\subsection{Residue jumps are Hecke exponents}
+
+\begin{proposition}\label{prop:jump}
+Let $M\subseteq L$ be $\cD(\log D_i)$-stable lattices in $E$ over
+$\widehat\cO$ with $L/M$ supported on $D_i$.  If $L$ has $r$-spectrum
+$\{c\}$ (a single value) and $M$ has $r$-spectrum $\{c'\}$, then
+$a:=c'-c\in\ZZ_{\ge0}$ and $M=t^aL$.
+\end{proposition}
+\begin{proof}
+For $x$ a $\binom{c}{\bullet}$-eigenvector, \Cref{lem:leibniz} gives
+\[
+   \theta_b(t^ax)=\sum_{i+j=b}D_i(t^a)\theta_j(x)
+   =\sum_{i+j=b}\tbinom ai\tbinom cj\,t^ax=\tbinom{a+c}{b}t^ax
+\]
+by Vandermonde, so $t^aL$ has $r$-spectrum $\{c+a\}$; thus $c'-c$ is an
+elementary divisor of $M\subseteq L$, in particular an integer.  If all
+elementary divisors of $M\subseteq L$ equal $a$ then $t^aL\subseteq M$ and
+$\mathrm{length}(L/M)=\mathrm{length}(L/t^aL)$, so $M=t^aL$.
+\end{proof}
+
+\begin{corollary}\label{cor:heckeexp}
+Let $\{\bar E_n\}$ be a logarithmic lattice system and
+$M_n:=\sigma_n(F^*\bar E_{n+1})$.  Then $M_n$ is $\cD(\log D_i)$-stable,
+and the $r$-spectrum of $F^*\bar E_{n+1}$ is $p\cdot r(\bar E_{n+1})$.
+Hence the \emph{Hecke exponents} of $\sigma_n$ are
+\[
+   a_n=p\,r_{n+1}-r_n\ \in\ \ZZ^N ,\qquad r_n:=r(\bar E_n).
+\]
+\end{corollary}
+\begin{proof}
+$\cD(\log)$-stability: $\partial^{[a]}(1\otimes x)=0$ unless $p\mid a$ and
+$D_{pb}(1\otimes x)=t^{pb}\otimes\partial^{[b]}x=1\otimes D_b(x)$.  Thus on
+$F^*\bar E_{n+1}$ the residues are $R_a=0$ for $p\nmid a$ and
+$R_{pb}=R_b(\bar E_{n+1})$: the digits are shifted up by one, i.e.\
+$r(F^*\bar E_{n+1})=p\,r_{n+1}$.  Now apply \Cref{prop:jump}.
+\end{proof}
+
+\begin{remark}[The Hecke exponent is \emph{not} the digit
+$\dig_n(c)$]\label{rem:heckenotdigit}
+An earlier draft wrote the twist below using $\dig_n(c)$ in place of
+$a_n$; this is \textbf{wrong} in general and is corrected here (see
+\Cref{sec:corrections} for the correction history and a worked
+counterexample).  The two agree for the specific lattice system used to
+\emph{define} $\cL_c$ in \Cref{sec:localstructure} (there $r_n$ is $c$
+with its first $n$ digits truncated, and one checks directly that
+$a_n=p\,r_{n+1}-r_n=-\dig_n(c)$ for that particular choice).  But
+\Cref{lem:normalise} below normalises a general lattice system
+differently -- to a \emph{single} residue value $c_n$ at each level, not
+to a digit-truncation -- and for that normalisation $a_n=pc_{n+1}-c_n$
+need not equal $\pm\dig_n(c)$: e.g.\ if $c_n=c$ for every $n$ (the
+``constant'' normalisation) then $a_n=c(p-1)$ for all $n$, which is
+independent of $n$ and generally differs from $\dig_n(c)$.  Both
+normalisations give the same total twist $N_i^{\otimes c}$
+(\Cref{thm:boundary}(2)); only the level-by-level bookkeeping differs.
+\end{remark}
+
+\subsection{Block decomposition of the lattices}
+
+\begin{proposition}[status as in \Cref{rem:sec8status}]\label{prop:blocks}
+Let $\bar E$ be a logarithmic lattice over $\widehat\cO$.  Then
+\[
+   \bar E=\bigoplus_{\bar c\in\Zp/\ZZ}\bar E\{\bar c\}
+\]
+canonically, where each $\bar E\{\bar c\}$ is a $\cD(\log D_i)$-stable
+$\widehat\cO$-subbundle whose restriction to $D_i$ is the sum of the
+components $(\bar E|_{D_i})^c$ with $c\mapsto\bar c$.  The decomposition
+is preserved by every morphism of logarithmic lattices, in particular by
+the $\sigma_n$.
+\end{proposition}
+\begin{proof}
+By \Cref{cor:rigidity} the commuting $k$-linear operators $\theta_a$ on
+$\bar E$ are simultaneously diagonalisable with joint characters
+$\binom{c}{\bullet}$, $c\in\Zp$; write $\bar E=\bigoplus_{c}\bar E[c]$ as
+$k$-vector spaces.  Each $\theta_a$ is $\cO_{D_i}$-linear
+(\Cref{lem:leibniz}, using that $D_a$ involves only $\partial_t$, so
+$D_b(f)=0$ for $b\ge1$ and any $f\in\cO_{D_i}$), so each $\bar E[c]$ is an
+$\cO_{D_i}$-module, and by the computation in \Cref{prop:jump},
+\[
+   t\cdot\bar E[c]\subseteq\bar E[c+1].
+\]
+Therefore $\bar E\{\bar c\}:=\bigoplus_{c\mapsto\bar c}\bar E[c]$ is
+$t$-stable, i.e.\ an $\widehat\cO$-submodule, and the sum over
+$\bar c\in\Zp/\ZZ$ is direct and exhausts $\bar E$.  Being a direct
+summand of a projective module it is projective, hence a subbundle.
+Morphisms of logarithmic lattices commute with the $\theta_a$ and so
+preserve the $\bar E[c]$, a fortiori the blocks.  Finally, the blocks are
+determined by the restriction to $D_i$ (\Cref{cor:globaldecomp}), which
+depends on \Cref{prop:coordfree} for its coordinate-freeness; hence so
+does this decomposition.
+\end{proof}
+
+\begin{remark}
+The finer decomposition by $c\in\Zp$ does \emph{not} lift to the lattice:
+residues differing by a positive integer are resonant, and the
+corresponding extension of lattices need not split.  Grouping by
+$\Zp/\ZZ$ is precisely what removes resonance.  Over $K$ resonance is
+invisible ($\cL_c\cong\cL_{c'}$ iff $c-c'\in\ZZ$, \Cref{rem:completemodZ}),
+which is why \Cref{thm:localstructure} gives a full splitting there.
+\end{remark}
+
+\begin{lemma}[Normalisation]\label{lem:normalise}
+Within a block $\bar E_n\{\bar c\}$ one may perform elementary
+modifications along the subbundles $(\bar E_n|_{D_i})^{c'}$ so that the
+$r$-spectrum of the block becomes a single value $c_n\in\Zp$ with
+$c_n\mapsto\bar c$.  This may be done independently at each level.
 \end{lemma}
 \begin{proof}
-Apply \Cref{thm:localstructure} to the formal completion at a point of
-$D_i$: $\hat\cE\cong\bigoplus_c\cL_c\otimes V_c$.  For $t'=ut$ with
-$u$ a unit, $\cL_c^{(t')}\cong\cL_c^{(t)}$ (the discrepancy is a system of
-units, killed by the infinite product of \Cref{lem:mu0}).  Since
-$\Hom(\cL_c,\cL_{c'})=0$ for $c\ne c'$, the isotypic decomposition is
-unique.
+An elementary modification $\ker(\bar E\to Q)$ along a subbundle $Q$ of
+$\bar E|_{D_i}$ shifts the residues in $Q$ by $+1$ and leaves the others
+fixed (\Cref{prop:jump}); the eigenvalues within a block differ by
+integers, so finitely many such modifications equalise them.  The
+$\sigma_n$ impose no constraint: for any choice of lattices,
+$\sigma_n(F^*\bar E_{n+1})$ and $\bar E_n$ are commensurable lattices in
+the same $K$-space.
 \end{proof}
 
-\begin{lemma}\label{lem:horizontal}
-Let $s$ be a coordinate along $D_i$.  Then
-$[\delta_t^{(m)},\partial_s^{[j]}]=0$, so the eigendecomposition of
-\Cref{lem:coordfree} is horizontal for the connection along $D_i$ at every
-level, and the logarithmic poles along $D_j$, $j\ne i$, are preserved.
-\end{lemma}
+\subsection{The boundary restriction theorem}
 
-\begin{theorem}[Boundary restriction]\label{thm:boundary}
-Let $\cE$ be regular singular on $U$ with logarithmic lattice system.
-There is a canonical decomposition
-\[
-   \cR_i(\cE):=\bar E_0|_{D_i}=\bigoplus_{c\in\Zp}\cR_i^c(\cE)
-\]
-into locally free direct summands, and each $\cR_i^c(\cE)$ carries the
-structure of an \emph{$N_i^{\otimes c}$-twisted} regular singular
-stratified bundle on $(D_i,D_i\cap D^{(i)})$: the transition maps satisfy
-\[
-   \sigma_n|_{D_i}\colon F^*\bigl(\bar E_{n+1}|_{D_i}\bigr)^c
-   \isoto
-   \bigl(\bar E_n|_{D_i}\bigr)^c\otimes N_i^{\otimes(-\dig_n(c))},
-\]
-and the total twist, obtained by solving $e_n=pe_{n+1}-\dig_n(c)$, is
-$N_i^{\otimes c}$.  In particular:
+\begin{theorem}[Boundary restriction; status as in
+\Cref{rem:sec8status}]\label{thm:boundary}
+Let $\cE$ be regular singular with logarithmic lattice system, normalised
+as in \Cref{lem:normalise}, and fix a block $\bar c\in\Zp/\ZZ$ with
+level-$n$ residue value $c_n\in\Zp$.  Put $B_n:=\bar E_n\{\bar c\}|_{D_i}$
+and $a_n:=pc_{n+1}-c_n\in\ZZ$ (the Hecke exponent of
+\Cref{cor:heckeexp}, \emph{not} the digit $\dig_n(c)$ -- see
+\Cref{rem:heckenotdigit}). Then:
 \begin{enumerate}
-\item $\cR_i^c(\cE)$ is an honest stratified bundle whenever the class of
-      $c\otimes[N_i]$ vanishes in
-      $\bigl(\Pic(D_i)\otimes\Zp\bigr)/\Pic(D_i)$ --- e.g.\ if
-      $c\in\ZZ$, or if $N_i$ is trivial;
-\item the adjoint tractor bundle $\cA|_{D_i}=\End$-type object has
-      cancelling twists, hence is always an honest log parabolic geometry
-      on $(D_i,D_i\cap D^{(i)})$;
-\item $\cR_i$ is compatible with $\otimes$, duals and pullbacks, and
-      $r$ restricts according to \Cref{thm:functoriality}\eqref{it:pullback}.
+\item $\sigma_n$ induces isomorphisms
+\[
+   F_{D_i}^*\,B_{n+1}\ \isoto\ B_n\otimes N_i^{\otimes(-a_n)} ,
+\]
+and each $B_n$ carries a logarithmic connection along
+$(D_i,D_i\cap D^{(i)})$ compatible with these.
+\item Setting $e_n:=c_n$ solves the untwisting recursion
+      $e_n=pe_{n+1}-a_n$; thus $(B_n)$ is an \emph{$N_i$-twisted regular
+      singular stratified bundle of weight $c:=c_0$} on
+      $(D_i,D_i\cap D^{(i)})$, with total twist ``$N_i^{\otimes c}$''.
+\item $(B_n)$ becomes an honest regular singular stratified bundle after
+      tensoring by a line bundle if and only if there exist
+      $M_n\in\Pic(D_i)$ with $[M_n]=p[M_{n+1}]-a_n[N_i]$, i.e.\ iff the
+      element $c\cdot[N_i]$ of the $p$-adic completion
+      $\widehat{\Pic(D_i)}_p$ lies in the image of $\Pic(D_i)$.  The
+      obstruction thus lies in $\widehat{\Pic(D_i)}_p/\Pic(D_i)$, and
+      vanishes when $c\in\ZZ$ or $N_i$ is torsion.
+\item The adjoint tractor bundle $\cA|_{D_i}$ has cancelling twists and is
+      always an honest log parabolic geometry on
+      $(D_i,D_i\cap D^{(i)})$.
+\item $\cR_i\colon\cE\mapsto\bigl(\bar E_\bullet\{\bar c\}|_{D_i}\bigr)_{\bar c}$
+      is compatible with $\otimes$, duals and pullbacks, and residues along
+      $D^{(i)}$ restrict as in
+      \Cref{thm:functoriality}\eqref{it:pullback}.
 \end{enumerate}
 \end{theorem}
-\begin{proof}[Proof sketch]
-The decomposition is \Cref{lem:coordfree}, locally free by
-\Cref{lem:constant} and $\cO_{D_i}$-linearity of $R_a$
-(\Cref{lem:leibniz}); horizontality is \Cref{lem:horizontal}.  For the
-twist, \Cref{thm:localstructure} gives locally
-$\sigma_n=t^{-\dig_n(c)}\times(\text{isomorphism})$ on the $c$-component,
-and $t$ is a trivialisation of $N_i^{-1}$ along $D_i$; the recursion
-$e_n=pe_{n+1}-\dig_n(c)$ has the unique bounded solution $e_0=-c$ in
-$\Zp$.
-\GAP{a relative version of \Cref{thm:localstructure} over $D_i$ is needed
-to make the local isomorphisms above globally coherent; the $\cO_{D_i}$-linearity
-of $R_a$ plus constancy of eigenvalues makes this plausible but it is not
-yet written}
+\begin{proof}
+(1) By \Cref{prop:blocks} the $\sigma_n$ preserve blocks; after
+normalisation each block of $\bar E_n$ has a single residue value, so
+\Cref{cor:heckeexp} and \Cref{prop:jump} give
+$\sigma_n(F^*\bar E_{n+1}\{\bar c\})=t^{a_n}\bar E_n\{\bar c\}
+=\bar E_n\{\bar c\}(-a_nD_i)$.  Restricting to $D_i$ and using
+$\bigl(F^*\bar E_{n+1}\bigr)\big|_{D_i}=F_{D_i}^*\bigl(\bar E_{n+1}|_{D_i}\bigr)$
+(absolute Frobenius preserves $D_i$) and
+$\cO(-a_nD_i)|_{D_i}=N_i^{\otimes(-a_n)}$ gives the displayed isomorphism.
+Horizontality along $D_i$: a coordinate $s$ along $D_i$ satisfies
+$[\,\delta^{(m)}_t,\partial_s^{[j]}\,]=0$, so all the constructions above
+are flat in the $D_i$-directions, and the logarithmic poles along
+$D_j$, $j\ne i$, are preserved.
+
+(2) $pc_{n+1}-a_n=pc_{n+1}-pc_{n+1}+c_n=c_n$.
+
+(3) Untwisting means finding $M_n$ with $F^*(B_{n+1}\otimes M_{n+1})\cong
+B_n\otimes M_n$, i.e.\ $[M_n]=p[M_{n+1}]-a_n[N_i]$.  Iterating,
+$[M_0]=-\bigl(\sum_{i<n}a_ip^i\bigr)[N_i]+p^n[M_n]$, so $[M_0]$ must
+reduce to $-\bigl(\sum_{i<n}a_ip^i\bigr)[N_i]$ modulo $p^n\Pic(D_i)$ for
+all $n$; since $\sum_na_np^n=-c$ this says $[M_0]\mapsto c\cdot[N_i]$ in
+$\widehat{\Pic(D_i)}_p$.  Conversely such an $M_0$ determines the $M_n$.
+
+(4) and (5) are formal.
 \end{proof}
+
+\begin{example}
+$\bar X=\PP^n$, $D_i$ a smooth hypersurface of degree $d$, so
+$\Pic(D_i)=\ZZ$ (for $n\ge4$) and $[N_i]=d$.  \Cref{thm:boundary}(3) then
+says the boundary object untwists iff $cd\in\ZZ$, i.e.\ iff
+$c\in\frac1d\ZZ$ --- a strong constraint recovering \Cref{cor:extension}
+when $d=1$.
+\end{example}
 
 \subsection{The dictionary with conformal infinity}\label{sec:conformal}
 
@@ -941,7 +1259,7 @@ choice of defining function $\rho$ & choice of logarithmic lattice $\bar E_0$\\
 conformal class (scaling of $\rho$) & indeterminacy of $r$ by $\Xst$ (\Cref{thm:welldef})\\
 asymptotic expansion exponents & $p$-adic digits $R^{(m)}$ of $r$\\
 conformal density of weight $w$ & $N_i^{\otimes c}$-twist, $c\in\Zp$ (\Cref{thm:boundary})\\
-tractor bundle is weight $0$ & $\cA|_{D_i}$ untwisted (\Cref{thm:boundary}(2))\\
+tractor bundle is weight $0$ & $\cA|_{D_i}$ untwisted (\Cref{thm:boundary}(4))\\
 quasi-unipotent monodromy at infinity & torsion $r\in\ZZ_{(p)}$, i.e.\ tameness\\
 unipotent part, weight filtration & \emph{absent locally} (\Cref{cor:nounipotent});
                                     global $\Ext$ only\\
@@ -952,9 +1270,278 @@ unipotent part, weight filtration & \emph{absent locally} (\Cref{cor:nounipotent
 \begin{remark}
 The identification ``residue $=$ conformal weight'' explains the
 $p$-adicity structurally: $N_i^{\otimes c}$ is meaningful inside the
-$F$-divided formalism precisely for $c\in\Zp$, because the recursion
-$e_n=pe_{n+1}-\dig_n(c)$ is a $p$-adic expansion.
+$F$-divided formalism precisely for $c\in\Zp$, because the untwisting
+recursion $e_n=pe_{n+1}-a_n$ (\Cref{thm:boundary}(2)) is a $p$-adic
+expansion.
 \end{remark}
+
+%% ===============================================================
+\section{$p$-adic middle convolution (exploratory)}\label{sec:MC}
+%% ===============================================================
+
+This section is exploratory and, apart from \Cref{con:MC,rem:middle},
+does not contain unconditional theorems.  We sketch a candidate $p$-adic
+middle convolution $\MC_c$, $c\in\Zp$, on $\PP^1$.  The essential input is
+\Cref{thm:localstructure}: because local monodromy is semisimple, the
+local invariants entering the classical theory reduce to
+\emph{multiplicities} of residues rather than counts of Jordan blocks.
+Whether this candidate construction actually behaves like a middle
+convolution -- in particular, whether it preserves regular singularity at
+all -- is the open \Cref{prob:MCrs}, on which everything else in this
+section depends; see the explicit hypotheses attached to each statement
+below.
+
+\subsection{Convolution via Gauss--Manin}
+Let $S=\{x_1,\dots,x_s\}\subset\AAA^1$ and $U=\AAA^1\setminus S$.  For
+$c\in\Zp$ let $\cL_c$ be the rank one stratified bundle on $\GG_m$ with
+residues $c$ at $0$ and $-c$ at $\infty$ (\Cref{prop:Gm}), and write
+$\cL_c(y-x)$ for its pullback under $(x,y)\mapsto y-x$.
+
+\begin{construction}\label{con:MC}
+For $\cE\in\Strat^{\rs}(U)$ and $c\in\Zp$ put, for $y$ varying in
+$\AAA^1\setminus S$,
+\[
+   \MC_c(\cE)_y:=\im\Bigl(
+     H^1_{\dR,c}\bigl(\AAA^1\setminus(S\cup\{y\}),\ \cE\otimes\cL_c(y-x)\bigr)
+     \longrightarrow
+     H^1_{\dR}\bigl(\cdots\bigr)\Bigr).
+\]
+Relative de Rham cohomology of a stratified bundle along a smooth
+morphism carries a Gauss--Manin stratification (Katz--Oda;
+\NEEDSLITERATURECHECK{precise reference for compatibility with
+$F$-divided systems}), so $\MC_c(\cE)$ is a stratified bundle on
+$\AAA^1\setminus S$
+\emph{wherever the cohomology sheaves are locally free of the expected
+rank} -- see \Cref{prob:MClf}.
+\end{construction}
+
+\begin{remark}[Why the local invariant simplifies]\label{rem:middle}
+In characteristic $0$, the definition of $j_{!*}$ requires bookkeeping of
+the unipotent part of local monodromy: $\dim\cF^{I_x}$ is the
+\emph{number of Jordan blocks} with eigenvalue $1$, not the multiplicity
+of the eigenvalue.  By \Cref{thm:localstructure} our local monodromy is
+semisimple, so, \emph{granting that the classical formula
+$\dim\cF^{I_x}=\#\{j:r_{x,j}\in\ZZ\}$ makes sense at all in this
+setting} (this is part of hypothesis (H-$\chi$) below),
+\[
+   \dim\cF^{I_x}=\#\{\,j:\ r_{x,j}\in\ZZ\,\}=:\delta_x
+\]
+is simply the plain multiplicity -- this is an unconditional consequence
+of \Cref{thm:localstructure} \emph{given} that $\dim\cF^{I_x}$ is a
+meaningful invariant here (\Cref{cor:nounipotent} already tells us there
+is no unipotent part to bookkeep).  Note \Cref{cor:nosection} forbids a
+canonical extension in the non-torsion range, but this is irrelevant to
+\Cref{con:MC}: the cohomological definition of $\MC_c$ requires no
+normalisation of $r$ into $[0,1)$.
+\end{remark}
+
+\subsection{Rank and exponents: a conditional proposition}
+
+\begin{proposition}[\textbf{Conditional}]\label{prop:MCrank}
+Assume:
+\begin{description}
+\item[(H-rs)] $\MC_c(\cE)$, as constructed in \Cref{con:MC}, is regular
+      singular on $\AAA^1\setminus S$ for $c\notin\ZZ$ and $\cE$
+      irreducible non-trivial (this is exactly \Cref{prob:MCrs});
+\item[(H-$\chi$)] the positive-characteristic Euler-characteristic /
+      middle-extension formula
+      $\chi(\PP^1,j_{!*}\cF)=M(2-|T|)+\sum_{x\in T}\dim\cF^{I_x}$ holds
+      for regular singular stratified bundles $\cF$ of rank $M$ on
+      $\PP^1$ with singular locus $T$, with $j_{!*}\cF$ defined
+      cohomologically as in \Cref{con:MC} and $\dim\cF^{I_x}$ as in
+      \Cref{rem:middle}.
+\end{description}
+Then, for $c\notin\ZZ$ and $\cE$ irreducible non-trivial with $r$-spectra
+$r_i$ at $x_i$ and $r_\infty$ at $\infty$, $N=\rk\cE$:
+\[
+   \rk\MC_c(\cE)=Ns-\sum_{i=1}^s\delta_i-\delta_\infty(c),
+   \qquad
+   \delta_i:=\#\{j: r_{i,j}\in\ZZ\},\quad
+   \delta_\infty(c):=\#\{j: r_{\infty,j}-c\in\ZZ\}.
+\]
+\end{proposition}
+\begin{proof}[Proof, given (H-rs) and (H-$\chi$)]
+By (H-$\chi$) applied to $\cF=\cE\otimes\cL_c(y-x)$ with
+$T=\{x_1,\dots,x_s,y,\infty\}$, $|T|=s+2$: the residues of $\cF$ are
+$r_i$ at $x_i$, $c$ at $y$ (so $\dim\cF^{I_y}=0$ as $c\notin\ZZ$), and
+$r_{\infty,j}-c$ at $\infty$.  By (H-rs), $\cF$ is regular singular, so
+$j_{!*}\cF$ and $\dim\cF^{I_x}$ are meaningful, and \Cref{rem:middle}
+identifies $\dim\cF^{I_x}$ with $\delta_x$.  Then
+$\dim H^1_{\mathrm{mid}}=M(|T|-2)-\sum_x\dim\cF^{I_x}$ (from (H-$\chi$)
+together with $\chi(\PP^1,j_!\cF)=M(2-|T|)$) gives the stated rank.
+\end{proof}
+
+\begin{remark}
+Given (H-rs) and (H-$\chi$), this argument is formally complete: it uses
+only \Cref{thm:localstructure} (unconditional) beyond the two hypotheses.
+Neither hypothesis is established in this manuscript.  (H-rs) is
+\Cref{prob:MCrs}.  (H-$\chi$) is, in effect, the assertion that the
+classical Euler-characteristic bookkeeping for middle extensions of local
+systems has a verbatim analogue for regular singular stratified bundles;
+no proof or reference for this analogue in positive characteristic is
+known to the author at the time of writing --
+\NEEDSLITERATURECHECK{does such a formula appear in the literature on
+$F$-divided sheaves / stratified bundles, e.g.\ in work building on
+Katz--Oda?}.
+\end{remark}
+
+\subsection{Exponent rules: conjectural}
+
+\begin{conjecture}[Exponent rules]\label{prop:MCrules}
+In the situation of \Cref{prop:MCrank} (assuming (H-rs) and (H-$\chi$)
+there), write $N'=\rk\MC_c(\cE)$.  The $\Zp$-valued Riemann scheme of
+$\MC_c(\cE)$ is
+\[
+\begin{aligned}
+   \text{at }x_i:&\quad \{\,r_{i,j}+c\ :\ r_{i,j}\notin\ZZ\,\}
+     \ \cup\ \{\,0\ \text{with multiplicity}\ N'-(N-\delta_i)\,\},\\[2pt]
+   \text{at }\infty:&\quad \{\,r_{\infty,j}-c\ :\ r_{\infty,j}-c\notin\ZZ\,\}
+     \ \cup\ \{\,-c\ \text{with multiplicity}\ N'-(N-\delta_\infty(c))\,\},
+\end{aligned}
+\]
+all equalities modulo $\ZZ$, i.e.\ up to the choice of lattice.
+\end{conjecture}
+
+\begin{remark}
+Unlike \Cref{prop:MCrank}, this is \emph{not} known to follow formally
+from (H-rs)+(H-$\chi$): it additionally requires the precise local
+behaviour of the Gauss--Manin connection near each singular point, which
+is not computed here.  What is given is Katz's classical exponent rules
+\cite[Ch.~6]{Katz2}, transported formally to $\Zp$ by
+$\mu=e^{2\pi i\alpha}\rightsquigarrow\alpha$ and simplified using
+\Cref{rem:middle} (no Jordan-block clause).  This transport is why the
+statement is recorded as a conjecture rather than a proposition: no
+independent, characteristic-$p$ derivation is given.  \Cref{prob:MCintrinsic}
+asks for a direct proof via the local Gauss--Manin residue; it is checked
+below only on the rank-one hypergeometric example
+(\Cref{ex:2F1}) and against \Cref{ex:GL2} (\Cref{ex:consistent}).
+\end{remark}
+
+\begin{example}[$p$-adic Gauss hypergeometric]\label{ex:2F1}
+Let $\cE=\cL_{\alpha}(x)\otimes\cL_{\beta}(x-1)$ on
+$\PP^1\setminus\{0,1,\infty\}$: rank $1$, residues $\alpha$ at $0$,
+$\beta$ at $1$, $-\alpha-\beta$ at $\infty$; assume
+$\alpha,\beta,\alpha+\beta+c\notin\ZZ$.  If \Cref{prop:MCrank} and
+\Cref{prop:MCrules} hold in this case, then $s=2$,
+$\delta_1=\delta_2=\delta_\infty(c)=0$, so
+\[
+   \rk\MC_c(\cE)=1\cdot2-0-0=2,
+\]
+with Riemann scheme
+\[
+   \begin{array}{c|c|c}
+   0 & 1 & \infty\\\hline
+   0,\ \alpha+c & 0,\ \beta+c & -c,\ -\alpha-\beta-c
+   \end{array}
+\]
+Comparing with the classical scheme
+$\bigl(\begin{smallmatrix}0,1-\gamma&0,\gamma-a-b&a,b\end{smallmatrix}\bigr)$
+gives $\gamma=1-\alpha-c$, $a+b=1-\alpha-\beta-2c$, $ab$ determined; the
+sum of all six exponents is $0$, consistent with
+\Cref{prop:restheorem} and $\deg\bar E_0=0$ (the classical value $1$ is a
+different lattice normalisation).  This is a \emph{consistency check on
+the conjecture}, not a proof of it; we call the resulting object the
+\emph{$p$-adic hypergeometric stratified bundle} $\cH(a,b;\gamma)$,
+$a,b,\gamma\in\Zp$, understanding that its existence is conditional on
+\Cref{prop:MCrank,prop:MCrules}.
+\end{example}
+
+\begin{remark}[Relation to Dwork]
+A $\Zp$-parameter hypergeometric is, level by level, a compatible system
+of hypergeometric-type equations with parameters
+$a,b,\gamma\bmod p^{n+1}$.  This is suggestive of the shape of Dwork's
+$p$-adic hypergeometric theory and of his congruences for
+${}_2F_1$-coefficients \NEEDSLITERATURECHECK{compare precisely with
+Dwork's Frobenius structure; not verified here}.
+\end{remark}
+
+\begin{example}[Consistency with \Cref{ex:GL2}]\label{ex:consistent}
+Taking $c=\tfrac12$ (possible for $p\ne2$) and $\alpha$ suitable, the
+conjectural scheme of \Cref{ex:2F1} reproduces the exponent pattern
+$\{\tfrac\alpha2,\tfrac{\alpha+1}2\}$ of the pushforward along the double
+cover of \Cref{ex:GL2}.  Again, this is evidence for the conjecture, not
+a proof.
+\end{example}
+
+\subsection{Rigidity and the $p$-adic Katz algorithm: conjectural}
+
+\begin{definition}
+For $\cE$ regular singular on $\PP^1\setminus T$ define the
+\emph{rigidity index}
+\[
+   \rig(\cE):=2N^2-\sum_{x\in T}\bigl(N^2-\dim Z(r_x)\bigr),
+   \qquad
+   \dim Z(r_x)=\sum_{\bar c\in\Zp/\ZZ}m_{x,\bar c}^2 ,
+\]
+where $m_{x,\bar c}$ is the multiplicity of $\bar c$ in the $r$-spectrum
+at $x$.  By \Cref{thm:localstructure} the centraliser of local monodromy
+really has this dimension -- no Jordan blocks intervene.  $\cE$ is
+\emph{rigid} if $\rig(\cE)=2$.
+\end{definition}
+
+\begin{conjecture}\label{prop:rigMC}
+$\rig(\MC_c(\cE))=\rig(\cE)$ for $c\notin\ZZ$, and $\MC_c$ preserves
+irreducibility.  Moreover $\MC_{c'}\circ\MC_c=\MC_{c+c'}$ on irreducible
+non-trivial objects, and $\MC_{-c}\circ\MC_c=\id$.
+\end{conjecture}
+
+\begin{remark}
+This is transported from \cite[6.0]{Katz2} and depends on
+\Cref{prop:MCrules} (also conjectural): granting \Cref{prop:MCrules},
+rigidity-invariance is expected to follow by the same purely
+combinatorial computation as in characteristic $0$, but that computation
+is not carried out here, so \Cref{prop:rigMC} is recorded as a conjecture
+in its own right rather than as a corollary.  A direct Gauss--Manin proof,
+bypassing \Cref{prop:MCrules} entirely, would be preferable; see
+\Cref{prob:MCintrinsic}.
+\end{remark}
+
+\begin{conjecture}[$p$-adic Katz algorithm]\label{conj:katzalg}
+Every irreducible rigid regular singular stratified bundle on
+$\PP^1\setminus T$ is obtained from a rank one object by a finite sequence
+of operations $\cE\mapsto\cE\otimes\cL$ ($\cL$ of rank one) and
+$\cE\mapsto\MC_c(\cE)$, $c\in\Zp$.
+\end{conjecture}
+
+\begin{remark}
+The choice of $c$ in Katz's reduction step is $c=-\sum(\text{certain
+residues})$.  In characteristic $0$ this requires a root of unity of the
+right order in the coefficient field; here $c$ ranges over the ring $\Zp$
+and such sums always exist, so the algorithm has \emph{more} room, not
+less -- \emph{if} the rest of the construction goes through.  The
+condition to check at each step is only $c\notin\ZZ$.
+\end{remark}
+
+\subsection{What is still missing}
+
+\begin{problem}\label{prob:MCrs}
+Does $\MC_c$ preserve regular singularity?  Equivalently: is the
+Gauss--Manin stratification of a regular singular stratified bundle along
+a family of affine curves again regular singular?  In characteristic $0$
+this is standard; here it is open, and it is the hypothesis (H-rs) on
+which \Cref{prop:MCrank} -- and hence everything else in \Cref{sec:MC} --
+depends.  This is the main gap in \Cref{sec:MC}.
+\end{problem}
+
+\begin{problem}\label{prob:MClf}
+Local freeness and base change for $H^1_{\dR}$ in \Cref{con:MC}: identify
+hypotheses (e.g.\ on $\delta_x$) guaranteeing that $\MC_c(\cE)$ is a
+vector bundle of the rank predicted by \Cref{prop:MCrank}, and that
+(H-$\chi$) holds.
+\end{problem}
+
+\begin{problem}\label{prob:MCintrinsic}
+Give an intrinsic proof of \Cref{prop:MCrules} by computing the local
+Gauss--Manin residue, independent of the transport from
+characteristic $0$, and deduce \Cref{prop:rigMC} from it directly.
+\end{problem}
+
+\begin{problem}
+Combine $\MC_c$ with \Cref{thm:boundary}: is there a middle convolution in
+higher dimension compatible with boundary restriction, so that the
+$p$-adic Katz algorithm can be run inductively on $\dim\bar X$?  This
+presupposes \Cref{prob:MCrs}.
+\end{problem}
 
 %% ===============================================================
 \section{Consequences and the inductive framework}\label{sec:applications}
@@ -965,10 +1552,10 @@ $\cE$ extends to a stratified bundle in a neighbourhood of $D_i$ if and
 only if $r_i\in\Xst$.
 \end{corollary}
 \begin{proof}
-$(\Leftarrow)$ Using \Cref{thm:boundary}, perform Hecke modifications of
-$\bar E_0$ along the eigencomponents to make all residues zero; by
-\Cref{cor:allzero} the $\sigma_n$ become lattice isomorphisms, so
-$(\bar E_n,\sigma_n)$ is an $F$-divided sheaf near $D_i$.
+$(\Leftarrow)$ As in \Cref{lem:normalise}, perform elementary
+modifications of $\bar E_0$ along the eigencomponents to make all
+residues zero; by \Cref{cor:allzero} the $\sigma_n$ become lattice
+isomorphisms, so $(\bar E_n,\sigma_n)$ is an $F$-divided sheaf near $D_i$.
 $(\Rightarrow)$ Clear.
 \end{proof}
 
@@ -1021,9 +1608,23 @@ difficulty:
 \section{Open problems}
 %% ===============================================================
 
-\begin{problem}
-Prove the relative version of \Cref{thm:localstructure} over a smooth base,
-closing the gap in \Cref{thm:boundary}.
+\begin{problem}[Relative local structure theorem]\label{prob:relstruct}
+Prove a relative version of \Cref{thm:localstructure} over a smooth base
+$S$.  This is \emph{no longer needed} to establish \Cref{thm:boundary}
+(see \Cref{rem:sec8status} and \Cref{sec:corrections} for the route that
+supersedes it), but is expected to matter in its own right for the
+twisted induction programme of \Cref{sec:applications}.  The obstruction
+to the direct approach is that \Cref{lem:res0}'s Cartier-descent step
+does not relativise: the kernel $M=\ker\theta_1$ is level-$1$ horizontal
+only in the $t$-direction, not in the $S$-direction.
+\end{problem}
+
+\begin{problem}[Formal write-up of coordinate independence]\label{prob:coordfreewriteup}
+Write out \Cref{prop:coordfree} rigorously (the log PD-envelope
+computation and the meaning of ``restricting to $D_i$'' at the level of
+the divided-power neighbourhood), so that \Cref{cor:globaldecomp},
+\Cref{prop:blocks} and \Cref{thm:boundary} become unconditional theorems.
+This is the only remaining gap in \Cref{sec:boundary}.
 \end{problem}
 
 \begin{problem}
@@ -1042,7 +1643,117 @@ group scheme of $K$ including irregular objects
 \end{problem}
 
 %% ===============================================================
+\section{Corrections and status of previous claims}\label{sec:corrections}
+%% ===============================================================
+
+This manuscript is a scientific record and not only a finished statement
+of results; this section keeps a short account of claims made in earlier
+drafts that turned out to be wrong or imprecise, why, and how they were
+fixed, so that the correction history is not lost by silent editing.
+Fuller working notes on these corrections are kept in
+\texttt{handoff/zp-chat.md} (\S5) and in the project's daily notes; this
+section is the authoritative summary inside the manuscript itself.
+
+\subsection{Digit-wise additivity of residues (fixed prior to this
+draft)}
+An early version of \Cref{thm:functoriality}\eqref{it:additive} argued
+tensor-additivity of the residue directly at the level of the $\Fp$-valued
+digits, i.e.\ claimed
+$R^{(m)}(\cE\otimes\cE')=R^{(m)}(\cE)+R^{(m)}(\cE')$.  This is false: for
+example with $p=5$, $c=1$, $c'=-1$ one has $\dig_1(1)=0$ and
+$\dig_1(-1)=4$, whose sum $4$ disagrees with $\dig_1(0)=0$ -- digits do
+not add because of carries.  The fix, already in place throughout this
+draft, is to work with the full family of operators $D_a$ (not only the
+level operators $\delta^{(m)}$), use the Lucas relations
+(\Cref{lem:lucas}) to reduce to a single Vandermonde identity
+$\sum_{b+c=a}\binom cb\binom{c'}{c}=\binom{c+c'}a$, and only \emph{then}
+extract digits via \Cref{lem:digitmap}.  The additivity is a statement
+about eigenvalues in the ring $\Zp$, never about digits; see the
+remark following \Cref{thm:functoriality}.
+
+\subsection{The boundary twist exponent: digit versus Hecke exponent
+(fixed in this revision)}
+An earlier version of \Cref{thm:boundary} wrote the twisting isomorphism
+at level $n$ as $F^*_{D_i}B_{n+1}\isoto B_n\otimes N_i^{\otimes(-\dig_n(c))}$,
+using the $p$-adic digit $\dig_n(c)$ as the exponent.  This is wrong for
+a general normalisation of the lattice system.  The correct exponent is
+the \emph{Hecke exponent} $a_n=pc_{n+1}-c_n\in\ZZ$ of
+\Cref{cor:heckeexp}, where $c_n$ is the (single, after
+\Cref{lem:normalise}) residue value of the block at level $n$.  The two
+agree only for the specific lattice system used to build $\cL_c$ itself
+in \Cref{sec:localstructure} (where $c_n$ is $c$ with its first $n$
+digits truncated, so $a_n=-\dig_n(c)$ there); for the ``constant''
+normalisation $c_n\equiv c$ used in \Cref{lem:normalise}, one instead gets
+the constant $a_n=c(p-1)$, generally different from $\pm\dig_n(c)$.  Both
+choices telescope to the same total twist $N_i^{\otimes c}$
+(\Cref{thm:boundary}(2)); only the level-by-level formula changes.  See
+\Cref{rem:heckenotdigit} for the derivation and a worked comparison of
+the two normalisations.
+
+\subsection{The relative-structure GAP in \Cref{thm:boundary}: superseded,
+not resolved}
+An earlier draft's proof of \Cref{thm:boundary} decomposed
+$\bar E_0|_{D_i}$ only pointwise on $D_i$ (applying
+\Cref{thm:localstructure} at each closed point separately) and left an
+explicit
+\[
+   \texttt{GAP: a relative version of \Cref{thm:localstructure} over }D_i
+   \texttt{ is needed to make the local isomorphisms globally coherent.}
+\]
+An attempt to prove that relative statement directly failed: the proof of
+\Cref{lem:res0} (the key step of \Cref{thm:localstructure}) uses Cartier
+descent on $M=\ker\theta_1$, and $M$ is level-$1$ horizontal only in the
+$t$-direction, not in the direction of the base $D_i$, so the descent does
+not relativise.  This is recorded as \Cref{prob:relstruct}, which remains
+open in its own right (it is expected to matter for the twisted-induction
+programme of \Cref{sec:applications}) but is \textbf{no longer needed}
+for \Cref{thm:boundary}.
+
+The route actually used in the current \Cref{sec:boundary} avoids the
+relative structure theorem entirely: coordinate-independence of the
+residue operators $R_a$ is instead checked directly on the diagonal
+(\Cref{prop:coordfree}), which combined with $\cO_{D_i}$-linearity of
+$R_a$ gives the global decomposition (\Cref{cor:globaldecomp}) and the
+block decomposition of lattices (\Cref{prop:blocks}) without ever
+invoking a relative version of \Cref{thm:localstructure}.  This closes
+the \emph{original} gap, but \Cref{prop:coordfree} itself is only correct
+in outline -- the log PD-envelope computation still needs a rigorous
+write-up (\Cref{prob:coordfreewriteup}) -- so \Cref{thm:boundary} should
+be read as ``proved, modulo that write-up,'' not as an unconditional
+theorem; see \Cref{rem:sec8status}.
+
+\subsection{``Complete invariant'' is modulo $\ZZ$, not $\Zp$}
+An earlier draft of \Cref{thm:localstructure}(2) asserted that the
+$r$-spectrum itself, as an element of $\Zp$, is a complete invariant of a
+regular singular stratified bundle over $K$.  This is inconsistent with
+item (1) of the very same theorem: representations of the diagonalisable
+group $\cT_p=\Spec k[\Zp/\ZZ]$ are graded by $\Zp/\ZZ$, not by $\Zp$.
+Concretely, $\cL_c\cong\cL_{c+n}$ for every $n\in\ZZ$ (\Cref{rem:completemodZ}):
+Hecke-modifying the level-$0$ lattice of the trivial bundle $\cO$ by
+$n\in\Xst=\ZZ$ realises $\cO$ itself with $r$-spectrum $\{n\}$, so by the
+single-eigenvalue case of \Cref{thm:localstructure}, $\cO\cong\cL_n$, and
+tensoring by $\cL_c$ gives $\cL_c\cong\cL_{c+n}$.  This is the same
+phenomenon, one dimension down, as $\Pic^{\strat}(\GG_m)\cong\Zp/\ZZ$ in
+\Cref{prop:Gm} (already correctly stated modulo $\ZZ$ in every draft).
+The corrected statement, and the corresponding fix to the Hom/Ext
+argument in the proof of \Cref{thm:localstructure} (which had implicitly
+assumed $\Hom(\cL_c,\cL_{c'})=0$ for all $c\ne c'$, true only for
+$c\not\equiv c'\pmod\ZZ$), are given in \Cref{rem:completemodZ} and in the
+proof of \Cref{thm:localstructure} itself.  This correction does not
+affect the decomposition $\cE\cong\bigoplus_c\cL_c^{\oplus n_c}$, nor
+\Cref{cor:extension}, both of which are about a fixed lattice, not the
+isomorphism class of $\cE$ over $K$.
+
+%% ===============================================================
 \begin{thebibliography}{99}
+
+\bibitem{DettweilerReiter} M.~Dettweiler and S.~Reiter,
+  \emph{An algorithm of Katz and its application to the inverse Galois
+  problem}, J. Symbolic Comput. \textbf{30} (2000), 761--798.
+
+\bibitem{Dwork} B.~Dwork,
+  \emph{$p$-adic cycles}, Publ. Math. IHES \textbf{37} (1969), 27--115.
+  \TODO{also cite Dwork's hypergeometric congruences}
 
 \bibitem{EsnaultKindler} H.~Esnault and L.~Kindler,
   \emph{Lefschetz theorems for tamely ramified coverings},
@@ -1057,6 +1768,10 @@ group scheme of $K$ including irregular objects
   \emph{Nilpotent connections and the monodromy theorem: applications of a
   result of Turrittin},
   Publ. Math. IHES \textbf{39} (1970), 175--232.
+
+\bibitem{Katz2} N.~Katz,
+  \emph{Rigid Local Systems}, Ann. of Math. Studies \textbf{139},
+  Princeton, 1996.
 
 \bibitem{Kindler} L.~Kindler,
   \emph{Regular singular stratified bundles and tame ramification},
