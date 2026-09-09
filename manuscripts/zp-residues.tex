@@ -14,6 +14,11 @@
 %%      \Cref{sec:corrections}).
 %%    * \Cref{thm:localstructure}(2) corrected to "modulo Z" (see
 %%      \Cref{sec:corrections}).
+%%    * Proof of \Cref{thm:localstructure} (non-single-valued case)
+%%      repaired: the k-linear eigenprojectors do not lift to the lattice,
+%%      and Hom=0 was conflated with Ext^1=0; replaced by the Z_p/Z-block
+%%      decomposition \Cref{lem:Kblocks}.  Statement unchanged.  See
+%%      \Cref{sec:corrections}.
 %%  \S1--\S7 are otherwise the pre-existing text of this manuscript; where
 %%  v2 had simplified a proof that this draft already had in more detail
 %%  (e.g.\ \Cref{thm:functoriality}\eqref{it:pullback}), the existing,
@@ -397,7 +402,9 @@ $\psi(\delta)=\nabla(\delta)^p-\nabla(\delta^{[p]})$, which only handles
 $a=1$ directly.  Note that $\theta_a$ is not $R$-linear (only $k$-linear),
 so \Cref{cor:rigidity} gives a decomposition of $\bar E_0$ as a
 $k$-vector space; the $R$-module structure interacts with it through
-\Cref{eq:grading} below.
+\Cref{eq:grading} below.  The coarser grouping of these eigenspaces by
+$\Zp/\ZZ$ \emph{does} descend to the lattice and to $K$
+(\Cref{lem:Kblocks}); the finer grouping by $c\in\Zp$ does not.
 \end{remark}
 
 \begin{lemma}[Leibniz]\label{lem:leibniz}
@@ -499,8 +506,32 @@ Let $\cE$ be regular singular.
 the horizontal generator by $t^{-\nu}$, and
 $\binom{x+\nu}{p^m}$ is the $m$-th digit of $x+\nu$.  In general reduce to
 rank one along the eigendecomposition (or use
-\Cref{thm:comparison}\eqref{it:additive}).
-(3) follows.
+\Cref{thm:functoriality}\eqref{it:additive}).
+
+(3) It suffices to show that any two logarithmic lattices $\bar E,\bar E'$
+of $\cE$ over $K$ have $r$-spectra that agree modulo $\ZZ$ as multisets.
+Replacing the pair by $\bar E+\bar E'\supseteq\bar E,\bar E'\supseteq
+\bar E\cap\bar E'$ (both $\theta_a$-stable, hence logarithmic, lattices) we
+may assume $\bar E'\subseteq\bar E$.  Then $\bar E/\bar E'$ is a
+finite-length $R$-module on which the $\theta_a$ act, semisimply and
+commuting by \Cref{cor:rigidity}; every $\theta_a$-simple subquotient is
+killed by $t$ (else multiplication by $t$ would be an automorphism of a
+finite-length module) and is therefore one-dimensional over $k$, of a
+single character $c\in\Zp$.  Choosing a composition series and pulling it
+back gives a chain
+$\bar E=L_0\supsetneq L_1\supsetneq\dots\supsetneq L_r=\bar E'$ of
+$\theta_a$-stable lattices with each $L_i/L_{i+1}$ one such eigenline, of
+character $c^{(i)}$.  For $x$ a character-$c^{(i)}$ eigenvector,
+\Cref{lem:leibniz} gives
+$\theta_b(tx)=t\theta_b(x)+t\theta_{b-1}(x)
+=\bigl(\binom{c^{(i)}}{b}+\binom{c^{(i)}}{b-1}\bigr)tx
+=\binom{c^{(i)}+1}{b}tx$; comparing $L_i/tL_i$ with $L_{i+1}/tL_{i+1}$,
+passing from $L_i$ to $L_{i+1}$ replaces the residue $c^{(i)}$ on that
+eigenline by $c^{(i)}+1$ and leaves the other eigenvalues unchanged.
+Hence $\mathrm{Spec}_r(\cE,\bar E')$ differs from
+$\mathrm{Spec}_r(\cE,\bar E)$ only by integer shifts of individual
+eigenvalues, so $\bar r$ modulo $\Xst$ is independent of the lattice; the
+$W$-ambiguity is that of \Cref{def:rspec}.
 \end{proof}
 
 \begin{remark}
@@ -646,6 +677,128 @@ shows $\cE_1$ again has all residues zero; induct, then apply
 \Cref{lem:mu0}.
 \end{proof}
 
+\begin{lemma}[$\Zp/\ZZ$-blocks over $K$]\label{lem:Kblocks}
+Let $\cE$ be regular singular on $K$ with a logarithmic lattice
+$\bar E_0$, and $E:=\bar E_0\otimes_RK$.
+\begin{enumerate}
+\item For every $n$ the commuting semisimple $k$-linear operators
+      $\theta_a$ decompose the finite-dimensional space
+      $\bar E_0/t^n\bar E_0=\bigoplus_c(\bar E_0/t^n\bar E_0)[c]$ into
+      joint eigenspaces, indexed by $c\in\Zp$ with $D_a$ acting by
+      $\binom ca$; only finitely many cosets $\bar c\in\Zp/\ZZ$ occur,
+      and they are those already occurring in $\bar E_0/t\bar E_0$.
+\item Multiplication by $t$ sends $(\bar E_0/t^n\bar E_0)[c]$ into
+      $(\bar E_0/t^n\bar E_0)[c+1]$ (Pascal), so the grouping
+      $(\bar E_0/t^n\bar E_0)\{\bar c\}
+       :=\bigoplus_{c\mapsto\bar c}(\bar E_0/t^n\bar E_0)[c]$ is
+      $t$-stable, and
+      $\bar E_0/t^n\bar E_0=\bigoplus_{\bar c}(\bar E_0/t^n\bar E_0)\{\bar c\}$
+      compatibly in $n$.
+\item In the limit,
+      $\bar E_0=\bigoplus_{\bar c\in\Zp/\ZZ}\bar E_0\{\bar c\}$ with
+      $\bar E_0\{\bar c\}:=\varprojlim_n(\bar E_0/t^n\bar E_0)\{\bar c\}$
+      a $\cD_{\bar X}(\log D)$-stable direct summand, hence a sublattice;
+      $E\{\bar c\}:=\bar E_0\{\bar c\}\otimes_RK$ is then a
+      $\cD_U$-stable $K$-subspace and
+      $\cE=\bigoplus_{\bar c\in\Zp/\ZZ}\cE\{\bar c\}$ in
+      $\Strat^{\rs}(K)$.  Here $\cE\{\bar c\}$ is intrinsic: it is the
+      largest $\cD_U$-stable $K$-subspace of $E$ all of whose
+      $\theta_a$-eigen-characters lie in $\bar c$.  Hence the
+      decomposition is functorial in $\cE$.
+\item The $r$-spectrum of $\cE\{\bar c\}$ lies in the coset $\bar c$;
+      after finitely many elementary modifications along its residue
+      eigencomponents one obtains a logarithmic lattice of
+      $\cE\{\bar c\}$ with a single residue value $c_1\in\bar c$.
+\end{enumerate}
+The individual joint eigenspaces $E[c]:=\{x\in E:\theta_ax=\binom cax\
+\forall a\}$ also make sense, with $t\colon E[c]\isoto E[c+1]$; but as
+the $\theta_a$ are $k$-linear, not $R$- or $K$-linear (the Remark after
+\Cref{cor:rigidity}), an individual $E[c]$ is neither a $K$-subspace nor
+the fibre of a sublattice, and $\bigoplus_{c\in\Zp}E[c]$ is in general a
+\emph{proper} $k$-subspace of $E$ (for $\cL_c$ it is
+$k[t,t^{-1}]e_0\subsetneq Ke_0$).  Grouping by $\Zp/\ZZ$ -- which
+restores stability under $t$ and $t^{-1}$ -- is what yields the genuine
+decomposition of (3).
+\end{lemma}
+\begin{proof}
+(1) $\theta_a$ preserves $\bar E_0$ and every $t^j\bar E_0$ (by
+\Cref{lem:leibniz}, $\theta_a(t^jx)=\sum_bD_b(t^j)\theta_{a-b}(x)
+=\sum_b\binom jb t^j\theta_{a-b}(x)\in t^j\bar E_0$), hence acts on
+$\bar E_0/t^n\bar E_0$; there the
+$\theta_a$ are commuting and, by \Cref{cor:rigidity}, semisimple with
+eigenvalues in $\Fp$, so simultaneously diagonalisable, and by
+\Cref{lem:lucas} each joint eigen-character is $a\mapsto\binom ca$ for a
+unique $c\in\Zp$ (its digits are the eigenvalues of the
+$\theta_{p^m}$), with $D_a=\prod_m\binom{\theta_{p^m}}{a_m}$ acting by
+$\binom ca$.  For $0\le j<n$, multiplication by $t^j$ induces an
+isomorphism $\bar E_0/t\bar E_0\isoto t^j\bar E_0/t^{j+1}\bar E_0$
+shifting $c$ by $j$ (part (2)); so every character of
+$\bar E_0/t^n\bar E_0$ has the form $c^{(i)}+j$ with $c^{(i)}$ a
+character of $\bar E_0/t\bar E_0$, and lies in the coset $\bar c^{(i)}$.
+
+(2) For a joint eigenvector $x$ of character $c$, \Cref{lem:leibniz}
+gives $\theta_a(tx)=t\theta_a(x)+t\theta_{a-1}(x)
+=\bigl(\binom ca+\binom c{a-1}\bigr)tx=\binom{c+1}{a}tx$ (Pascal), so
+$t$ raises $c$ by $1$; grouping over a coset is thus $t$-stable.  The
+transition maps $\bar E_0/t^{n+1}\bar E_0\to\bar E_0/t^n\bar E_0$ are
+$\theta_a$-equivariant, hence respect the coset grading.
+
+(3) $\bar E_0=\varprojlim_n\bar E_0/t^n\bar E_0$ ($t$-adic completeness of
+a lattice), and a compatible finite direct sum decomposition at each
+level passes to the limit, so
+$\bar E_0=\bigoplus_{\bar c}\bar E_0\{\bar c\}$.  Each
+$\bar E_0\{\bar c\}$ is $\cD_{\bar X}(\log D)$-stable (the $\theta_a$
+respect the coset grading at every level) and is an $R$-module direct
+summand of the finite free module $\bar E_0$, hence finite free -- a
+sublattice.  Then $E\{\bar c\}=\bar E_0\{\bar c\}\otimes_RK$ is a
+$K$-subspace with $E=\bigoplus_{\bar c}E\{\bar c\}$, and it is
+$\cD_U$-stable: it is $K$-stable, and the operators
+$\nabla(\partial_t^{[j]})=t^{-j}\theta_j$ preserve it because $\theta_j$
+respects the coset grading (it acts on each character space by a scalar)
+and $t^{-j}$ preserves the $K$-subspace.  A $\cD_U$-submodule of $\cE$
+that is a $K$-subspace is a sub-stratified bundle, and the $r$-spectrum of
+$\cE\{\bar c\}$ lies in $\bar c$ by construction.
+
+\emph{Intrinsic characterisation.}  We use that $\Strat^{\rs}(K)$ is
+closed under subquotients (\cite{Kindler}; it is a tannakian subcategory
+of $\Strat(K)$), that a nonzero regular singular object has a
+nonzero $r$-spectrum ($\bar V\ne0\Rightarrow\bar V/t\bar V\ne0$ by
+Nakayama), and that for a surjection $V\twoheadrightarrow W$ of
+regular singular objects the $r$-spectrum of $W$ lies (mod $\ZZ$) in that
+of $V$ (choose lattices $\bar V\twoheadrightarrow\bar W$; the
+$\theta_a$-semisimple $\bar W/t\bar W$ is a $\theta_a$-equivariant
+quotient of $\bar V/t\bar V$).  Now let $V\subseteq E$ be any
+$\cD_U$-stable $K$-subspace with $r$-spectrum in $\bar c$.  For
+$\bar d\ne\bar c$ the composite $V\hookrightarrow E\twoheadrightarrow
+E\{\bar d\}$ has image both a subobject of $E\{\bar d\}$ ($r$-spectrum in
+$\bar d$) and a quotient of $V$ ($r$-spectrum in $\bar c$); as
+$\bar c\cap\bar d=\varnothing$ that image is $0$.  Hence
+$V\subseteq\bigcap_{\bar d\ne\bar c}\ker(E\to E\{\bar d\})=E\{\bar c\}$.
+This proves maximality and lattice-independence of $E\{\bar c\}$.
+Functoriality follows: for $\varphi\colon\cE\to\cE'$ in $\Strat^{\rs}(K)$,
+$\varphi(E\{\bar c\})$ is a $\cD_U$-stable $K$-subspace with $r$-spectrum
+in $\bar c$, so $\varphi(E\{\bar c\})\subseteq E'\{\bar c\}$.
+
+(4) The $r$-spectrum of $\bar E_0\{\bar c\}$ is the sub-multiset of that
+of $\bar E_0$ carried by the characters with $c\mapsto\bar c$, so lies in
+$\bar c$; independence modulo $\ZZ$ of the lattice is
+\Cref{thm:welldef}(2).  The residue values in the block differ by
+integers, so finitely many elementary modifications along the residue
+eigencomponents equalise them to a single $c_1\in\bar c$: this is the
+case $R=k[[t]]$ of \Cref{lem:normalise} (equivalently \Cref{prop:jump}),
+proved in \Cref{sec:boundary} by an elementary Vandermonde computation
+that uses neither the present lemma nor \Cref{thm:localstructure}.
+
+For the closing remark: the eigenvector computation of (2) gives
+$t\colon E[c]\to E[c+1]$, and applying \Cref{lem:leibniz} to
+$t\cdot(t^{-1}y)=y$ for $y\in E[c+1]$, then inducting on $a$ (with
+$\theta_0=\id$), gives $t^{-1}\colon E[c+1]\to E[c]$; so
+$t\colon E[c]\isoto E[c+1]$, and $\bigoplus_cE[c]$ is a $k$-subspace
+stable under $t^{\pm1}$.  For $\cL_c$ it is $k[t,t^{-1}]e_0$, properly
+contained in $Ke_0$, so this $k$-subspace is in general not all of $E$
+and does not by itself give a $K$-linear decomposition.
+\end{proof}
+
 \begin{theorem}[Local structure theorem]\label{thm:localstructure}
 Let $\cE$ be a regular singular stratified bundle on $K=k((t))$.  Then
 there is an isomorphism
@@ -664,38 +817,75 @@ Consequently:
 \end{enumerate}
 \end{theorem}
 \begin{proof}
-Suppose first the $r$-spectrum is a single value $c$ with multiplicity
-$N$.  Then every $R^{(m)}$ is the scalar $\dig_m(c)$.  By
-\Cref{thm:functoriality}\eqref{it:additive}, $\cL_{-c}\otimes\cE$ has
-$r$-spectrum $\{0\}$ with multiplicity $N$, so by \Cref{cor:allzero} it is
-trivial and $\cE\cong\cL_c^{\oplus N}$.
+\emph{Single value.}  Suppose the $r$-spectrum is a single value $c$ with
+multiplicity $N$.  Then every $R^{(m)}$ is the scalar $\dig_m(c)$, so by
+\Cref{thm:functoriality}\eqref{it:additive} the bundle
+$\cL_{-c}\otimes\cE$ has $r$-spectrum $\{0\}$ with multiplicity $N$; by
+\Cref{cor:allzero} it is trivial, whence $\cE\cong\cL_c^{\oplus N}$.
 
-In general, the simultaneous eigendecomposition of the $R^{(m)}$ lifts to
-a filtration of $\cE$ by $\cD(\log)$-stable saturated stratified
-subbundles with single-valued graded pieces
-\CHECK{write out the lifting of the eigenprojectors; they are polynomials
-in the $\theta_a$, hence generate $R$-submodules, and commute with all
-$\sigma_n$}.  For $c\not\equiv c'\pmod\ZZ$ we have $\Hom(\cL_c,\cL_{c'})=0$:
-a nonzero such map, being a nonzero $K$-linear map between rank-one
-objects, is an isomorphism $\cO\cong\cL_{c'-c}$; transporting the lattice
-of $\cL_{c'-c}$ along it gives a logarithmic lattice of the trivial bundle
-$\cO$ with $r$-spectrum $\{c'-c\}$, but any two $R$-lattices in a
-$1$-dimensional $K$-vector space differ by a power of $t$, i.e.\ every
-logarithmic lattice of $\cO$ is a Hecke modification of the standard one
-by some $\nu\in\Xst=\ZZ$, so by \Cref{thm:welldef}(2) its $r$-spectrum
-lies in $\ZZ$ -- contradicting $c'-c\notin\ZZ$.  For $c\equiv c'\pmod\ZZ$
-(including $c=c'$), $\cL_{c'-c}\cong\cO$ (\Cref{rem:completemodZ}), so
-$\Ext^1(\cL_c,\cL_{c'})\cong\Ext^1(\cO,\cO)$, which vanishes by
-\Cref{cor:allzero}: a self-extension has $r=0$, hence is trivial.
-Therefore the filtration splits, with graded pieces belonging to the same
-class mod $\ZZ$ merged into isomorphic copies of a single $\cL_c$ as in
-\Cref{rem:completemodZ}.
+\emph{General case.}  By \Cref{lem:Kblocks}(3) there is a finite
+decomposition $\cE=\bigoplus_{\bar c\in\Zp/\ZZ}\cE\{\bar c\}$ in
+$\Strat^{\rs}(K)$.  Fix $\bar c$.  By \Cref{lem:Kblocks}(4) some
+logarithmic lattice of $\cE\{\bar c\}$ has a single residue value
+$c_1\in\bar c$, so the single-value case applied to $\cE\{\bar c\}$ gives
+$\cE\{\bar c\}\cong\cL_{c_1}^{\oplus n_{\bar c}}$ with
+$n_{\bar c}=\dim_KE\{\bar c\}$.  Summing over $\bar c$ gives
+$\cE\cong\bigoplus_{\bar c}\cL_{c(\bar c)}^{\oplus n_{\bar c}}$, an
+isomorphism of the asserted form $\bigoplus_{c\in\Zp}\cL_c^{\oplus n_c}$.
 
-Statement (1): the resulting fibre functor identifies $\Strat^{\rs}(K)$
-with $\Zp/\ZZ$-graded vector spaces, i.e.\ $\Rep(\cT_p)$; note
-$\Zp/\ZZ$ has no $p$-torsion (its torsion subgroup is
-$\ZZ_{(p)}/\ZZ$, of order prime to $p$), so $\cT_p$ is a genuine
-diagonalisable group and its representations are semisimple.
+This establishes the displayed isomorphism; \emph{every} object of
+$\Strat^{\rs}(K)$ is a finite direct sum of the $\cL_c$.  Statements (1)
+and (3) are now formal consequences, as follows.
+
+\emph{Morphisms between the $\cL_c$.}  For $c\equiv c'\pmod\ZZ$ we have
+$\cL_c\cong\cL_{c'}$ (\Cref{rem:completemodZ}) and
+$\End(\cL_c)=k$: a $\cD_U$-linear endomorphism of the rank-one
+$K$-vector space $\cL_c$ is multiplication by a horizontal function,
+i.e.\ by a scalar.  For $c\not\equiv c'\pmod\ZZ$, $\Hom(\cL_c,\cL_{c'})=0$:
+a nonzero map between rank-one objects over the field $K$ is an
+isomorphism, forcing $\cL_c\cong\cL_{c'}$ and hence $[c]=[c']$ in
+$\Zp/\ZZ$ by \Cref{thm:welldef}(3) (the residue mod $\ZZ$ is an
+isomorphism invariant), a contradiction.  So the $\cL_{\bar c}$, one for each coset
+$\bar c\in\Zp/\ZZ$, are pairwise non-isomorphic objects with
+endomorphism ring $k$ and no nonzero maps between distinct ones.
+
+\emph{Statement (1).}  Combining the two preceding paragraphs, the
+$k$-linear functor
+$\omega\colon\cE\mapsto\bigl(\Hom(\cL_c,\cE)\bigr)_{\bar c\in\Zp/\ZZ}$,
+to finitely supported $\Zp/\ZZ$-graded finite-dimensional $k$-vector
+spaces, is fully faithful (both sides compute
+$\prod_{\bar c}\mathrm{Mat}_{m_{\bar c}\times n_{\bar c}}(k)$ on
+$\cE=\bigoplus\cL_c^{n_c}$, $\cE'=\bigoplus\cL_c^{m_c}$) and essentially
+surjective; hence an equivalence of additive categories.  Under it
+$\Strat^{\rs}(K)$ inherits from the target the structure of a semisimple
+abelian $k$-linear category, and the tensor product corresponds to the
+convolution of $\Zp/\ZZ$-gradings, so
+$\Strat^{\rs}(K)\simeq\Rep(\cT_p)$ with $\cT_p:=\Spec k[\Zp/\ZZ]$: the
+representations of the diagonalisable group scheme $\Spec k[A]$ of an
+abelian group $A$ are exactly the $A$-graded $k$-vector spaces, the
+finite-dimensional ones having finite weight support
+\NEEDSLITERATURECHECK{standard; e.g.\ SGA3 Exp.\ I or Waterhouse,
+\emph{Introduction to Affine Group Schemes}, ch.\ 2 -- add precise
+reference}.  Since $\Zp/\ZZ$ has no $p$-torsion (its torsion subgroup
+$\ZZ_{(p)}/\ZZ$ has order prime to $p$), $\cT_p$ is a genuine
+diagonalisable group and $\Rep(\cT_p)$ -- graded vector spaces -- is
+semisimple.
+
+\emph{Statement (3).}  In $\Rep(\cT_p)$ -- equivalently in
+$\Zp/\ZZ$-graded vector spaces -- all $\Ext^1$ vanish; transporting along
+the equivalence $\omega$, $\Ext^1_{\Strat^{\rs}(K)}(\cL_c,\cL_{c'})=0$ for
+\emph{all} $c,c'$.  Concretely, an extension $0\to\cL_{c'}\to M\to\cL_c\to0$
+has $M\cong\bigoplus_d\cL_d^{\oplus m_d}$ by the first part of the proof;
+the inclusion $\cL_{c'}\hookrightarrow M$ is a nonzero element of
+$\Hom(\cL_{c'},M)$, which by the $\Hom$-computation is the multiplicity
+space of the $\bar c'$-isotypic summand $M_{\bar c'}\cong\cL_{c'}^{\oplus m_{\bar c'}}$
+of $M$; its image is a line, a direct summand of $M_{\bar c'}$ and hence
+of $M$, and the complementary summand maps isomorphically to $\cL_c$
+under $M\to\cL_c$, giving a section.  \emph{This uses the direct-sum
+decomposition of the extension object, not $\Hom(\cL_c,\cL_{c'})=0$, which
+does not by itself force splitting; see \Cref{sec:corrections}.}
+
+\emph{Statement (2)} is \Cref{rem:completemodZ}.
 \end{proof}
 
 \begin{remark}[Isomorphisms among the $\cL_c$, and consistency with
@@ -740,6 +930,15 @@ There is no nilpotent element of $\fg$ attached to $r$, hence no
 Jacobson--Morozov $\mathfrak{sl}_2$ and no canonical weight filtration
 constructed from local data.
 \end{corollary}
+\begin{proof}
+The residues $R_a$ are simultaneously diagonalisable with eigenvalues in
+$\Fp$ (\Cref{cor:rigidity}), so the local monodromy is semisimple.  By
+\Cref{thm:localstructure} every object of $\Strat^{\rs}(K)$ is
+$\bigoplus_c\cL_c^{\oplus n_c}$ and the category is semisimple, so no
+local datum records a nilpotent (Jordan-block) structure: the only local
+invariant is the $r$-spectrum modulo $\ZZ$, a multiset of semisimple
+characters.
+\end{proof}
 
 \begin{example}[Non-semisimplicity is global]\label{ex:globalext}
 On $\GG_m=\Spec k[t,t^{-1}]$ consider the extension of $\cO$ by $\cO$
@@ -1735,14 +1934,65 @@ single-eigenvalue case of \Cref{thm:localstructure}, $\cO\cong\cL_n$, and
 tensoring by $\cL_c$ gives $\cL_c\cong\cL_{c+n}$.  This is the same
 phenomenon, one dimension down, as $\Pic^{\strat}(\GG_m)\cong\Zp/\ZZ$ in
 \Cref{prop:Gm} (already correctly stated modulo $\ZZ$ in every draft).
-The corrected statement, and the corresponding fix to the Hom/Ext
-argument in the proof of \Cref{thm:localstructure} (which had implicitly
-assumed $\Hom(\cL_c,\cL_{c'})=0$ for all $c\ne c'$, true only for
-$c\not\equiv c'\pmod\ZZ$), are given in \Cref{rem:completemodZ} and in the
-proof of \Cref{thm:localstructure} itself.  This correction does not
+The corrected statement is given in \Cref{rem:completemodZ}; the
+corresponding fix to the proof of \Cref{thm:localstructure} is described
+in the next subsection.  This correction does not
 affect the decomposition $\cE\cong\bigoplus_c\cL_c^{\oplus n_c}$, nor
 \Cref{cor:extension}, both of which are about a fixed lattice, not the
 isomorphism class of $\cE$ over $K$.
+
+\subsection{The proof of \Cref{thm:localstructure}: $\Zp/\ZZ$-block
+decomposition in place of eigenprojector lifting (this revision)}
+Beyond the ``modulo $\ZZ$'' correction above, the proof of the
+non-single-valued case of \Cref{thm:localstructure} had two defects, both
+now repaired \emph{without any change to the statement of the theorem}.
+
+\emph{(i) Eigenprojectors on the lattice.}  An earlier draft lifted the
+simultaneous eigendecomposition of the $R^{(m)}$ to a
+$\cD(\log)$-stable filtration of the \emph{lattice} by asserting that the
+eigenprojectors ``are polynomials in the $\theta_a$, hence generate
+$R$-submodules''.  This is incorrect: the $\theta_a$ are $k$-linear but
+not $R$-linear (the Remark after \Cref{cor:rigidity}; indeed
+$t\cdot\bar E_0^{(c)}\subseteq\bar E_0^{(c+1)}$), so a polynomial in the
+$\theta_a$ is only $k$-linear and its image need not be an $R$-submodule.
+The finer decomposition $\bigoplus_{c\in\Zp}E[c]$ genuinely does
+\emph{not} lift to the lattice (\Cref{lem:Kblocks}; cf.\ the Remark after
+\Cref{prop:blocks}).  What does lift is the coarser grouping by
+$\Zp/\ZZ$-cosets: grouping the $k$-linear eigenspaces over a coset
+restores stability under $t$ and $t^{-1}$ and yields a genuine
+decomposition $\cE=\bigoplus_{\bar c}\cE\{\bar c\}$ of stratified bundles
+over $K$ (\Cref{lem:Kblocks}, which is the specialisation to $K=k((t))$ of
+the block decomposition of \Cref{prop:blocks}).  Within one block a single
+residue value is reached by elementary modifications (\Cref{lem:normalise}),
+reducing to the single-value case.
+
+\emph{(ii) $\Hom=0$ versus $\Ext^1=0$.}  An earlier draft concluded that
+an extension of $\cL_c$ by $\cL_{c'}$ splits from
+$\Hom(\cL_c,\cL_{c'})=0$.  Vanishing of $\Hom$ does not imply vanishing of
+$\Ext^1$; that step was a gap.  A first attempt to patch it treated the
+resonant case $c\equiv c'\pmod\ZZ$ by claiming the $\theta_a$ are
+strictly triangular on the extension, hence nilpotent, hence zero -- also
+wrong, since $\theta_a$ acts on the sub-object $\cO$ as the nonzero
+operator $D_a$ on $K$, and ``a self-extension has $r=0$'' is not
+lattice-independent (\Cref{thm:welldef}).  The gap is now closed
+structurally: once the direct-sum decomposition is established (which is
+$\Ext$-free -- it uses only \Cref{lem:Kblocks} and the single-value
+case), \emph{every} object is $\bigoplus_c\cL_c^{\oplus n_c}$, and with
+the $\Hom$-computation the functor
+$\cE\mapsto(\Hom(\cL_c,\cE))_{\bar c}$ is an equivalence of
+$\Strat^{\rs}(K)$ with $\Zp/\ZZ$-graded vector spaces $=\Rep(\cT_p)$.
+Semisimplicity and $\Ext^1(\cL_c,\cL_{c'})=0$ for \emph{all} $c,c'$ are
+then read off the target category; concretely, an extension
+$0\to\cL_{c'}\to M\to\cL_c\to0$ splits because $M\cong\bigoplus_d\cL_d^{\oplus m_d}$
+and the sub-object $\cL_{c'}$ is a direct summand of the
+$\bar c'$-isotypic part of $M$.
+
+The conclusions of \Cref{thm:localstructure} --- the direct sum
+decomposition, semisimplicity of $\Strat^{\rs}(K)$,
+$\Ext^1(\cL_c,\cL_{c'})=0$ for all $c,c'$, and the equivalence with
+$\Rep(\cT_p)$ --- are unchanged, as are the downstream statements
+depending on them (\Cref{cor:nounipotent,thm:comparison,cor:blocks} and
+\Cref{sec:MC}).
 
 %% ===============================================================
 \begin{thebibliography}{99}
