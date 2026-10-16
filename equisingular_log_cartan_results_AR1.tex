@@ -1,0 +1,1224 @@
+% !TeX program = lualatex
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{luatexja}
+\usepackage{luatexja-fontspec}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+\geometry{margin=28mm}
+\setlength{\emergencystretch}{4em}
+\allowdisplaybreaks
+\hypersetup{
+  unicode=true,
+  hidelinks,
+  pdftitle={Equisingular family 上の logarithmic Cartan geometry}
+}
+\setlist{leftmargin=2em}
+\numberwithin{equation}{section}
+
+\theoremstyle{definition}
+\newtheorem{definition}{定義}[section]
+\newtheorem{lemma}[definition]{補題}
+\newtheorem{proposition}[definition]{命題}
+\newtheorem{theorem}[definition]{定理}
+\newtheorem{corollary}[definition]{系}
+\newtheorem{example}[definition]{例}
+\newtheorem{counterexample}[definition]{反例}
+\newtheorem{remark}[definition]{注意}
+
+\renewcommand{\proofname}{証明}
+\DeclareMathOperator{\At}{At}
+\DeclareMathOperator{\Ad}{Ad}
+\DeclareMathOperator{\ad}{ad}
+\DeclareMathOperator{\Lie}{Lie}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Fitt}{Fitt}
+\DeclareMathOperator{\Bl}{Bl}
+\DeclareMathOperator{\res}{res}
+\DeclareMathOperator{\Ann}{Ann}
+\newcommand{\OO}{\mathcal O}
+\newcommand{\g}{\mathfrak g}
+\newcommand{\h}{\mathfrak h}
+\newcommand{\Atlog}{\operatorname{At}^{\log}}
+\newcommand{\tX}{\widetilde X}
+\newcommand{\tE}{\widetilde E}
+\newcommand{\tal}{\widetilde\alpha}
+\newcommand{\LL}{\mathcal L}
+\newcommand{\Car}{\operatorname{Car}}
+
+\title{Equisingular family 上の logarithmic Cartan geometry:\\
+branch separation と relative conductor descent\\[2pt]
+{\large (Main Theorem 2)}}
+\author{}
+\date{2026-10-16}
+
+\begin{document}
+\maketitle
+
+\paragraph{位置づけ.}
+本稿は固定曲線版 \texttt{nodal\_log\_cartan\_results.tex}（以下 [Fix]、
+凍結済み・本稿では変更しない）の Main Theorem~1 を、node が基底上で
+infinitesimal に persist する family へ拡張する Main Theorem~2 の
+最終稿である。内容は研究ノート
+\texttt{equisingular\_family\_normalization\_audit\_2026-10-15\_ja.md}
+（Astra）と、その独立監査
+\texttt{equisingular\_family\_opus55\_audit\_2026-10-16\_ja.md}
+（Opus 5.5。MT2-A: VALID WITH REPAIR、MT2-B/C: VALID、反例なし）に基づき、
+監査が要求した repair R1--R4 を反映して整理し直したものである。
+\textbf{新しい数学は含まない。} [Fix] の結果は再証明しない。
+smoothing $xy=t$、relative dormancy は扱わない（\S\ref{sec:outlook}）。
+
+\paragraph{状態ラベル.}
+\textbf{PROVED}: 本稿内で証明済み（外部結果は明示引用）。
+\textbf{OPEN / CANDIDATE}: 未証明。
+\textbf{FALSE}: 反例あり。
+\textbf{NEEDS LITERATURE CHECK}: 一次資料の番号を未確認。
+番号を確認していない文献番号は書かない。
+
+\paragraph{構成（論理依存順）.}
+\S\ref{sec:setup} 定義 $\to$
+\S\ref{sec:2A} Theorem~2A（幾何的 branch separation）$\to$
+\S\ref{sec:2B} Theorem~2B（relative conductor descent、branch separation
+data を入力とする）$\to$
+\S\ref{sec:2C} Corollary~2C（equisingular Main Theorem~2 と base change）$\to$
+\S\ref{sec:art} Artinian 系・node-avoiding branched 系 $\to$
+\S\ref{sec:cex} 反例と警告 $\to$
+\S\ref{sec:outlook} outlook と status。
+
+\tableofcontents
+
+%=====================================================================
+\section{設定と定義}\label{sec:setup}
+%=====================================================================
+
+\(k\) を標数 \(p>0\) の perfect field とする。群については全編で
+\(G\) を \(k\) 上の smooth affine algebraic group、\(H\subseteq G\) を
+smooth closed subgroup で \(G/H\) が smooth 一次元のものとし、
+\(\g=\Lie G\)、\(\h=\Lie H\) とする。基底上ではこれらを base change する。
+\(k\) の代数閉性、\(G\) の簡約性・連結性、\(p\neq2\) は仮定しない。
+右 torsor の associated bundle の規約は [Fix] に従い
+\([eh,v]=[e,\Ad(h)v]\) とする。
+
+基底 \(B\) は任意の \(k\)-scheme であり、\textbf{reduced・Noetherian・
+Artinian は仮定しない}。\(B^\dagger\) は fs log scheme とする。
+斜体 \(A\) は任意の \(k\)-algebra を表す。
+
+\begin{definition}[Equisingular family]\label{def:EQ}
+\(f:X^\dagger\to B^\dagger\) が \emph{equisingular family} であるとは、
+次を満たすことをいう。
+\begin{enumerate}[label=(EQ\arabic*)]
+\item underlying \(X\to B\) は proper、flat、finitely presented で、
+  幾何的 fibre は純一次元の nodal curve である。
+\item \(\Sigma:=V(\Fitt_1\Omega^1_{X/B})\subset X\)（\emph{scheme-theoretic}
+  な relative singular locus。reduced locus ではない）に対し、
+  \(\Sigma\to B\) は flat である。
+\item (E8: 標準 chart) \(X^\dagger\) は \(B^\dagger\) 上、étale 局所的に
+  次の標準 chart で記述される。
+  ここで base の étale 近傍には pullback log structure を入れ、
+  各標準 model への étale 射は、その model の chart log structure
+  に関して strict とする。
+  \begin{itemize}
+  \item 非標点 smooth locus: base log structure の strict pullback。
+  \item markings: chart \(P\to P\oplus\mathbf N\)。\(\mathbf N\) の生成元は
+    smooth relative coordinate \(z\) に写る。markings は互いに交わらず
+    nodes とも交わらない relative divisor である。
+  \item nodes: fs chart \(P\to M_B\) と \(q\in P\)、étale な
+    \(\operatorname{Spec}A\to B\)、étale な
+    \(U\to X\) および \(U\to\operatorname{Spec}R_0\)、
+    \(R_0=A[x,y]/(xy-\alpha_B(q))\) があり、\(U\) の log structure は
+    \(Q=P\oplus_{\mathbf N}\mathbf N^2\)
+    （\(\mathbf N\to P:1\mapsto q\)、\(\mathbf N\to\mathbf N^2\) は対角）
+    から $e_x\mapsto x$、$e_y\mapsto y$、関係 \(e_x+e_y=q\) により定まる。
+  \end{itemize}
+  node の枝・marking の大域的 label は要求しない（étale descent による
+  monodromy を許す）。
+\end{enumerate}
+\end{definition}
+
+\begin{remark}\label{rem:EQ-redundancy}
+(i) (E8) の node chart は \(X/B\) の flatness と fibre の nodality を
+含むので、(EQ1) の一部は (E8) と冗長である（害はない）。
+(ii) proper 性は \(\Sigma/B\) の finiteness（命題~\ref{prop:flat-etale}(c)）
+と研究対象の指定にだけ使い、\S\ref{sec:2B} の descent には使わない。
+(iii) node chart の存在は \(B^\dagger\) が非自明であることを要求する
+（\(\alpha_B(q)=0\) となる \(q\in P\setminus P^\times\)、
+§\ref{sec:2A} 参照）。
+(iv) 「標準 chart」は明示的な仮定であり、単に「log smooth」や「dual graph が
+一定」とした、より曖昧な class についての定理ではない。
+\end{remark}
+
+\begin{definition}[Pointed log structure on \(\tX\)]\label{def:pointed}
+\(\nu:\tX\to X\) と \(D=\nu^{-1}(\Sigma)\) が与えられたとする。
+\(Z=D+\nu^{-1}\mathcal M\) と置く。ただし \(\mathcal M\) は元の
+marking divisor である。\(\tX^\dagger\) には、base log structure に
+\(Z\) の chart-defined marking log structure を加えたものを入れる。
+具体的には、局所方程式 \(z\) を選び、base chart \(P\) に対して
+\[
+  P\oplus\mathbf N\longrightarrow\mathcal O_{\tX},
+  \qquad (a,n)\longmapsto\alpha_B(a)z^n
+\]
+の associated log structure を用いる。\(Z\) の外では base log
+structure の strict pullback を用いる。\(z'=uz\) による変更は
+marking generator を \(\widetilde e_z+[u]\) に送る同型で貼り合わせる。
+ここで補集合 \(j:\tX\setminus Z\hookrightarrow\tX\) から作る
+full divisorial log structure
+\(\mathcal O_{\tX}\cap j_*\mathcal O_{\tX\setminus Z}^{\times}\)
+は用いない。nonreduced base 上では両者は一般に異なる。
+本稿の log differentials、log tangent および residue はすべて
+この chart-defined log structure に対するものである。
+これは \(X^\dagger\) の strict pullback ではなく、\(\nu\) が
+log scheme morphism であることも仮定しない。
+\end{definition}
+
+\begin{definition}[群oid]\label{def:groupoids}
+\(\Car_{G,H}(X^\dagger/B^\dagger)\) を、\(H\)-torsor \(E\)（fppf、
+特に smooth なので étale 局所自明）と、vertical inclusion を保つ同型
+\[
+  \alpha:\Atlog_{X/B}(E)\xrightarrow{\ \sim\ }E(\g)
+\]
+の組（relative logarithmic Cartan geometry）、および Cartan map を
+保つ torsor isomorphism のなす群oidとする。ここで
+\(\Atlog_{X/B}(E)\) は \(E\) の relative logarithmic Atiyah bundle
+（\(E\) に \(X^\dagger\) の strict pullback log structure を入れた
+\(T^{\log}_{E/B}\) の \(H\)-invariants）である。
+
+(Branch separation data が与えられたとき) \(\Car^{\mathrm{cond}}_{G,H}
+(\tX,D\to\Sigma/B)\) を、組 \((\tE,\tal,P_\Sigma,\beta)\) の群oidとする。
+ここで \((\tE,\tal)\) は \(\tX^\dagger\) 上の Cartan geometry、
+\(P_\Sigma\) は \(\Sigma\) 上の \(H\)-torsor、
+\(\beta:a^*P_\Sigma\xrightarrow{\sim}\tE|_D\) は torsor 同一視であり、
+次の \emph{full residue law}
+\begin{equation}\label{eq:residue-law}
+  \tau^*\rho=-\Phi_{\g}(\rho)\quad\text{in }\Gamma\bigl(D,\tau^*\tE(\g)|_D\bigr)
+\end{equation}
+を、\(\mathcal O_D\) 上の等式として（nilpotent な係数を含めて）満たす。
+\(\rho\), \(\tau\), \(\Phi_{\g}\) は \S\ref{sec:2B}
+（定義~\ref{def:residue}）で定める。射は
+\(\beta\) と Cartan map を保つ torsor isomorphism の組 \((\tilde f,f_\Sigma)\)
+である。
+\end{definition}
+
+\begin{definition}[Branch separation datum (BSD)]\label{def:BSD}
+\textbf{これが Theorem~2B の唯一の幾何的入力である。}
+EQ の (E8) chart を持つ \(X^\dagger/B^\dagger\)、閉部分スキーム
+\(\Sigma\subset X\)、有限表示な有限射 \(\nu:\tX\to X\)、
+\(D:=\nu^{-1}(\Sigma)\) の組が \emph{branch separation datum} であるとは、
+各 node chart \((U\to\operatorname{Spec}R_0)\) について次が成り立ち、
+かつ \(\nu\) が node の外で同型であることをいう。
+\begin{enumerate}[label=(BS\arabic*)]
+\item \(\alpha_B(q)=0\)（すなわち \(R_0=R_A:=A[x,y]/(xy)\)）。
+\item \(\Sigma\cap U=U\times_{R_A}V(x,y)\)、
+  \(U\times_X\tX=U\times_{R_A}\operatorname{Spec}S_A\)（ここで
+  \(S_A:=A[x]\times A[y]\) と \(R_A\to S_A\) は自然な射）。
+\end{enumerate}
+\end{definition}
+
+BSD に \(B\) に沿う base change との両立性は \emph{含めない}
+（\S\ref{sec:2C} でのみ使う）。また「global な枝 label」「proper」
+「reduced」も含めない。
+
+%=====================================================================
+\section{Theorem 2A: 幾何的 branch separation}\label{sec:2A}
+%=====================================================================
+
+\subsection{環の局所計算（任意の \(A\)）}
+
+\begin{lemma}[Relative local ring と conductor]\label{lem:local-ring}
+\textbf{PROVED.}
+任意の \(k\)-algebra \(A\) に対し
+\(R=A[x,y]/(xy)\)、\(S=A[x]\times A[y]\)、\(I=(x,y)\)、\(C=A\times A\) とする。
+各 \(r\in R\) は一意に \(r=c+xf(x)+yg(y)\)（\(c\in A\)）と書け、
+\(R\to S\), \(r\mapsto(c+xf,\,c+yg)\) は単射（\(A\) が非被約でも）で、
+像は定数項の一致する対である。よって
+\(R=S\times_{C}A\)（\(S\to C\) は原点評価、\(A\to C\) は対角）。
+conductor \(\{s\in S:sS\subset R\}\) は \(I\) に等しい（nilpotent な定数項に
+対しても）。さらに
+\begin{align}
+  0\to R\to S\oplus A&\to A^2\to0, \tag{2.1}\label{eq:C2}\\
+  0\to R\to S&\xrightarrow{(f,g)\mapsto f(0)-g(0)}A\to0 \tag{2.2}\label{eq:C3}
+\end{align}
+は \(A\)-module として split exact であり、したがって任意の
+\(A\to A'\) でそのまま同じ形の完全列を与える。
+\(S/R\cong R/I\) は巡回 \(R\)-module、\(\Ann(x)=(y)\)、\(\Ann(y)=(x)\)、
+\((x)\cap(y)=0\)。
+\end{lemma}
+
+\begin{proof}
+\(R\) は \(A\)-module として \(A\oplus xA[x]\oplus yA[y]\) と自由で、
+単射性・像の記述は定義から従う。\((1,0)\in S\) と \(c\) 倍が \(R\) に入る
+ことは \(c=0\) と同値、\(c=0\) なら任意の \(S\) の元との積が \(R\) に入る。
+完全列の split は自由基底による。残りは直接計算。
+\end{proof}
+
+\subsection{Node parameter の消滅（repair R2）}
+
+\begin{lemma}[Flatness $\Rightarrow$ parameter 零]\label{lem:flat-zero}
+\textbf{PROVED.}
+\(A\) を任意の可換環、\(r\in A\)、\(J=rA\) とする。\(A/J\) が \(A\)-flat なら
+\[
+  J/J^2\;\cong\;\operatorname{Tor}_1^A(A/J,A/J)=0 .
+\]
+したがって \(J=J^2\)。\(J=(r)\) なので、ある \(a\in A\) に対し
+\(r=r^2a\)、すなわち
+\[
+  r(1-ra)=0 .
+\]
+\(\mathfrak p\in V(r)\) では \(ra\in\mathfrak p A_{\mathfrak p}\) なので
+\(1-ra\) は \(A_{\mathfrak p}\) の単元であり、\(r=0\) in
+\(A_{\mathfrak p}\)。すなわちある \(g\notin\mathfrak p\) に対し
+\(r=0\) in \(A_g\)。（同値に、\(e:=ra\) は冪等元で \(J=eA\)、
+\(V(r)=V(e)\) 上で \(r=0\)。）
+\end{lemma}
+
+\begin{proof}
+任意のイデアル \(J,J'\) に対し \(\operatorname{Tor}_1^A(A/J,A/J')
+=(J\cap J')/JJ'\) であり、\(J'=J\) とおく。\(A/J\) が flat なら
+\(\operatorname{Tor}_1^A(A/J,-)=0\)。残りは上の通り。
+\end{proof}
+
+\begin{remark}[この論法が使わないもの]\label{rem:no-noeth}
+\textbf{Noetherian 性も reducedness も使わない。} \(J\) が単項であることから、
+冪等イデアルの議論は Nakayama を使わずに閉じる。また補題の結論は
+localization \(A\to A_{\mathfrak p}\)、\(A\to A_g\)（flat base change で
+\(A/J\) の flatness は保たれる）、および faithfully flat な étale 被覆に沿う
+descent（命題~\ref{prop:flat-etale} の Step~2）と両立する。
+\end{remark}
+
+\begin{proposition}[\(\Sigma/B\) flat $\Leftrightarrow$ étale; repair R1]
+\label{prop:flat-etale}
+\textbf{PROVED.} \(X/B\) が locally of finite presentation で、(E8) の node chart を
+持つとする。
+\begin{enumerate}[label=(\alph*)]
+\item (局所) node chart において、\(\Sigma/B\) が flat であるための必要十分
+  条件は、node の像の近傍で \(\alpha_B(q)=0\) となることである。
+  このとき \(\Sigma\to B\) は étale である。\textbf{ここに properness は
+  不要である。}
+\item \(\Sigma\hookrightarrow X\) は finitely presented closed immersion。
+\item (大域) \(X/B\) が proper なら、\(\Sigma/B\) flat \(\Leftrightarrow\)
+  \(\Sigma/B\) finite étale。properness は \(\Sigma/B\) の \emph{finiteness}
+  を得るためだけに使う。
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1 (Fitting ideal).} \(\Omega_{R_0/A}\) は生成元 \(dx,dy\) と関係
+\(y\,dx+x\,dy\) をもつので \(\Fitt_1=(x,y)\)。\(\Omega\) の形成と Fitting
+ideal は étale 局所化と可換である
+[Stacks, Lemma 31.10.1, tag \texttt{0C3I}]。\(U\to\operatorname{Spec}R_0\)
+と \(\operatorname{Spec}A\to B\) が étale なので
+\(\Omega_{U/B}=\Omega_{R_0/A}\otimes\OO_U\) であり、
+\[
+  \Sigma\cap U=U\times_{R_0}\operatorname{Spec}(A/(r)),
+\]
+特に \(\Sigma_U\to\operatorname{Spec}(A/(r))\) は étale
+（étale 射 \(U\to\operatorname{Spec}R_0\) の base change）。
+
+\emph{Step 2 (flatness の移行).} \(\Sigma/B\) flat から \(\Sigma_U\to
+\operatorname{Spec}A\) は flat。像 \(W\subset\operatorname{Spec}(A/r)\) は開で、
+\(\Sigma_U\to W\) は étale かつ全射なので faithfully flat。よって
+\(A\)-module の単射 \(M\hookrightarrow N\) に対し
+\(M\otimes_A\OO_W\to N\otimes_A\OO_W\) の核 \(K\) は、
+\(\OO_{\Sigma_U}\) との tensor で \(0\)（\(\Sigma_U/A\) flat）となるので
+\(K=0\)。すなわち \(W/\operatorname{Spec}A\) は flat。node の像を含む
+\(W=V(r)\cap D(g)\) をとり \(A\) を \(A_g\) に置き換えれば、
+\(A/(r)\) は \(A\)-flat。（有限性の仮定は使わない。）
+
+\emph{Step 3.} 補題~\ref{lem:flat-zero}より node の像の近傍で \(r=0\)。
+逆に \(r=0\) なら \(\Sigma_U=U\times_{R_A}\operatorname{Spec}A\to
+\operatorname{Spec}A\) は、étale 射 \(U\to\operatorname{Spec}R_A\) の
+切断 \(\operatorname{Spec}A\to\operatorname{Spec}R_A\) に沿う base change
+なので étale、特に flat。(a) と (b) を得る。(b) は (a) と
+\(X/B\) lfp から \(\Fitt_1\Omega_{X/B}\) が有限生成であることによる。
+
+\emph{(c).} \(\Sigma\subset X\) は閉なので \(B\) 上 proper。(a) より
+\(\Sigma/B\) は étale、特に locally quasi-finite。proper かつ locally
+quasi-finite なので finite。逆は finite étale $\Rightarrow$ flat。
+なお unramified 性は nodal family の一般論としても得られる
+[Stacks, Section 53.20 (tag \texttt{0C58}), Lemma 53.20.1]、node の局所方程式
+は [Stacks, Lemma 53.21.1, tag \texttt{0CBY}] による。
+（\texttt{0C58} は \emph{section} の tag であり lemma の tag ではない。
+Lemma 53.20.1 自身の個別 tag は本稿では引用しない。）
+\end{proof}
+
+\begin{remark}[区別の要約]\label{rem:flat-etale-distinction}
+\(\Sigma/B\) flat $\Rightarrow$ \(\Sigma/B\) étale は局所的に成立し、
+properness を必要としない。properness は \(\Sigma/B\) が \emph{finite} で
+あること（つまり $\Sigma$ が有限個の枝で被覆されること）を保証するために
+のみ使う。
+\end{remark}
+
+\subsection{Rees algebra と blow-up}
+
+\begin{lemma}[Blow-up の node 局所計算]\label{lem:rees}
+\textbf{PROVED.} 任意の \(A\) と \(R=A[x,y]/(xy)\)、\(I=(x,y)\) に対し、
+\(I^n=x^nA[x]\oplus y^nA[y]\)（\(n\ge1\)）であり
+\(\Bl_I\operatorname{Spec}R=\operatorname{Spec}A[x]\sqcup\operatorname{Spec}A[y]
+=\operatorname{Spec}S\)。さらに \(S=R+Re\)（\(e=(1,0)\)）で
+\(S\cong R[e]/(e^2-e,\,xe-x,\,ye)\) なので \(R\to S\) は有限表示な有限射。
+\end{lemma}
+
+\begin{proof}
+\(xy=0\) より \(I^n=(x^n,y^n)\)。Rees algebra \(\bigoplus I^nt^n\) は
+\(xt,yt\) で生成される。\(D_+(xt)\) では \(y\cdot xt=0\) かつ
+\((yt)(xt)=0\) より \(y=0\)、\(yt/xt=0\)。次数 \(0\) の環は
+\(\{f/x^n\}\) を \(x\)-torsion で割ったもので、\(x\) は \(A[x]\) の
+非零因子なので \(A[x]\)。\(D_+(yt)\) も同様、
+\(D_+(xt)\cap D_+(yt)=D_+(xt\cdot yt)=\emptyset\)。
+\((f,g)=(f-f(0)+g(0),\,g)+(f(0)-g(0))\,e\)
+（右辺第一項は定数項が揃うので \(R\) の元）と書けるので \(S=R+Re\)。\(R[e]/(e^2-e)=R\times R\)、
+\(xe-x\mapsto(0,-x)\)、\(ye\mapsto(y,0)\) なので商は \(R/(y)\times R/(x)=S\)。
+\end{proof}
+
+\subsection{Theorem 2A}
+
+\begin{theorem}[Theorem 2A: geometric branch separation]\label{thm:2A}
+\textbf{Status: PROVED.}
+\(f:X^\dagger\to B^\dagger\) を equisingular family（定義~\ref{def:EQ}）
+とし、\(I_\Sigma=\Fitt_1\Omega^1_{X/B}\)、
+\[
+  \tX:=\Bl_{I_\Sigma}X,\qquad \nu:\tX\to X,\qquad D:=\nu^{-1}(\Sigma).
+\]
+このとき次が成り立つ。
+\begin{enumerate}[label=(\arabic*)]
+\item (Singular locus) node chart で \(\alpha_B(q)=0\)（局所的に）、
+  \(\Sigma/B\) は finite étale（命題~\ref{prop:flat-etale}）。
+  \(\Sigma\) の形成は任意の base change \(B'\to B\) と可換
+  （\(\Sigma'=\Sigma\times_BB'\)）。
+\item (Canonical branch separation) \(\nu\) は有限表示な有限射で、
+  \(\Sigma\) の外で同型。node chart 上
+  \(U\times_X\tX\cong U\times_{R_A}\operatorname{Spec}(A[x]\times A[y])\)。
+  \(\tX/B\) は smooth で、各幾何的 fibre 上で \(\nu\) は normalization。
+\item (Relative conductor) \(\{s\in\nu_*\OO_{\tX}:s\,\nu_*\OO_{\tX}\subset\OO_X\}
+  =I_\Sigma\)、\(S/R\cong R/I\)。
+  \(D\) は \(\tX\) 上の relative effective Cartier divisor。
+\item (Degree two étale) \(a:D\to\Sigma\) は degree-two finite étale で、
+  canonical な involution \(\tau\)（$D\times_\Sigma D=\Delta\sqcup\Gamma_\tau$ を
+  満たす唯一の非自明 deck 変換）をもつ。\(\LL:=\ker(\Tr_a:a_*\OO_D\to\OO_\Sigma)\)
+  は階数 1 の直線束で、乗法による \(m:a^*\LL\xrightarrow{\sim}\OO_D\) は
+  同型。\(p=2\) でも同じ（$1/2$ は現れない）。
+\item (Ferrand pushout) \(\nu\) と \(i:\Sigma\hookrightarrow X\) は有限なので
+  $X$ は $(D;\,\tX,\Sigma)$ の effective Ferrand pushout：
+  \[
+    0\to\OO_X\to\nu_*\OO_{\tX}\oplus i_*\OO_\Sigma\to b_*\OO_D\to0
+    \qquad(b=\nu d=ia)
+  \]
+  は $\OO_B$-module として étale 局所的に split exact。
+\item (Base change) 任意の scheme 射 \(B'\to B\) に対し、
+  \(X'=X\times_BB'\) も (EQ1)--(EQ3) を満たす
+  （$B'^\dagger$ は pullback log structure）。さらに
+  \(\Bl_{I_{\Sigma'}}X'\cong\tX\times_BB'\)、$D'=D\times_BB'$、
+  (5) の完全列は $B'$ に沿う pullback で保たれる。
+\item (BSD) \((X^\dagger/B^\dagger;\Sigma,\nu)\) は
+  定義~\ref{def:BSD} の branch separation datum である。
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) は命題~\ref{prop:flat-etale}。base change との可換性は
+Fitting ideal の形成が任意の base change と可換であること
+[Stacks, Lemma 31.10.1, tag \texttt{0C3I}] による。
+
+\medskip
+\emph{(2)の局所部分と大域化.}
+Rees algebra の形成は flat base change と可換
+（$I^n\otimes\OO_U=(I\OO_U)^n$ が flatness から従う）ので、
+étale 射 $U\to X$ に対し $\Bl_{I_\Sigma}X\times_XU=\Bl_{I_\Sigma\OO_U}U$、
+かつ $I_\Sigma\OO_U=(x,y)\OO_U$。$U\to\operatorname{Spec}R_A$ は flat なので
+$\Bl_{(x,y)}U=U\times_{R_A}\Bl_{(x,y)}R_A$ であり、
+補題~\ref{lem:rees} から chart 上の記述を得る。$\nu$ の有限性・有限表示性・
+「$\Sigma$ の外で同型」は étale 局所的に検査できる。smoothness:
+$\tilde U=U\times_{R_A}\operatorname{Spec}(A[x]\sqcup A[y])$ は
+$A[x]\sqcup A[y]$ 上 étale、$A[x]$ は $A$ 上 smooth、$A$ は $B$ 上 étale。
+\emph{fibrewise normalization}: 幾何的点 $\bar b$ で $\tX_{\bar b}$ は smooth
+（特に normal）、$\nu_{\bar b}$ は finite で $X_{\bar b}\setminus
+\Sigma_{\bar b}$ 上同型、$D_{\bar b}$ は有限点集合なので birational。normal な
+source からの finite birational 射は normalization である。
+\textbf{Noetherian 性は使わない。}
+
+\emph{(3).} $S/R\cong R/I$ は巡回で、有限表示加群の annihilator の形成は
+flat base change と可換、$\Ann(S/R)=I$。これは Fitting ideal $I_\Sigma$ の
+chart 表示と一致。$D$ は chart で $(x)\subset A[x]$ と $(y)\subset A[y]$ で、
+$x,y$ は任意の $A$ で非零因子、商は $A$ で $B$-flat。
+
+\emph{(4).} chart で $D=\Sigma\sqcup\Sigma$ なので degree-two finite étale。
+$\tau$ は、$D\times_\Sigma D$ の対角が open かつ closed
+（étale + separated）で、補集合が degree 1 の finite étale
+すなわち graph $\Gamma_\tau$ であることから canonical に定まる。
+split の場合 $\Tr(u,v)=u+v$、$\LL=A(1,-1)$（$p=2$ では $(1,1)$ だが
+trace は全射のまま kernel は階数 1）。$m$ は各枝で $\pm1$ 倍なので同型。
+
+\emph{(5).} 補題~\ref{lem:local-ring}（\eqref{eq:C2} は $A$-split）と、
+$\nu$, $i$ が有限であることによる。大域的な effectivity は
+[Temkin--Tyomkin, Thm.~4.2.1]、または $D\to\Sigma$ が有限であることから
+[Temkin--Tyomkin, Thm.~6.2.1(ii)(b)]。
+
+\emph{(6).} (E8) chart は pullback で保たれ、(1) により $\Sigma'$ は
+$B'$ 上 flat。Rees algebra について：$R'=R\otimes_AA'$ であり、
+$I^n$ は $R$ の $A$-直和因子
+（補空間 $A\oplus\bigoplus_{0<i<n}(Ax^i\oplus Ay^i)$ は自由）なので
+$I^n\otimes_AA'\to R'$ は単射で像は $I'^n$、よって
+$R[It]\otimes_AA'\cong R'[I't]$ となり、Proj は次数付き代数の base change と
+可換。比較射 $\Bl_{I'}X'\to\tX\times_BB'$ は chart 上で同型
+（étale descent）。conductor の形成は補題~\ref{lem:local-ring}、
+(5) の完全列の pullback は \eqref{eq:C2} の $A$-split 性による。
+これは $B$ に沿う base change の主張であり、$X'\to X$ に沿う base change の主張
+ではない（反例~\ref{cex:Xbc}）。
+
+\emph{(7).} (BS1) は (2)(3)、(BS0) は (1)。
+\end{proof}
+
+\begin{remark}[total-space normalization との区別]\label{rem:not-total-norm}
+$\tX$ は \emph{relative} な意味の branch separation
+（$B$-smooth な source を持つ有限射で fibrewise normalization）であり、
+$X$ の total space の通常の正規化ではない。$A$ が非被約のとき
+$A[x]\times A[y]$ は normal scheme の環ではないから、total-space
+normalization と読むと $\epsilon$ を消してしまう（反例~\ref{cex:total}）。
+\(\tX\setminus D\) は $\tX$ で scheme-theoretically dense であり、$\nu$ は
+「$B$-smooth な source を持つ有限射で $\Sigma$ の外で同型となるもの」として
+同型を除き一意に特徴づけられる可能性が高いが、この一意性は証明しておらず
+\textbf{CANDIDATE}（Main Theorem~2 には不要）。
+\end{remark}
+
+%=====================================================================
+\section{Theorem 2B: relative conductor descent}\label{sec:2B}
+%=====================================================================
+
+本節では \((X^\dagger/B^\dagger;\Sigma,\nu)\) を定義~\ref{def:BSD} の
+branch separation datum とする。\textbf{base change との両立性、$X$ の proper 性、
+$B$ の性質は仮定しない。} 以下の局所計算はすべて chart
+$U\to\operatorname{Spec}R_A$（$A$ は任意）上で行う。
+
+\begin{lemma}[BSD の帰結]\label{lem:BSD-conseq}
+\textbf{PROVED.} BSD から次が従う（定理~\ref{thm:2A}(2)--(5) と同じ局所計算で）。
+(i) $\nu$ は有限で $\Sigma$ の外で同型。(ii) $\tX/B$ は smooth。
+(iii) $D$ は relative effective Cartier で $a:D\to\Sigma$ は degree-two
+finite étale。(iv) \eqref{eq:C2}, \eqref{eq:C3} が成り立つ（$A$-split）。
+(v) $X$ は effective Ferrand pushout。
+\end{lemma}
+
+\subsection{Log differential の比較（nonzerodivisor による貼り合わせ）}
+
+\begin{lemma}[Chart での計算]\label{lem:chart-log}
+\textbf{PROVED.} $R=R_A$ に対し、$e_x+e_y=q$、$\alpha_B(q)=0$ より
+$d\log q=0$ なので
+\[
+  \Omega^1_{R/A,\log}=R\,\eta,\quad
+  \eta=d\log e_x=-d\log e_y,\quad dx=x\eta,\ dy=-y\eta .
+\]
+（残る関係 $x\,dy+y\,dx=-xy\eta+xy\eta=0$ は自明。）$T^{\log}_{R/A}=R\delta$,
+$\delta(x)=x$, $\delta(y)=-y$, $\delta(A)=0$。
+枝 $\tX_x=\operatorname{Spec}A[x]$, $\tX_y=\operatorname{Spec}A[y]$ に
+$\zeta_x=d\log x$, $\zeta_y=d\log y$（定義~\ref{def:pointed} の
+chart-defined marking log structure）
+を入れると、$\varphi(\eta)=(\zeta_x,-\zeta_y)$ は
+$\nu^*\Omega^1_{R/A,\log}\xrightarrow{\sim}A[x]\zeta_x\times A[y]\zeta_y$
+を与える。$\theta:=(\varphi^{-1})^\vee$ は $\theta(\delta)=(x\partial_x,-y\partial_y)$
+で、$\Sigma$ 上 $\delta\mapsto(1,-1)$。よって
+$T^{\log}|_\Sigma\simeq\LL$（$\LL=A(1,-1)$）。
+\end{lemma}
+
+\begin{proof}
+定義からの直接計算。$\varphi(\eta)$ が生成元を単位倍の生成元に送るので同型。
+reducedness は使わない。
+\end{proof}
+
+\begin{lemma}[$\varphi$ の大域化]\label{lem:phi-glue}
+\textbf{PROVED.} chart 写像 $\varphi_U$ は \emph{$d$-compatible} である：
+合成 $\nu^*\Omega^1_{X/B}\to\nu^*\Omega^1_{X/B,\log}\xrightarrow{\varphi}
+\Omega^1_{\tX/B,\log}$ は標準射 $\nu^*\Omega^1_{X/B}\to\Omega^1_{\tX/B}
+\to\Omega^1_{\tX/B,\log}$ に一致する。したがって $\varphi_U$ は
+étale 被覆に沿って大域同型
+\[
+  \varphi:\nu^*\Omega^1_{X/B,\log}\xrightarrow{\sim}\Omega^1_{\tX/B,\log},\qquad
+  \theta=(\varphi^{-1})^\vee:\nu^*T^{\log}_{X/B}\xrightarrow{\sim}T^{\log}_{\tX/B}
+\]
+へ貼り合わさる。$\varphi,\theta,m$ は $B$ に沿う任意の base change と可換。
+\end{lemma}
+
+\begin{proof}
+$x$-枝で $\varphi(dx)=x\zeta_x=dx$、$y$-枝で $\varphi(dx)=0\cdot(-\zeta_y)=0=dx|_{\tX_y}$
+（$dy$ も同様）。$\Omega_{U/B}$ は $dx,dy$ で生成されるので $d$-compatibility は
+全ての関数で成立する。重なり $W=U_1\times_XU_2$ 上で $\varphi_1,\varphi_2$ はともに
+$d$-compatible。chart 1 の $\eta_1$ を使うと、$x$-枝上で
+$x_1(\varphi_1-\varphi_2)(\eta_1)=(\varphi_1-\varphi_2)(dx_1)=0$。
+$x_1$ は $A[x]$ の非零因子で、étale pullback で非零因子性は保たれ、target は
+locally free なので $(\varphi_1-\varphi_2)(\eta_1)=0$。$y$-枝も同様。
+この議論は枝ラベルの入れ替え、unit 倍の座標変更、nilpotent な座標変更
+（例：$A=k[\epsilon]/\epsilon^2$ で $u=1+\epsilon x$, $x'=x+\epsilon x^2$,
+$\eta'=(1+\epsilon x)\eta$）を全て含む。node/smooth、marking/smooth、
+marking/marking（$z\,d\log z=dz$ と $z$ の非零因子性）の重なりも同様。
+これは \emph{scheme-theoretic} な非零因子性の使用であり、位相的な dense-open
+による延長ではない。$p=2$ でも式に $2^{-1}$ は現れない。
+$\varphi$ は「$d$-compatible な唯一の $\OO$-線形写像」として特徴づけられるので、
+chart 非依存性と base change との可換性も従う。
+\end{proof}
+
+\begin{remark}[Groupified log comparison]\label{rem:groupified-comparison}
+定義~\ref{def:pointed} の log structure を用いる。
+base log の元と単元を自然に写し、node の \(x\)-枝では
+\[
+ \nu^\flat_{\mathrm{gp}}(e_x)=\widetilde e_x,
+ \qquad
+ \nu^\flat_{\mathrm{gp}}(e_y)=q-\widetilde e_x
+\]
+とする。\(y\)-枝では対称的に定める。これは
+\(\nu^{-1}M_X^{\mathrm{gp}}\to M_{\tX}^{\mathrm{gp}}\) の射であり、
+log monoid の射とは主張しない。
+関係 \(e_x+e_y=q\) は保たれる。単元変更
+\(e_x'=e_x+[u]\)、\(e_y'=e_y+[v]\)、\(q'=q+[uv]\) に対し
+\[
+ q'-\widetilde e_x'
+ =q-\widetilde e_x+[\nu^\sharp v],
+ \qquad \widetilde e_x'=\widetilde e_x+[\nu^\sharp u]
+\]
+なので整合する。共通の strict étale refinement では、
+生き残る generator は同じ conductor Cartier divisor の方程式として
+単元倍で対応し、他方はこの関係で決まる。base chart の refinement
+および枝交換とも両立するので、これらの写像は貼り合う。
+smooth locus と元の marking では自然な同一視である。
+\end{remark}
+
+\begin{lemma}[Related lifts]\label{lem:related-lifts}
+\(t=(\partial,\lambda)\in T^{\log}_{X/B}\) とする。
+\(\widetilde t=\theta(1\otimes t)
+  =(\widetilde\partial,\widetilde\lambda)\) は
+\[
+ \widetilde\partial\circ\nu^\sharp=\nu^\sharp\circ\partial,
+ \qquad
+ \widetilde\lambda\circ\nu^\flat_{\mathrm{gp}}
+       =\nu^\sharp\circ\lambda
+\]
+を満たす。この二条件を満たす relative log derivation は高々一つである。
+\end{lemma}
+
+\begin{proof}
+第一の等式は補題~\ref{lem:phi-glue} の \(d\)-compatibility の双対である。
+第二は node chart の \(e_x,e_y\)、base log の元、単元で確認する。
+\(t=a\delta\) に対し \(x\)-枝の値は
+\(\nu^\sharp a,-\nu^\sharp a\)、base 上では零、単元 \(u\) 上では
+\(\partial(u)/u\) の pullback である。\(y\)-枝も同様である。
+これらは source の groupification の局所生成元なので十分である。
+smooth chart と marking chart では同一視から従う。
+
+一意性について、strict étale node chart の環を \(C\) とすると
+各枝の環は \(C/(y)C\)、\(C/(x)C\) である。各商写像の全射性により
+related lift の underlying derivation は一意である。
+target の groupified log structure は étale 局所的に単元、base log、
+生き残る marking generator で生成される。単元上の log component は
+underlying derivation で決まり、残りは related 条件と relative 条件で
+決まる。よって log component も一意である。
+この議論は reducedness、normality、dense-open equality を使わない。
+\end{proof}
+
+\begin{lemma}[A-R1: relative restricted comparison]\label{lem:AR1}
+Relative log derivations の restricted operation を
+\[
+ (\partial,\lambda)^{[p]}
+  =\left(\partial^p,
+       m\longmapsto\partial^{p-1}(\lambda(m))+\lambda(m)^p\right)
+\]
+とする。任意の局所切断 \(t\in T^{\log}_{X/B}\) に対して
+\[
+ \theta(1\otimes t^{[p]})=\theta(1\otimes t)^{[p]}.
+\]
+左辺は source で restricted power を取った後の pullback を意味する。
+単なる module pullback に restricted structure を自動的に入れる
+という意味ではない。
+\end{lemma}
+
+\begin{proof}
+上の式は標数 \(p\) の任意の base 上で relative log derivation を与える。
+実際、\(\partial^p\) は base 上零の derivation であり、第二成分は
+additive で base log 上零である。log compatibility は
+\(\partial(\alpha(m))=\alpha(m)\lambda(m)\) と標数 \(p\) の恒等式
+\[
+ (\partial+M_b)^p
+   =\partial^p+M_{\partial^{p-1}(b)+b^p}
+\]
+から従う。ここで \(M_b\) は \(b\) による乗法であり、
+\(\alpha(m)\) を割る操作は不要である。
+補題~\ref{lem:related-lifts} の第一の等式を反復すると
+\(\widetilde\partial^{\,r}\nu^\sharp
+   =\nu^\sharp\partial^r\) である。
+これと \(\nu^\sharp(a^p)=(\nu^\sharp a)^p\) により、
+二つの related 条件は上の restricted operation で保たれる。
+従って \(\theta(1\otimes t^{[p]})\) と
+\(\theta(1\otimes t)^{[p]}\) はともに \(t^{[p]}\) に related であり、
+同補題の一意性によって一致する。
+\end{proof}
+
+\begin{lemma}[Relative gauge vanishing]\label{lem:gauge}
+\textbf{PROVED.} $r=c+xf(x)+yg(y)\in R_A$ に対し
+\[
+  d_{\log}r=[x(f+xf')-y(g+yg')]\eta\in I\,\Omega^1_{R/A,\log},
+\]
+よって一般の chart で $d_{X/B}(\OO_X)\subset I_\Sigma\,\Omega^1_{X/B,\log}$
+（$\Sigma$ の外では $I_\Sigma=\OO_X$）。$\tX$ 側でも
+$d_{\tX/B}(\OO_{\tX})\subset I_D\,\Omega^1_{\tX/B,\log}$。
+$H$ の Maurer--Cartan form を $\omega_H=\sum g_{\ell j}\,d\phi_\ell\otimes X_j$
+（$\OO(H)$ は有限生成）と書くと、任意の $h:U\to H$ と $t\in T^{\log}$ に対し
+$(h^*\omega_H)(t)\in I_\Sigma\otimes\h$、$\Sigma$ 上および $D$ 上で零。
+\end{lemma}
+
+\begin{proof}
+計算は直接。\textbf{これは relative differential $d_{X/B}$ の主張である。}
+$A\to B$ は étale で $t$ は $B$-線形な derivation なので $t(\epsilon)=0$ であり、
+absolute differential $d\epsilon$ は現れない。
+\end{proof}
+
+\subsection{Relative Atiyah bundle と node 上の splitting}
+
+\begin{lemma}[Frame 表示と遷移則]\label{lem:frame}
+\textbf{PROVED.} $E$ を $H$-torsor とし、$e\in E(U)$ を étale 局所 section
+とすると
+\[
+  \Phi_e:\Atlog_{X/B}(E)|_U\xrightarrow{\sim}(\OO_U\otimes\h)\oplus T^{\log}|_U,
+\]
+$\Atlog_{X/B}(E)$ は局所自由、完全列 $0\to E(\h)\to\Atlog\to T^{\log}\to0$ を
+もつ。frame $e'=eh$ では遷移は
+$(u,t)\mapsto(\Ad(h^{-1})u-(h^*\omega_H)(t),\,t)$
+（[Fix] (5.0c) と同じ）。$\Sigma$ 上では補題~\ref{lem:gauge} により
+$\operatorname{diag}(\Ad(h^{-1}),\mathrm{id})$。
+\end{lemma}
+
+\begin{proof}
+自明 torsor 上で $(\OO_U\otimes\OO(H)\otimes\h)^H=\OO_U\otimes\h$
+（cofree comodule の不変部分は任意の加群について計算できる）なので flatness の
+仮定は不要。遷移則は [Fix] と同じ計算。
+\end{proof}
+
+\begin{lemma}[$\chi_E$ と node splitting]\label{lem:chi}
+\textbf{PROVED.} $H$-torsor $E$ に対し、frame $e$ 上で
+\(\chi_e:=\Phi_{\nu^*e}^{-1}\circ(\mathrm{id}\oplus\theta)\circ\nu^*\Phi_e\) と
+定めると、補題~\ref{lem:phi-glue} から
+\[
+  ((\nu^*h)^*\omega_H)(\theta\nu^*t)=\nu^*((h^*\omega_H)(t))
+  \tag{3.1}\label{eq:F4}
+\]
+（$\langle\varphi(a),\theta(b)\rangle=\langle a,b\rangle$ と $d$-compatibility）
+なので $\chi_e,\chi_{e'}$ は遷移則と両立し、$\tX$ の étale 被覆に沿って
+\[
+  \chi_E:\nu^*\Atlog_{X/B}(E)\xrightarrow{\sim}\Atlog_{\tX/B}(\tE)
+  \qquad(\tE:=\nu^*E)
+\]
+に貼り合わさる。$\Sigma$ 上では canonical な
+\begin{equation}\label{eq:F6}
+  \Atlog_{X/B}(E)|_\Sigma\simeq P_\Sigma(\h)\oplus\LL\quad(P_\Sigma:=E|_\Sigma),
+\end{equation}
+$D$ 上では $\Atlog_{\tX/B}(\tE)|_D\simeq\tE(\h)|_D\oplus\OO_D$
+（$T^{\log}_{\tX/B}|_D\simeq\OO_D$ は positive Euler generator $x\partial_x$,
+$y\partial_y$ による）が canonical に定まる。
+\end{lemma}
+
+\begin{proof}
+上の通り。\(\nu\) は flat でないので、invariants と非平坦 pullback の交換、
+$\Atlog$ が任意の pullback と可換という主張、$\nu$ に沿う descent は
+\emph{使わない}。descent は $\tX$ の étale 被覆に沿ってのみ行う。
+canonical 性は、$\Sigma$ および $D$ 上で gauge correction が零
+（補題~\ref{lem:gauge}）だから。
+\end{proof}
+
+\subsection{Relative torsor patching}
+
+\begin{proposition}[Torsor の conductor clutching]\label{prop:torsor-patch}
+\textbf{PROVED.} BSD の下で、$H_X$-torsor の群oidは三つ組
+$(\tE,P_\Sigma,\beta)$（$\beta:a^*P_\Sigma\xrightarrow{\sim}\tE|_D$,
+射は $\beta$ を保つ torsor 同型）の群oidと同値である。
+\end{proposition}
+
+\begin{proof}
+外部結果は effective Ferrand datum 上の flat algebra の patching と完全忠実性
+[Temkin--Tyomkin, Cor.~3.3.11; Cor.~6.3.3; 別証明として
+Thm.~6.3.2(ii)]。reducedness・Noetherian 性の仮定はない。
+
+(1) affine open 上で、二つの torsor algebra を $D$ 上の同型で fibre product して
+$\OO_X$-algebra $\mathcal A_E$ を得る。Ferrand により $\mathcal A_E$ は $\OO_X$-flat
+で、二つの pullback は元の algebra に戻る。$E=\operatorname{Spec}_X\mathcal A_E$。
+(2) $\OO(H)$ は $k$-flat なので $\otimes_k\OO(H)$ は fibre product と可換。
+coaction と余結合則・余単位則は patching 写像の単射性
+（flat module なので D4 が適用できる）で検出される。
+(3) $E\times H\to E\times_XE$ は両側で torsor 同型で、flat algebra の同値により
+大域的にも同型。(4) $E\to X$ は affine、flat（Ferrand）、全射（$\nu$ は全射で
+$\tE\to\tX$ は全射）なので fpqc cover。(5) $E\to X$ の $E$ による base change は
+$E\times H\to E$ で smooth かつ finitely presented。lfp と smooth は fpqc 局所的に
+降下するので $E\to X$ は smooth fp。循環はない：(4) は smooth/fp を使わず
+flat・全射・affine だけを使う。\emph{fpqc cover は $E\to X$ であって
+$\nu$ ではない。}
+射と逆は完全忠実性による。
+\end{proof}
+
+\begin{lemma}[Module の reconstruction]\label{lem:D4}
+\textbf{PROVED.} $F$ を quasi-coherent かつ $\OO_X$-flat（特に有限局所自由）とする
+と、$0\to F\to\nu_*\nu^*F\oplus i_*i^*F\to b_*b^*F\to0$ は完全。
+$F_1,F_2$ が有限局所自由なら $\mathcal Hom(F_1,F_2)$ も有限局所自由で
+同様。また局所自由 $\mathcal M$ に対し $\mathcal M\hookrightarrow\nu_*\nu^*\mathcal M$
+（G5）。
+\end{lemma}
+
+\begin{proof}
+構造層の完全列 \eqref{eq:C2} を $F$ と tensor し（$\mathrm{Tor}_1$ は flat 性で消える）、
+有限射の projection formula を使う。G5 は \eqref{eq:C3} の $R\hookrightarrow S$ を
+局所自由加群と tensor したもの。$X$ の reducedness は使わない。
+\end{proof}
+
+\subsection{Conductor-side Atiyah compatibility（repair R3）}
+
+[Fix] の L5 Step~3 の相対版を、独立した補題として明示する。
+
+\begin{definition}[Residue, clutching]\label{def:residue}
+$\beta$ から $\tau$ に沿う $\phi:=\tau^*\beta\circ\beta^{-1}:\tE|_D\to\tau^*\tE|_D$
+が定まり、$\Phi_\h,\Phi_\g$ をそれが $\tE(\h)|_D$, $\tE(\g)|_D$ に誘導する写像とする。
+Cartan map $\tal$ に対し、補題~\ref{lem:chi} の分解
+$\Atlog_{\tX/B}(\tE)|_D=\tE(\h)|_D\oplus\OO_D$ を用いて
+$\rho:=\tal(0,1)\in\Gamma(D,\tE(\g)|_D)$（Cartan residue）と定める。
+\end{definition}
+
+\begin{lemma}[Conductor-side Atiyah compatibility]\label{lem:conductor-At}
+\textbf{PROVED.} BSD の下で、torsor conductor datum $(\tE,P_\Sigma,\beta)$
+から命題~\ref{prop:torsor-patch} で復元した $E$ について、$\nu^*E=\tE$,
+$E|_\Sigma=P_\Sigma$, 各 étale 局所 section $e$ で
+$\nu^*e|_{D}=\beta(a^*(e|_\Sigma))$ である。このとき
+\[
+  \beta_{\At}:=\beta_\h\oplus m:\
+  a^*\bigl(P_\Sigma(\h)\oplus\LL\bigr)\xrightarrow{\sim}
+  \tE(\h)|_D\oplus\OO_D
+\]
+とおくと、次が成り立つ。
+\begin{enumerate}[label=(\alph*)]
+\item 図式
+\[
+\begin{array}{ccc}
+a^*\bigl(\Atlog_{X/B}(E)|_\Sigma\bigr)=b^*\Atlog_{X/B}(E)
+ &\xrightarrow{\ a^*\eqref{eq:F6}\ }& a^*\bigl(P_\Sigma(\h)\oplus\LL\bigr)\\
+\Big\downarrow{\scriptstyle\chi_E|_D}&&\Big\downarrow{\scriptstyle\beta_{\At}=\beta_\h\oplus m}\\
+\Atlog_{\tX/B}(\tE)|_D&\xrightarrow{\ \ \text{補題~\ref{lem:chi}}\ \ }&\tE(\h)|_D\oplus\OO_D
+\end{array}
+\]
+が可換である。すなわち conductor 上の比較写像は $\beta_\h\oplus m$ \emph{そのもの}。
+\item canonical 同型
+\[
+  \Atlog_{X/B}(E)\;\cong\;\operatorname{Patch}\bigl(\Atlog_{\tX/B}(\tE),\,
+  P_\Sigma(\h)\oplus\LL;\ \beta_{\At}\bigr)
+\]
+がある。ここで $\operatorname{Patch}$ は
+$\nu_*\Atlog_{\tX/B}(\tE)\oplus i_*(P_\Sigma(\h)\oplus\LL)$ から
+$b_*(\Atlog_{\tX/B}(\tE)|_D)$ への二つの制限の差の kernel。
+\item $\tau$ に沿う clutching は $J(u,c)=(\Phi_\h(u),-c)$ である。
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{(a).} frame $e$ をとる。$\Atlog_{X/B}(E)|_U\simeq(\OO\otimes\h)\oplus T^{\log}$
+(補題~\ref{lem:frame}) で、\eqref{eq:F6} は $(u,t)\mapsto(u|_\Sigma,\bar t)$
+（$\bar t$ は $t|_\Sigma\in T^{\log}|_\Sigma\simeq\LL$、$\delta\mapsto(1,-1)$）。
+$\chi_E|_D$ は frame $\nu^*e$ に関して $(u,t)\mapsto(\nu^*u,\theta\nu^*t)$、
+補題~\ref{lem:chi} の分解のあと $(u|_D,\ \res\,\theta\nu^*t)$ となる。ここで
+$\res:T^{\log}_{\tX/B}|_D\to\OO_D$ は positive Euler generator による同一視。
+\begin{itemize}
+\item 水平部分：$t=f\delta$ なら $\res\,\theta\nu^*(f\delta)=f|_D\cdot(1,-1)$
+  （$\theta(\delta)|_D=(x\partial_x,-y\partial_y)|_D\mapsto(1,-1)$）。
+  一方 $m(a^*(\bar t))=m(f|_\Sigma\,\ell)=f|_D\cdot(1,-1)$（$\ell=(1,-1)$）。
+  この等式は任意の $A$（nilpotent・$p=2$ を含む）で成り立つ。
+\item 垂直部分：$\nu^*e|_D=\beta(a^*(e|_\Sigma))$ より $\nu^*u|_D\leftrightarrow
+  a^*(u|_\Sigma)$ が $\beta_\h$ で対応する。
+\item frame 取り替え $e'=eh$：両辺とも遷移は $\Sigma$ 上、$D$ 上で
+  $\operatorname{diag}(\Ad(h^{-1}),\mathrm{id})$（補題~\ref{lem:gauge}）で、
+  $\nu^*e'|_D=\beta(a^*(e'|_\Sigma))$ も成り立つので可換性は frame に依らない。
+\end{itemize}
+\emph{(b).} $A_E:=\Atlog_{X/B}(E)$ は局所自由なので補題~\ref{lem:D4} から
+$0\to A_E\to\nu_*\nu^*A_E\oplus i_*i^*A_E\to b_*b^*A_E\to0$ は完全。
+補題~\ref{lem:chi}（$\nu^*A_E\simeq\Atlog_{\tX/B}(\tE)$）、
+\eqref{eq:F6}（$i^*A_E\simeq P_\Sigma(\h)\oplus\LL$）、(a)（$b^*A_E$ の二通りの
+同定が $\beta_{\At}$ で一致）により、この完全列は Patch の定義列と同一視される。
+\emph{(c).} $\tau^*m=-m$ は層の射の等式で、étale 局所（split）で
+copy~1 が $\ell\mapsto\ell_1$、copy~2 が $\ell_2=-\ell_1$ となることから従う
+（$p=2$ では $-1=1$ と整合）。$\h$ 成分は $\phi$ の定義から $\Phi_\h$。
+\end{proof}
+
+\begin{remark}
+(a) は $E$ の存在（命題~\ref{prop:torsor-patch}）と $\Atlog$ の局所自由性
+（補題~\ref{lem:frame}）のみを使い、Cartan map の descent や
+Atiyah compatibility を仮定していないので循環はない。新しい仮定も追加していない。
+\end{remark}
+
+\subsection{Cartan map の descent と Theorem 2B}
+
+\begin{proposition}[Full residue law の必要十分性]\label{prop:residue}
+\textbf{PROVED.} BSD の下、$(\tE,P_\Sigma,\beta)$ と $\tX^\dagger$ 上の Cartan
+geometry $(\tE,\tal)$ を固定する。$E$ を復元する。このとき $\tal$ と
+$P_\Sigma$ 上の同型 $\alpha_\Sigma$ で compatible なものから $E$ 上の
+Cartan map $\alpha$ が（一意に）定まるための必要十分条件は
+\eqref{eq:residue-law} が $\OO_D$ 上で成立することである。
+\end{proposition}
+
+\begin{proof}
+補題~\ref{lem:conductor-At}（\textbf{ここで明示的に引用する}）により
+$\beta_{\At}=\beta_\h\oplus m$、$J=(\Phi_\h,-1)$。
+$V:=P_\Sigma(\g)$, $r:=\beta_\g^{-1}\rho\in\Gamma(D,a^*V)$,
+$F_D:=\beta_\g^{-1}\circ\tal|_D\circ\beta_{\At}=a^*(\mathrm{incl})\oplus q_D$、
+$q_D=m\otimes r\in\Gamma(D,a^*\mathcal Hom(\LL,V))$ とおく。
+$D\times_\Sigma D=\Delta\sqcup\Gamma_\tau$ なので、$a$ に沿う fpqc descent の
+条件は $\tau^*q_D=q_D$ である（$a^*\mathcal Hom(\LL,V)$ の切断 $q_D$ の
+不変性であり、\emph{任意の切断 $\ell$ を $\tau$-不変として扱ってはいない}）。
+$\tau^*m=-m$ （補題~\ref{lem:conductor-At}(c)）より
+$\tau^*q_D=(-m)\otimes\tau^*r$、したがって
+$\tau^*q_D=q_D\iff m\otimes(\tau^*r+r)=0\iff\tau^*r=-r$
+（$m$ は $a^*\LL^\vee$ の nowhere vanishing な切断）。
+$\tau^*r=-r\iff\tau^*\rho=-\Phi_\g(\rho)$ は $\tau^*\beta_\g$ の定義から。
+よって (\ref{eq:residue-law}) のとき $q_D$ は一意な $q:\LL\to V$ に降下し、
+$\alpha_\Sigma:=\mathrm{incl}\oplus q$（$P_\Sigma(\h)\oplus\LL\to V$）が
+定まる。$a^*\alpha_\Sigma=F_D$ は同型で $a$ は faithfully flat なので
+$\alpha_\Sigma$ も同型。$\alpha$ は $\operatorname{Patch}$ の kernel 上で
+$(v,n)\mapsto(\tal v,\alpha_\Sigma n)$ とし、整合は
+$\tal(v)|_D=\beta_\g a^*(\alpha_\Sigma n)$ による。逆写像も同様に patch でき、
+vertical inclusion の条件は $\mathcal Hom$ の単射性（G5）で検出される。
+必要性：$\alpha$ の conductor 制限は compatible で、$\tau$ 側の At の変換は
+$J(u,c)=(\Phi_\h u,-c)$（補題~\ref{lem:conductor-At}(c)）、
+$(\tau^*\tal|_D)\circ J=\Phi_\g\circ\tal|_D$ を $(0,1)$ で評価すると
+(\ref{eq:residue-law})。この等式は層の射の等式で、reducedness は使わない。
+\end{proof}
+
+\begin{theorem}[Theorem 2B: relative conductor descent]\label{thm:2B}
+\textbf{Status: PROVED.}
+$(X^\dagger/B^\dagger;\Sigma,\nu)$ を branch separation datum
+（定義~\ref{def:BSD}）とする。このとき canonical な群oidの同値
+\[
+  \boxed{\ \Car_{G,H}(X^\dagger/B^\dagger)\ \simeq\
+  \Car^{\mathrm{cond}}_{G,H}(\tX,D\to\Sigma/B)\ }
+\]
+がある。non-split node、self-node、標数二、非被約基底を含む。
+この定理の仮定に「conductor square が全 base change と両立する」ことは
+\emph{含まれない}。
+\end{theorem}
+
+\begin{proof}
+\emph{関手 $F$.} $F(E,\alpha):=(\nu^*E,\ \nu^*\alpha\circ\chi_E^{-1},\
+E|_\Sigma,\ \beta_E)$（$\chi_E$：補題~\ref{lem:chi}）。vertical inclusion を保つ
+同型で、residue law は命題~\ref{prop:residue} の必要性部分。
+\emph{関手 $G$.} 対象 $(\tE,\tal,P_\Sigma,\beta)$ に対し $E$ を
+命題~\ref{prop:torsor-patch} で、$\alpha$ を命題~\ref{prop:residue} で復元する。
+$E(\g)\simeq\operatorname{Patch}(\tE(\g),P_\Sigma(\g);\beta_\g)$
+（有限局所自由なので補題~\ref{lem:D4}）。
+\emph{射と一意性.} 射 $(\tilde f,f_\Sigma)$ は命題~\ref{prop:torsor-patch} の
+完全忠実性で $f:E\to E'$ に一意に復元される。Cartan 適合性の差
+$\psi=\alpha'\circ\At(f)-f_\g\circ\alpha$ は有限局所自由
+$\mathcal Hom$ の切断で、$\nu^*\psi=0$ なら G5（補題~\ref{lem:D4}）により
+$\psi=0$。$FG\cong\mathrm{id}$, $GF\cong\mathrm{id}$ も復元の一意性から。
+本質的全射性・完全忠実性・準逆性は [Fix] の Main Theorem~1 の構造と同じで、
+reducedness を \eqref{eq:C3} の明示的単射に置き換えて成立する。
+\end{proof}
+
+%=====================================================================
+\section{Corollary 2C: equisingular Main Theorem 2 と base change}\label{sec:2C}
+%=====================================================================
+
+\begin{corollary}[Corollary 2C: Main Theorem 2 (MT2-A)]\label{cor:2C}
+\textbf{Status: PROVED.}
+$f:X^\dagger\to B^\dagger$ を equisingular family（定義~\ref{def:EQ}）とし、
+$\nu:\tX=\Bl_{I_\Sigma}X\to X$, $D$, $\tX^\dagger$ を定理~\ref{thm:2A}、
+定義~\ref{def:pointed} の通りとする。このとき canonical な群oidの同値
+\[
+  \boxed{\ \Car_{G,H}(X^\dagger/B^\dagger)\ \simeq\
+  \Car^{\mathrm{cond}}_{G,H}(\tX,D\to\Sigma/B)\ }
+\]
+があり、次の base change と両立する。
+\begin{enumerate}[label=(\roman*)]
+\item 任意の scheme 射 $B'\to B$（$B'^\dagger$ は pullback log structure）。
+  特に flat、faithfully flat、étale、strict étale log、perfect field extension、
+  Artinian 射 $B'\to B$（非平坦な商・nilpotent thickening を含む）。
+\item 標準 chart class (E8) 内の fs log base change
+  $B'^\dagger\to B^\dagger$（命題~\ref{prop:fs}）。ただし chart の存在に
+  関する文献引用は \textbf{NEEDS LITERATURE CHECK}（repair R4）。
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+定理~\ref{thm:2A}(7) により $(X^\dagger/B^\dagger;\Sigma,\nu)$ は BSD で、
+定理~\ref{thm:2B} を適用する。base change：定理~\ref{thm:2A}(6) により
+$B'$ 上の family も同じ型の BSD であり、$\nu',D',\Sigma'$ は pullback。
+各構成は一意性で特徴づけられている（$\varphi$：$d$-compatibility、$\chi_E$：
+frame 表示、$E$：命題~\ref{prop:torsor-patch} の完全忠実性、$\alpha$：G5 の
+単射性）ので、二段階の base change の比較は一致する（functorial coherence）。
+ここで「両立」とは、functor・逆・自然同型が canonical に対応することを意味し、
+異なる base 上の群oid同士が同値になることではない。
+\end{proof}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\hline
+Base change & 状態 & 理由 \\
+\hline
+arbitrary scheme $B'\to B$ & PROVED & 定理~\ref{thm:2A}(6) + 一意性 \\
+flat / fppf / étale / strict étale log & PROVED & 上の特殊例 \\
+Artinian $B'\to B$ (非平坦も) & PROVED & 上の特殊例 \\
+fs log base change (E8 chart class 内) & PROVED$^\ast$ & 命題~\ref{prop:fs}。$^\ast$R4 \\
+arbitrary $X'\to X$ に沿う base change & FALSE (主張せず) & 反例~\ref{cex:Xbc} \\
+閉埋め込み $B\hookrightarrow B'$ への lift 存在 & OPEN (範囲外) & base change ではない \\
+E8 の外の一般 fs log smooth 射 & NOT PROVED (主張せず) & 反例~\ref{cex:E8} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{fs log base change（repair R4）}
+
+\begin{proposition}[Node monoid の pushout]\label{prop:fs}
+\textbf{PROVED (monoid の直接計算).}
+$P$ を fs monoid、$q\in P$、$Q:=P\oplus_{\mathbf N}\mathbf N^2$ とする。
+$e_x\mapsto(0,1)$, $e_y\mapsto(q,-1)$, $P\ni a\mapsto(a,0)$ により
+$Q\subset P^{gp}\oplus\mathbf Z$ と見て
+\begin{equation}\label{eq:I1}
+  Q=\{(a,n):a\in P,\ a+nq\in P\}.
+\end{equation}
+（$n\ge0$ なら $a+ne_x$, $n<0$ なら $(a+nq)+(-n)e_y$。$P$ が integral なので
+$Q\to P^{gp}\oplus\mathbf Z$ は単射。）$P$ が saturated なら $Q$ は saturated
+（$N(a,n)\in Q$ から $Na,N(a+nq)\in P$、よって $a,a+nq\in P$）で、有限生成性は
+標準 presentation から従う。さらに任意の fs monoid $P'$ と $q'\in P'$ について
+\[
+  P'\oplus_{\mathbf N}\mathbf N^2\ (\mathbf N\to P':1\mapsto q')
+\]
+は同じ計算で既に integral かつ saturated である。したがって
+\textbf{fine fibre product の integralization も saturation も underlying scheme を
+変えず}、fs log base change 後の $X'$ は ordinary fibre product $X\times_BB'$ と
+一致する。marking の chart $P'\oplus\mathbf N$ と smooth の chart $P'$ は自明に fs。
+$q'$ が単位になる可能性は、$\alpha_{B'}(q')=f^*\alpha_B(q)=0$ より
+$B'\neq\emptyset$ では起こらない。
+\end{proposition}
+
+\begin{remark}[R4: 文献]\label{rem:R4}
+上の monoid の計算自体は（Opus 5.5 により VALID と判定された）本稿の内容である。
+一方、「任意の fs log 射 $B'^\dagger\to B^\dagger$ は $B'$ 上 étale 局所的に
+$B^\dagger$ の chart $P$ と両立する fs chart $P\to P'$ をもつ」という標準的な事実
+（Kato の chart 存在定理）の一次文献の正確な theorem/proposition 番号は、
+\textbf{本稿では確認していない。NEEDS LITERATURE CHECK}
+（Kato, \emph{Logarithmic structures of Fontaine--Illusie}, 1989 の §2、または
+Ogus, \emph{Lectures on Logarithmic Algebraic Geometry}, Ch.~II の該当箇所。
+番号は未照合なので書かない）。この引用は Corollary~\ref{cor:2C}(ii) の行
+\emph{のみ}に必要であり、underlying の base change (i) および定理 2A, 2B には
+影響しない。
+\end{remark}
+
+\begin{remark}
+Q が saturated な monoid であることと $P\to Q$ が saturated morphism である
+こととは区別されるが、本稿が使うのは前者（fs fibre product の計算）だけである。
+\end{remark}
+
+%=====================================================================
+\section{系: Artinian 版と node-avoiding branched 版}\label{sec:art}
+%=====================================================================
+
+\begin{corollary}[Artinian version (Version C)]\label{cor:art}
+\textbf{Status: PROVED.}
+$A$ を任意の local Artinian $k$-algebra とし、$X^\dagger/A^\dagger$ を
+(E8) の標準 chart をもつ proper nodal family で、scheme-theoretic singular locus
+$\Sigma/A$ が flat であるものとする。このとき Corollary~\ref{cor:2C} が成り立つ。
+node の label、splitness、$p\ne2$ は不要。
+\end{corollary}
+
+\begin{proof}
+$B=\operatorname{Spec}A$ に対する Corollary~\ref{cor:2C} の特殊化であり、
+追加の内容はない。Artinian base では有限 étale 被覆は residue field の étale data
+の持ち上げとして現れるが、証明は étale descent を直接使い、この分類を必要としない。
+この系は family や Cartan object の \emph{lift の存在}を主張しない。
+\end{proof}
+
+\begin{definition}[Node-avoiding branched Cartan geometry]\label{def:branched}
+$\mathcal B\subset X\setminus\Sigma$ を、$\Sigma$ および markings と交わらない
+$B$ 上の relative effective Cartier divisor とする。
+$\Car^{\mathrm{br}}_{G,H}(X^\dagger/B^\dagger;\mathcal B)$ を、$(E,\alpha)$、
+ただし $\alpha:\Atlog_{X/B}(E)\to E(\g)$ は vertical inclusion を保つ
+$\OO_X$-線形写像で、誘導される直線束の写像
+$\bar\alpha:T^{\log}_{X/B}\to E(\g/\h)$ の zero divisor が $\mathcal B$ に等しい
+ものの群oidとする。$\tX$ 側は $\nu^*\mathcal B$ を指定して同様に
+$\Car^{\mathrm{br,cond}}$ を定める。
+\end{definition}
+
+\begin{corollary}[Node-avoiding branched version]\label{cor:branched}
+\textbf{Status: PROVED}（定理~\ref{thm:2B} の形式的な系）。
+定理~\ref{thm:2A}, \ref{thm:2B} の下で
+$\Car^{\mathrm{br}}(X^\dagger/B^\dagger;\mathcal B)\simeq
+\Car^{\mathrm{br,cond}}(\tX,D\to\Sigma/B;\nu^*\mathcal B)$。
+relative Cartier 条件は許された base change で保たれるので、
+この対応は Corollary~\ref{cor:2C} と同じ base change と両立する。
+branch--node collision は含めない。
+\end{corollary}
+
+\begin{proof}
+命題~\ref{prop:residue} の descent は $\alpha$ の全域での可逆性を要求しない
+（$\mathcal Hom$ の切断の patching は補題~\ref{lem:D4}）。$\mathcal B\cap\Sigma=\emptyset$
+なので $\Sigma$ の近傍で $\bar\alpha$ は同型：$\det\alpha$ は $\Sigma$ 上の単元で
+あり、単元となる点の集合は開で $\Sigma$ を含む。$\Sigma$ の外では $\nu$ は同型
+なので $\bar\alpha$ の zero scheme と重複度はそのまま降下する。逆写像の
+復元・射の一意性は定理~\ref{thm:2B} と同じ。
+\end{proof}
+
+%=====================================================================
+\section{反例と警告}\label{sec:cex}
+%=====================================================================
+
+以下 $A=k[\epsilon]/(\epsilon^2)$, $R=A[x,y]/(xy)$。
+
+\begin{counterexample}[Reduced / quotient residue matching では不十分]
+\label{cex:reduced}
+\textbf{FALSE（過剰な十分性）.}
+$G=\mathbf G_a^2$, $H=\mathbf G_a\times0$, trivial torsor。枝の positive
+residue を $\rho_x=(0,1)$, $\rho_y=(\epsilon,-1)$ とすると、reduced family 上でも
+$\g/\h$-valued residue 上でも matching するが、full residue law は
+$\epsilon\neq0$ により失敗する。したがって reduced / quotient residue matching
+だけでは非被約基底上の map descent に不十分。この反例は punctured branch 上で
+零になる例ではない（$A[x]\to A[x,x^{-1}]$ は単射なので $\epsilon$ はそこでも非零）。
+
+さらに $G=\mathbf G_a\rtimes\mathbf G_m$, $H=\mathbf G_m$, $\g$ の translation
+generator $b$ で $\Ad(h)b=hb$ とする。$\rho_x=b$, $\rho_y=-b$ のとき clutching を
+$h=1+\epsilon u$ に変えると必要条件は $\rho_y=-b-\epsilon ub$ で、
+$\epsilon u\ne0$ なら $\rho_y=-b$ は失敗する（$p=2$ でも成立）。
+一方、$\Ad$ が自明な abelian の場合など、stabilizer 内の変形は residue では
+検出されない（theorem の反例ではない。clutching 自体は conductor data に保持）。
+\end{counterexample}
+
+\begin{counterexample}[merely $B$-flat coherent module は conductor から復元できない]
+\label{cex:Xbc}
+\textbf{FALSE（一般化）.}
+$F=R/(x-y)\cong A[t]/(t^2)$ は有限表示 $R$-module で $A$-free（階数 2）だが
+$\OO_X$-flat ではない。$F\otimes_RS\cong A\times A$, $F\otimes_RA\cong A$,
+$F\otimes_RC\cong A^2$ で、patching の kernel は対角 $A$ のみとなり、$F$ の
+非零元 $t$ は消える。同じ例は任意の $X'\to X$ に沿う Ferrand square の保存も
+否定する：$X'=\operatorname{Spec}F$ とすると pushout は $\operatorname{Spec}A$
+であって $\operatorname{Spec}A[t]/t^2$ ではない（$X'\to B$ 自体は flat）。
+定理~\ref{thm:2A}(6) の「任意の $B$ に沿う base change」とは別の操作である。
+補題~\ref{lem:D4} が flat（特に有限局所自由）な $F$ に限る理由。
+\end{counterexample}
+
+\begin{counterexample}[Total-space ordinary normalization は不適切]\label{cex:total}
+\textbf{FALSE（語義の警告）.}
+$A$ が非被約のとき $A[x]\times A[y]$ は normal scheme の環ではない。
+「reduction を取ってから通常の正規化」と読むと $\epsilon$ を消し、求める相対対象を
+失う。また $B$ が reduced でも non-normal なら $B$-smooth な $\tX$ は total space
+として normal とは限らない。本稿の $\tX$ は finite 射・$B$-flat source・幾何的
+fibre が normal・fibrewise normalization という相対的意味である。
+\end{counterexample}
+
+\begin{counterexample}[Nilpotent smoothing parameter は equisingular theorem の外]
+\label{cex:smoothing}
+\textbf{範囲外.} node chart $xy=r$ で $r\ne0$ が nilpotent の場合
+（例：$A=k[\epsilon]/\epsilon^2$, $r=\epsilon$）、$\Sigma=\operatorname{Spec}A/(r)$
+は $A$-flat でない（補題~\ref{lem:flat-zero}）。geometric fibres の graph が
+一定であることだけでは scheme-theoretic persistence を代用できない。本稿は
+$r\ne0$ の family を研究せず、対象外と判定するのみである（\S\ref{sec:outlook}）。
+\end{counterexample}
+
+\begin{counterexample}[Test A: 同じ reduction を持つ二つの Cartan map の読み方]
+\label{cex:testA}
+\textbf{PROVED（例の正しい読み方）.}
+$G=\mathbf G_a^2$, $H=\mathbf G_a\times0$, trivial torsor、$A=k[\epsilon]/\epsilon^2$。
+Cartan 係数 $v=(0,1)$ と $v'=(\epsilon,1)$ に対し、$\alpha(u,f\delta)=u+fv$,
+$\alpha'(u,f\delta)=u+fv'$ とする。
+\begin{itemize}
+\item \textbf{各 $\alpha,\alpha'$ は Cartan map として同型写像である}
+  （商係数が $1$）。reduction 上では一致し、$A$ 上では異なる。
+  normalization に引き戻しても差 $(\epsilon,0)$ は消えない。
+\item \textbf{しかし二つの Cartan geometry $(E,\alpha)$ と $(E,\alpha')$ が互いに
+  同型であるとは限らない（一般に成り立たない）。} この二つを混同してはならない。
+  実際、同型は trivial torsor の自己同型 $h\in H(R)$ による gauge 変換で、
+  $v'=v-\delta(h)e_1$ となる（$e_1$ は $\h$ の生成元、符号は規約による）。
+  よって $\delta(h)=\epsilon$（符号は無関係）が要求される。ところが
+  補題~\ref{lem:gauge} より $\delta(h)\in(x,y)$ であり、$\epsilon\notin(x,y)R$
+  （$R/(x,y)=A$）なので不可能。normalization 上でも $x\partial_xh\in(x)$
+  なので同様。したがって node の近傍で二つの geometry は同型でない。
+\end{itemize}
+\end{counterexample}
+
+\begin{counterexample}[Non-split node, $p=2$, self-node, 複数 node の検算]
+\textbf{PROVED（検算）.}
+$A$ を $2$ が可逆な local Artinian、$d$ を残余体で nonsquare な unit とし
+$L=A[t]/(t^2-d)$, $R=A[u,v]/(u^2-dv^2)\to L[z]$（$u\mapsto tz$, $v\mapsto z$）
+は像 $A\oplus zL[z]$、conductor $zL[z]$、$\Sigma=\operatorname{Spec}A$,
+$D=\operatorname{Spec}L$ を与える。$p=2$ では $L=A[t]/(t^2+t+c)$, $2t+1=1$ で
+étale、$\Tr(1)=0$, $\Tr(t)=1$、$\LL=A\cdot1$、$m$ は恒等係数の同型。
+self-node は $\mathbf P^1_A$ の disjoint sections $0,\infty$ の pinch
+（$\{0,\infty\}$ は affine open $\mathbf P^1\setminus\{1\}$ に含まれる）で、
+$D$ の局所環は $A\sqcup A$ のまま。複数 node・component graph の cycle は
+étale 被覆上の torsor patching が大域 data を復元するので問題を起こさない。
+\end{counterexample}
+
+\begin{counterexample}[(E8) を外すと R1 は成り立たない]\label{cex:E8}
+\textbf{FALSE（無条件な拡張）.}
+node に trivial log structure を入れると $\Omega^1_{R/A}\otimes_RA[x]\simeq
+A[x]dx\oplus(A[x]/(x))dy$ となり、node 上 locally free 階数 1 ではなく、
+pointed branch の $A[x]\,d\log x$ と同型でない。(E8) を落とした一般の
+log smooth 射への拡張は主張しない。
+\end{counterexample}
+
+%=====================================================================
+\section{Outlook と status}\label{sec:outlook}
+%=====================================================================
+
+\begin{remark}[N1: smoothing 境界例 --- 次研究への warning としてのみ記録]
+\label{rem:N1}
+\textbf{OPEN --- NEXT PROJECT (Smoothing $xy=t$)。本稿ではこれ以上研究しない。}
+Opus 5.5 の監査（D.2）が見つけた例：$A=k[\epsilon]/\epsilon^2$,
+$R=A[x,y]/(xy-\epsilon)$, $I=(x,y)$。chart $D_+(xt)$ の次数 $0$ の環は、
+$s=y/x$ として $\epsilon=x^2s$, $k[x,s]/(x^4s^2)$ を $x$-torsion で割った
+$k[x,s]/(s^2)$ となる。$D_+(yt)$ も対称で、二つの chart の重なりは
+「$s$ 可逆かつ $s$ nilpotent」で空。したがって
+$\Bl_{(x,y)}=\operatorname{Spec}k[x,s]/(s^2)\sqcup\operatorname{Spec}k[y,s']/(s'^2)$。
+$\operatorname{Ann}(\epsilon)=(s)\ne(x^2s)=\epsilon M$ なので source は
+$A$-flat でなく（したがって $B$-smooth でもない）、閉 fibre
+$k[x,s]/(s^2,x^2s)$ は非被約で normalization ではない。
+結論：$\Bl_{(x,y)}$ は equisingular branch separation と同じ振る舞いをしない。
+これは仮定 ``$\Sigma/B$ flat'' が本質的であることを示す境界例であり、
+smoothing の研究の出発点として保存する。\emph{smoothing の定理・分類・解析は
+本稿の範囲外であり、何も主張しない。}
+\end{remark}
+
+\begin{remark}[Relative dormancy]\label{rem:dormancy}
+Relative log tangent の restricted comparison は
+補題~\ref{lem:AR1} で確認した。
+一方、connection pullback compatibility、associated torsor 上の
+restricted comparison、relative \(p\)-curvature compatibility および
+relative dormancy は \textbf{OPEN / CANDIDATE} のままであり、
+Main Theorem~2 に含めない。[Fix] の \S9 を相対証明として数えない。
+\end{remark}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}ll@{}}
+\hline
+項目 & Status \\
+\hline
+MT2 geometric branch separation (Theorem 2A) & PROVED \\
+MT2 relative conductor descent (Theorem 2B) & PROVED \\
+MT2-A equisingular corollary (Corollary 2C) & PROVED \\
+A-R1 tangent restricted comparison (補題~\ref{lem:AR1}) & PROVED \\
+Artinian version (Corollary \ref{cor:art}) & PROVED \\
+Node-avoiding branched version (Corollary \ref{cor:branched}) & PROVED \\
+fs log chart の存在引用 (repair R4) & NEEDS LITERATURE CHECK \\
+Connection pullback compatibility & OPEN / CANDIDATE \\
+Associated torsor restricted comparison & OPEN / CANDIDATE \\
+Relative $p$-curvature compatibility & OPEN / CANDIDATE \\
+Relative dormancy & OPEN / CANDIDATE \\
+Smoothing $xy=t$ & OPEN --- NEXT PROJECT \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{thebibliography}{99}
+\bibitem{Fix} 本プロジェクト, \texttt{nodal\_log\_cartan\_results.tex}
+  （固定曲線版 Main Theorem~1、凍結済み）。
+\bibitem{Stacks} The Stacks Project.
+  Section 53.20 (tag \texttt{0C58}), Lemma 53.20.1;
+  Lemma 53.21.1 (tag \texttt{0CBY});
+  Lemma 31.10.1 (tag \texttt{0C3I}).
+\bibitem{TT} M.~Temkin, I.~Tyomkin, \emph{Ferrand's pushouts for algebraic
+  spaces}, arXiv:1305.6014v3. Thm.~4.2.1, Cor.~3.3.11, Thm.~6.2.1(ii)(b),
+  Cor.~6.3.3, Thm.~6.3.2(ii).
+\bibitem{Kato} K.~Kato, \emph{Logarithmic structures of Fontaine--Illusie},
+  1989. \textbf{NEEDS LITERATURE CHECK}（chart 存在の正確な番号は未確認）。
+\bibitem{Ogus} A.~Ogus, \emph{Lectures on Logarithmic Algebraic Geometry}.
+  \textbf{NEEDS LITERATURE CHECK}（同上）。
+\end{thebibliography}
+
+\end{document}
