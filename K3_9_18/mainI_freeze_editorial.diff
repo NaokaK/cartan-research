@@ -1,0 +1,85 @@
+--- audited-patched.tex
++++ sncl_log_cartan_mainI_frozen.tex
+@@ -1,8 +1,9 @@
+ % !TeX program = uplatex
+ % Compile:
+-%   uplatex sncl_log_cartan_manuscript_ja.tex
+-%   uplatex sncl_log_cartan_manuscript_ja.tex
+-%   dvipdfmx sncl_log_cartan_manuscript_ja.dvi
++%   uplatex sncl_log_cartan_mainI_frozen.tex
++%   uplatex sncl_log_cartan_mainI_frozen.tex
++%   dvipdfmx sncl_log_cartan_mainI_frozen.dvi
++% Main Theorem I only: FROZEN 2026-10-25; see mainI_freeze_log_2026-10-25_ja.md
+ %
+ % English title:
+ % Gluing and First-Order Deformation Obstructions for
+@@ -285,7 +286,8 @@
+ \subsection{共通設定}
+ % Source: G (common assumptions)
+ 
+-\(k\) を標数 \(p>0\) の代数閉体とし、\(X\) をprojective SNC曲面とする。
++\(k\) を標数 \(p>0\) の代数閉体とし、\(X\) をprojective strict（simple）SNC曲面とする。
++ここで各既約成分はsmoothで、成分の自己交叉はない。
+ 既約成分、double curves、および各成分のboundaryを
+ \[
+ X=\bigcup_{i\in I}X_i,\qquad
+@@ -942,7 +944,8 @@
+ 
+ 固定したdescent datumに対するgluingはglobal algebraicであり、
+ component identificationsを保つ同型を除いて一意である。
+-morphismsも同じdescentを満たす。
++大域的strict geometryから、\eqref{eq:full-compatibility}--\eqref{eq:triple-cocycle}を
++満たすdescent datumへのrestriction functorは圏同値（特に充満忠実）である。
+ \end{theorem}
+ 
+ 
+@@ -952,8 +955,8 @@
+ \begin{lemma}[SNC局所環のequalizer表示]
+ \label{lem:snc-ring-equalizer}
+ $X$ のdouble chart $xy=0$ およびtriple chart $xyz=0$ において、
+-局所環をそれぞれ $R=S/(xy)$, $R=S/(xyz)$ とする。
+-ここで $S$ はsmooth ambient chartの局所環で、$x,y,z$ は対応する
++étale chart上の局所環をそれぞれ $R=S/(xy)$, $R=S/(xyz)$ とする。
++ここで $S$ はそのsmooth ambient chartの局所環で、$x,y,z$ は対応する
+ 相対的な正規交叉パラメータである。
+ このとき
+ \begin{align}
+@@ -984,9 +987,10 @@
+ \eqref{eq:double-ring-eq}--\eqref{eq:triple-intersection-eq}を得る。
+ triple chartで三つの成分のsectionが各pairwise intersection上で一致すれば、
+ まず$x=0$と$y=0$の二成分が$S/(xy)$上の一つのsectionを与える。
+-その$z=0$への二つのrestrictionは三重点で一致するので
+-\eqref{eq:triple-intersection-eq}によって$S/(xy,z)$上の
+-一つのsectionを与える。最後に\eqref{eq:triple-ring-eq}を適用する。
++このsectionと第三成分のsectionの$S/(xy,z)$へのrestrictionは、
++$S/(x,z)$および$S/(y,z)$への像がそれぞれ一致する。
++従って\eqref{eq:triple-intersection-eq}の単射性により、
++$S/(xy,z)$上で一致する。最後に\eqref{eq:triple-ring-eq}を適用する。
+ これを各局所chartで検査すると\eqref{eq:snc-cech-equalizer}を得る。
+ なお、右端への全射性は主張していない。
+ \end{proof}
+@@ -1041,9 +1045,11 @@
+ 補題\ref{lem:snc-ring-equalizer}の表示は、
+ strict henselizationのflatnessによって$T$上でも成立する。
+ 各component ring $T_i$は$T$の商なのでstrict henselian local ringである。
+-その上の$E_i$のclosed fiberは非空smooth schemeであり、
+-separably closedな剰余体上の有理点を持つ
+-\emph{(Stacks Project, Lemma 33.25.6, Tag 056U)}。
++その上の$E_i$のclosed fiberは非空smooth schemeである。
++\emph{Stacks Project, Lemma 33.25.6, Tag 056U}によれば、
++基礎体上separableな剰余体を持つ閉点はsmooth schemeで稠密である。
++ここでは基礎体がseparably closedなので、これらは有理点であり、
++closed fiberが非空であることから、そのような点が存在する。
+ その点はsectionへ持ち上がる。実際、affine smooth $T_i$-schemeの
+ coordinate algebraにTag 0H74を適用し、
+ $T_i$の極大イデアルを法とする点を持ち上げればよい。
+@@ -1180,6 +1186,9 @@
+ component側の同型も同じrestrictionから構成されるので、
+ $E_H|_{X_i}\simeq E_{H,i}$による表示を変えたときの比較は
+ まさに\eqref{eq:snc-atiyah-natural-comparison}である。
++\eqref{eq:atiyah-restriction}もtorsor上のlog derivationのrestrictionから
++構成されるため、torsor同型についてnaturalである。
++従ってmorphism descentでも、Cartan mapsとの可換性を成分上で検査できる。
+ この証明はtorsorのclosed gluingを使用しない。
+ 
+ normal derivativeが不要なことを環上でも確認する。

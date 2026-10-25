@@ -1,0 +1,3294 @@
+% !TeX program = uplatex
+% Compile:
+%   uplatex sncl_log_cartan_mainI_frozen.tex
+%   uplatex sncl_log_cartan_mainI_frozen.tex
+%   dvipdfmx sncl_log_cartan_mainI_frozen.dvi
+% Main Theorem I only: FROZEN 2026-10-25; see mainI_freeze_log_2026-10-25_ja.md
+%
+% English title:
+% Gluing and First-Order Deformation Obstructions for
+% Logarithmic Cartan Geometries on SNCL Surfaces
+
+\documentclass[uplatex,dvipdfmx,11pt]{jsarticle}
+
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{mathrsfs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{pxjahyper}
+
+\hypersetup{
+  hidelinks,
+  pdftitle={SNCL曲面上の対数的Cartan幾何の貼り合わせと一次変形障害}
+}
+
+\numberwithin{equation}{section}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{定理}[section]
+\newtheorem{proposition}[theorem]{命題}
+\newtheorem{lemma}[theorem]{補題}
+\newtheorem{corollary}[theorem]{系}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{定義}
+\newtheorem{example}[theorem]{例}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{注意}
+
+\renewcommand{\proofname}{証明}
+
+\DeclareMathOperator{\Spec}{Spec}
+\DeclareMathOperator{\At}{At}
+\DeclareMathOperator{\ad}{ad}
+\DeclareMathOperator{\Ad}{Ad}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\Ext}{Ext}
+\DeclareMathOperator{\Isom}{Isom}
+\DeclareMathOperator{\Lie}{Lie}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\rk}{rk}
+\DeclareMathOperator{\coker}{coker}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\Supp}{Supp}
+\DeclareMathOperator{\Desc}{Desc}
+\DeclareMathOperator{\dlog}{dlog}
+\DeclareMathOperator{\Obs}{Obs}
+\DeclareMathOperator{\obf}{ob}
+\DeclareMathOperator{\Def}{Def}
+
+\newcommand{\OO}{\mathcal O}
+\newcommand{\GG}{\mathbb G}
+\newcommand{\NN}{\mathbf N}
+\newcommand{\FF}{\mathbf F}
+\newcommand{\ZZ}{\mathbf Z}
+\newcommand{\g}{\mathfrak g}
+\newcommand{\h}{\mathfrak h}
+\newcommand{\sQ}{s_Q^{\log}}
+\newcommand{\Xlog}{X^{\log}}
+\newcommand{\Tlog}{T_{X^{\log}/s_Q^{\log}}}
+\newcommand{\Omlog}{\Omega^1_{X^{\log}/s_Q^{\log}}}
+\newcommand{\Atlog}{\At_{\log}}
+\newcommand{\Car}{\mathrm{Car}}
+\newcommand{\calC}{\mathcal C}
+\newcommand{\calB}{\mathfrak B}
+\newcommand{\calD}{\mathfrak D}
+\newcommand{\restr}[2]{\left.#1\right|_{#2}}
+% Phase II locked notation (see Section 2.4)
+\newcommand{\shH}{\mathcal H}
+\newcommand{\shG}{\mathcal G}
+\newcommand{\shA}{\mathcal A}
+\newcommand{\shV}{\mathcal V}
+\newcommand{\Kfix}{\mathcal K_{\mathrm{fix}}^\bullet}
+\newcommand{\Ktot}{\mathcal K_{\mathrm{tot}}^\bullet}
+\newcommand{\Dtot}{D_\theta^{\mathrm{tot}}}
+\newcommand{\Aeps}{A_\varepsilon}
+\newcommand{\nablaad}{\nabla^{\mathrm{ad}}}
+\newcommand{\Hyp}{\mathbb H}
+
+\setlist[enumerate]{label=\textup{(\arabic*)},leftmargin=*}
+\setlist[itemize]{leftmargin=*}
+
+\title{SNCL曲面上の対数的Cartan幾何の\\
+貼り合わせと一次変形障害}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+正標数の代数閉体上のSNCL曲面を固定し、その各既約成分に与えられた
+strict logarithmic Cartan geometryを貼り合わせる問題と、
+得られた大域的幾何の一次変形の問題を扱う。
+
+第一の問題では、double curve上のresidueの整合性だけでは
+貼り合わせを特徴づけられないことを示し、
+制限されたlogarithmic Atiyah bundle上のCartan同型全体を保持する
+full boundary Cartan datumを導入する。
+固定したsemistable-type log structureに対し、
+double curves全体でのfull compatibility、inverse relation、
+および三重点でのcocycle条件が、
+大域的なstrict logarithmic Cartan geometryの存在の必要十分条件となる
+（主定理I）。
+三重点のdefectは、residueのcentralizerではなく
+実際のboundary automorphism sheafによるnonabelian descent obstructionとして現れる。
+semistable log structureのunit変更が与えるshearを計算したうえで、
+log structure自体の存在条件をCartan d-semistabilityとして定式化し、
+framed、exact-unframed、locally-isomorphicという三種類のrealization groupoidを
+区別して大域的実現の存在条件を与える（主定理II）。
+
+第二の問題では、上の存在条件が満たされる場合に大域的実現
+\(\xi=(E_H,\theta)\) を一つ固定する。
+fixed-log Cartan複体、underlying relative log理論、
+およびtotal relative複体を並列に構成し、
+これらを結ぶ基本完全列
+\(0\to\mathcal K_{\mathrm{fix}}^\bullet\to\mathcal K_{\mathrm{tot}}^\bullet\to T[0]\to0\)
+とその連結写像 \(\partial_\theta\) を与える。
+非零の一次基底方向 \(c\) に対しては、
+underlying実現の障害 \(\operatorname{ob}_f(c)\in H^2(T)\) が消える場合に限り
+realization torsor \(\mathcal P_c\) 上のaffine Cartan obstruction
+\(\operatorname{Obs}_{\theta,c}\) を構成し、
+その線形部分が \(\partial_\theta\) であることと、
+零点がCartan liftを持つ実現に一致することを示す。
+これにより方向のみに依存するsecondary class
+\(\overline{\operatorname{Obs}}_\theta(c)\in\coker\partial_\theta\)
+を定義し、その消滅と、方向 \(c\) のCartan-compatibleな
+marked一次変形の存在が同値であることを示す（主定理III）。
+これらは一次の結論であり、高次の持ち上げや実際のsmoothingは扱わない。
+\end{abstract}
+
+\tableofcontents
+
+%======================================================================
+\section{はじめに}
+\label{sec:introduction}
+%======================================================================
+
+\subsection*{問題の設定}
+
+退化族の特殊fiberは、しばしば単純正規交叉（SNC）な曲面として現れ、
+semistable-typeのlog structureを与えることでlog smoothな射
+\(f:\Xlog\to\sQ\) になる。
+このとき、各既約成分の上に与えられた幾何構造が
+double curveとtriple pointを越えて大域的な構造に貼り合わさるか、
+という問題が生じる。
+
+本稿では、この幾何構造として、等質空間 \(G/H\) をモデルとする
+strict logarithmic Cartan geometryを扱う。
+smooth pair上のlogarithmic Cartan geometryとそのresidueについては
+Biswas--Dumitrescu--McKayの理論がある \cite{BDM}。
+SNC曲面では、double curveの両側でnormal logarithmic directionの符号が反転し、
+residueは反対称性を満たす。
+
+\subsection*{residue条件だけでは不十分であること}
+
+しかし、residueはboundary上のCartan構造の
+normal方向の情報しか記録しない。
+例\ref{ex:residue-not-enough}では、residueが完全に整合していながら
+tangent方向のCartan mapの像が一致せず、貼り合わせが不可能な例を与える。
+したがって、residue matchingを貼り合わせの十分条件とすることはできない。
+
+そこで本稿では、制限されたlogarithmic Atiyah bundle上の
+Cartan同型 \(\Theta_i\) をtorsor \(F_i\) とともに保持した
+full boundary Cartan datum \(\calB_{ij}=(F_i,\Theta_i)\)
+を基本的なboundary dataとする（定義\ref{def:full-boundary-datum}）。
+
+\subsection*{第一部：貼り合わせとCartan d-semistability}
+
+第\ref{sec:definitions}節から第\ref{sec:realization}節までが第一部であり、
+特殊fiber上の存在問題を扱う。
+
+まず成分への制限（補題\ref{lem:restriction}）とboundary Atiyah bundleの
+fiber product表示（補題\ref{lem:boundary-atiyah}）を用意し、
+境界構造定理（定理\ref{thm:boundary-structure}）でresidueの満たす
+関係式と、canonicalに得られるもの・得られないものを分離する。
+
+固定したsemistable-type \(M\) に対しては、
+full compatibility、inverse relation、triple cocycleの三条件が
+大域的実現の存在の必要十分条件となる（主定理I、定理\ref{thm:fixed-log-gluing}）。
+pairwise mapsが存在しても残る三重点のdefectは、
+実際のboundary automorphism sheafによる非可換なdescent obstructionとして
+記述される（定理\ref{thm:triple-obstruction}）。
+このautomorphism sheafはresidueのcentralizerの真部分sheafになり得る
+（例\ref{ex:centralizer}）。
+
+次に \(M\) 自体を動かす問題に移る。
+unit変更によるboundary comparisonのshearを計算し
+（定理\ref{thm:unit-variation}）、
+補正可能なmismatchが \(d\log(\text{unit})\) 型に限られることを見る。
+最後に、Cartan d-semistabilityと三種類のrealization groupoidを定義し、
+大域的実現の存在条件を圏論的に定式化する
+（主定理II、定理\ref{thm:cartan-d-semistability}）。
+
+\subsection*{第二部：固定した実現の一次変形}
+
+第\ref{sec:first-order-complexes}節以降が第二部である。
+ここでは第一部の存在条件が満たされる場合に、大域的実現
+\(\xi=(E_H,\theta)\) を一つ選んで固定し、
+それを動かせるかどうかという別の問題を扱う。
+
+零の基底方向については、三つの一次変形問題
+（fixed-log Cartan、underlying relative log、total relative）を区別し、
+それぞれの分類を与える。
+Cartan側の作用素は
+\[
+\Dtot(a)=\mathcal L_{\widetilde a}\omega
+=\nablaad\theta(a)+\iota_{\sigma(a)}K
+\]
+であり、曲率はこの作用素自身に現れる。
+flatnessは仮定せず、標数 \(2\) も除外しない。
+
+\subsection*{基本完全列}
+
+これらの複体は
+\[
+0\longrightarrow\Kfix\longrightarrow\Ktot\longrightarrow T[0]\longrightarrow0
+\]
+という \(k\)-sheaf complexesの完全列で結ばれ
+（定理\ref{thm:fundamental-exact-sequence}）、
+その連結写像
+\(\partial_\theta:H^1(T)\to\Hyp^2(\mathcal K_{\mathrm{fix}})\)
+が、零方向のunderlying一次変形にCartan構造を持ち上げる障害を与える。
+
+\subsection*{smoothing方向上のaffine obstruction}
+
+非零の一次基底方向 \(c\in V_Q\) では事情が異なる。
+まずunderlying側の実現が存在するための条件は
+\(\obf_f(c)=0\) であり、この場合に実現のclass全体
+\(\mathcal P_c\) は \(H^1(T)\)-torsorになるが、
+canonicalな原点を持たない。
+したがって \(\partial_\theta\) を \(c\) に直接適用して障害を得ることはできない。
+
+そこで各 \(\eta\in\mathcal P_c\) 上の局所Cartan liftsの貼合せdefectから
+\(\Obs_{\theta,c}(\eta)\in\Hyp^2(\mathcal K_{\mathrm{fix}})\)
+を構成し、これが線形部分 \(\partial_\theta\) を持つaffine写像であることを示す。
+その結果、方向 \(c\) のみに依存するsecondary class
+\(\overline{\Obs}_\theta(c)\in\coker\partial_\theta\)
+が定まる。
+
+\subsection*{主定理}
+
+本稿の主定理は次の三つである。
+
+\begin{itemize}
+\item \textbf{主定理I}（定理\ref{thm:fixed-log-gluing}）：
+固定したlog structure上のfull boundary貼り合わせ判定法。
+\item \textbf{主定理II}（定理\ref{thm:cartan-d-semistability}）：
+Cartan d-semistabilityと大域的実現の存在条件。
+\item \textbf{主定理III}（定理\ref{thm:first-order-cartan-obstruction}）：
+一次smoothing方向に沿うCartan obstruction。
+\end{itemize}
+
+\subsection*{本稿で扱わない範囲}
+
+本稿の第二部の結論はすべて一次の範囲に限られる。
+二次以上への持ち上げ、任意のsmall extensionに対する障害理論、
+形式的持ち上げ、unobstructedness、algebraization、
+実際のsmoothingやsmoothな一般fiberの存在、
+混標数のlifting、p-curvatureやflatnessの保存については、
+本稿の定理から何も結論しない。
+また、第一部の貼り合わせ結果から変形・smoothingの結論を導くこともしない。
+
+本稿で採用するstrict logarithmic Cartan geometryの定義を、
+既存文献の定義全体と無条件に同一視しない。
+新規性に関しては、本稿で検討した文献の範囲では
+この設定における直接の定式化を確認していない、という限定した形で述べる
+（第\ref{sec:discussion}節）。
+
+%======================================================================
+\section{SNCL曲面上の対数的Cartan幾何}
+\label{sec:definitions}
+%======================================================================
+
+\subsection{共通設定}
+% Source: G (common assumptions)
+
+\(k\) を標数 \(p>0\) の代数閉体とし、\(X\) をprojective strict（simple）SNC曲面とする。
+ここで各既約成分はsmoothで、成分の自己交叉はない。
+既約成分、double curves、および各成分のboundaryを
+\[
+X=\bigcup_{i\in I}X_i,\qquad
+D_{ij}=X_i\cap X_j,\qquad
+D_i=\bigcup_{j\ne i}D_{ij}
+\]
+と書く。
+非連結な \(D_{ij}\) は、その連結成分を区別して扱う。
+double curve上のtriple pointsのreduced divisorを \(P\) と書く。
+
+semistable-type log structure \(M\) を固定したとき、
+\[
+f:(X,M)=\Xlog\longrightarrow
+\sQ=(\Spec k,Q\to k),\qquad Q=\NN^m
+\]
+を考え、これをSNCL射と呼ぶ。
+基底chartは、各生成元を \(0\) に送る。
+基底log typeとcomponentのラベルは固定する。
+
+局所的には、一つのactiveな基底生成元に対して
+\[
+xy=0\qquad\text{または}\qquad xyz=0
+\]
+というsemistable chartを用いる。
+残る基底生成元は基底からのpullbackとして扱う。
+微分形式と接層は常に
+\(\Omlog\)、\(\Tlog\) という\emph{relative}なものを意味する。
+
+以下、\(H\subset G\) はsmooth affine algebraic groupsの閉部分群で、
+\[
+\h=\Lie(H),\qquad \g=\Lie(G),\qquad
+\dim(\g/\h)=2
+\]
+とする。
+
+\begin{remark}
+\label{rem:scope-local}
+貼り合わせ定理は上のprojectiveな設定で述べる。
+局所的条件およびsheaf性に関する反例では、
+同じ局所理論が定義される非固有なSNCモデルも用いる。
+その場合はその旨を明示する。
+\end{remark}
+
+\begin{remark}[仮定の区別]
+\label{rem:log-k3}
+一般のSNCL曲面について
+\(\omega_{X_i}(D_i)\simeq\OO_{X_i}\) とは主張しない。
+この結論を用いる箇所では、追加条件
+\begin{equation}
+\label{eq:log-canonical-trivial}
+\Omega^2_{X^{\log}/s_Q^{\log}}\simeq\OO_X
+\end{equation}
+を明示する。
+以下、この条件を\emph{log canonical triviality}と呼ぶ。
+SNCL log K3の場合にはこの条件が含まれるが、
+本稿ではlog K3に固有のそれ以外の条件を使用しない。
+一般のSNCL曲面から\eqref{eq:log-canonical-trivial}を導くこともしない。
+Pérez BuendíaのSNCL log K3の記法における微分形式も、
+本稿ではrelative log differentialとして扱う
+\cite{PB}。
+\end{remark}
+
+\subsection{Logarithmic Atiyah bundleとstrict geometry}
+% Source: I-01
+
+\begin{definition}[Strict relative logarithmic Cartan geometry]
+\label{def:strict-log-cartan}
+\(p:E_H\to X\) をprincipal \(H\)-torsorとし、
+\[
+E_H^{\log}:=(E_H,p^*M)
+\]
+とする。
+relative logarithmic Atiyah bundleを
+\[
+\Atlog(E_H):=T_{E_H^{\log}/s_Q^{\log}}/H
+\]
+と定める。
+右辺はequivariant vector bundleのdescentを意味する。
+これにはexact sequence
+\begin{equation}
+\label{eq:atiyah}
+0\longrightarrow\ad(E_H)
+\xrightarrow{\iota}\Atlog(E_H)
+\xrightarrow{\ \sigma\ }\Tlog\longrightarrow0
+\end{equation}
+がある。
+
+型 \((G,H)\) のstrict relative logarithmic Cartan geometryとは、
+\(E_G=E_H\times^H G\) に対する同型
+\begin{equation}
+\label{eq:strict-cartan}
+\theta:\Atlog(E_H)\xrightarrow{\sim}
+E_H\times^H\g=\ad(E_G)
+\end{equation}
+で
+\[
+\theta\circ\iota=\iota_1
+\]
+を満たすものである。
+ここで \(\iota_1:\ad(E_H)\to\ad(E_G)\) は包含から誘導される。
+対応する principal-space 上のCartan formを \(\omega\) と書く。
+\end{definition}
+
+\(H\) のsmoothnessにより、torsor上のrelative log tangent sequenceは
+局所的にexactであり、descentにより\eqref{eq:atiyah}を得る。
+\(H\)-equivarianceは定義中のdescentに含まれる。
+\(\theta\) にbracket compatibilityやflatnessを要求しない。
+
+smooth pair \((Y,D)\) では、本稿のAtiyah bundleは
+\[
+\At(E_H)(-\log D)
+:=
+\At(E_H)\times_{T_Y}T_Y(-\log D)
+\]
+に一致する。
+ただし、定義\ref{def:strict-log-cartan}は本稿の正標数・relative-log設定で採用する
+定義であり、\cite{BDM}のlogarithmic Cartan geometryの定義全体との同値を
+主張するものではない。
+
+\subsection{誘導接続、曲率、branch divisor}
+% Source: I-01, I-02
+
+\(\theta\) は \(E_G\) 上のrelative logarithmic connectionを誘導する。
+具体的には
+\[
+\Atlog(E_G)
+\simeq
+\bigl(\Atlog(E_H)\oplus\ad(E_G)\bigr)/
+\{(\iota c,-\iota_1c)\}
+\]
+上のretraction
+\begin{equation}
+\label{eq:induced-connection}
+r_\theta([a,b])=\theta(a)+b
+\end{equation}
+を用いる。
+局所sectionにおける接続を \(d+A\) と書き、
+その誘導adjoint connectionを \(\nablaad\) と書く。
+
+曲率は、標数 \(2\) を含む全ての標数で有効な評価式
+\begin{equation}
+\label{eq:curvature-eval}
+K(u,w):=d_{\log}\omega(u,w)+[\omega(u),\omega(w)]
+\end{equation}
+によって定める。
+標数が \(2\) でなければ、これは通常の \(\tfrac12[\omega,\omega]\) を用いる記法と一致する。
+本稿では \(\tfrac12[\omega,\omega]\) という式を文字どおり用いない。
+\(K=0\)（flatness）は仮定しない。
+
+\begin{definition}[Soldering mapとbranch divisor]
+\label{def:branch}
+\(\theta\iota=\iota_1\) を満たすbundle map \(\theta\) は、商上に
+\[
+\beta_\theta:\Tlog\longrightarrow
+V:=E_H\times^H(\g/\h)
+\]
+を誘導する。
+branchを扱う場合に限り、\(\theta\) の同型性を、
+\(\beta_\theta\) が各既約成分上でgenerically invertibleであるという条件に緩める。
+
+このとき
+\[
+B:=Z(\det\beta_\theta)
+\]
+をbranch divisorと呼ぶ。
+strict geometryでは \(B=0\)、すなわちそのsupportは空である。
+逆に、この設定で \(B=0\) なら \(\beta_\theta\)、従って \(\theta\) は同型になる。
+\end{definition}
+
+\subsection{大域的対象に用いる記号}
+\label{subsec:notation}
+% Source: II-01 (locked notation)
+
+第\ref{sec:first-order-complexes}節以降では、
+固定した大域的strict geometry \(\xi=(E_H,\theta)\) に対し、次の記号を用いる。
+これらはここで一度だけ定義する。
+\begin{equation}
+\label{eq:locked-notation}
+\begin{gathered}
+\shH=\ad(E_H),\qquad
+\shG=\ad(E_G),\qquad
+\shA=\Atlog(E_H),\\[2pt]
+T=\Tlog,\qquad
+\Omega=\Omlog,\qquad
+\shV=\Omega\otimes\shG .
+\end{gathered}
+\end{equation}
+\eqref{eq:atiyah}と\eqref{eq:strict-cartan}はこの記号で
+\[
+0\to\shH\xrightarrow{\iota}\shA\xrightarrow{\sigma}T\to0,
+\qquad
+\theta:\shA\xrightarrow{\sim}\shG,
+\qquad
+\theta\iota=\iota_1
+\]
+と書ける。
+基底環としては
+\[
+\Aeps=k[\varepsilon]/(\varepsilon^2)
+\]
+を用いる。
+
+\begin{remark}[記号の衝突を避けるための約束]
+\label{rem:notation-clash}
+boundaryの局所的対象に用いる \(A_i=T_{X_i}(-\log D_i)|_{D_{ij}}\)、
+基底環 \(\Aeps\)、および \(\shA=\Atlog(E_H)\) は
+互いに異なる対象であり、字体と添字で区別する。
+同様に、base monoid \(Q\) とboundary quotient \(Q_{ij}\)、
+制限されたAtiyah bundle \(B_i\) とbranch divisor \(B\) も区別する。
+boundary Cartan automorphism sheafには \(\mathscr A_{ij}\) を用い、
+\(\shA\) とは区別する。
+\end{remark}
+
+%======================================================================
+\section{成分への制限と境界構造}
+\label{sec:boundary}
+%======================================================================
+
+\subsection{成分への制限}
+% Source: I-03
+
+\begin{lemma}[Component restriction]
+\label{lem:restriction}
+固定したsemistable-type \(M\) に対してcanonicalな同型
+\begin{align}
+\restr{\Tlog}{X_i}
+&\simeq T_{X_i}(-\log D_i), \label{eq:tangent-restriction}\\
+\restr{\Omlog}{X_i}
+&\simeq\Omega^1_{X_i}(\log D_i), \label{eq:forms-restriction}\\
+\restr{\Atlog(E_H)}{X_i}
+&\simeq\At(E_{H,i})(-\log D_i) \label{eq:atiyah-restriction}
+\end{align}
+がある。ここで \(E_{H,i}=E_H|_{X_i}\) である。
+
+strict Cartan structureと誘導接続の曲率はこれらの同型のもとで制限される。
+特にglobalにflatなら各component上でもflatである。
+
+さらに\eqref{eq:log-canonical-trivial}を仮定すれば
+\[
+\omega_{X_i}(D_i)\simeq\OO_{X_i}.
+\]
+この最後の結論は\eqref{eq:log-canonical-trivial}を仮定した場合に限る。
+\end{lemma}
+
+\begin{proof}
+double chart \(xy=0\) では
+\[
+\dlog x+\dlog y=0
+\]
+であり、relative log tangentは
+\[
+x\partial_x-y\partial_y,\qquad\partial_z
+\]
+を基底に持つ。
+\(X_i=(x=0)\) へのrestrictionは
+\[
+-y\partial_y,\qquad\partial_z
+\]
+となり、\(T_{X_i}(-\log D_i)\) の基底である。
+
+triple chart \(xyz=0\) では
+\[
+\dlog x+\dlog y+\dlog z=0
+\]
+であり、relative log tangentの基底として
+\[
+x\partial_x-y\partial_y,\qquad
+y\partial_y-z\partial_z
+\]
+を取れる。
+\(X_i=(x=0)\) 上の像
+\[
+-y\partial_y,\qquad
+y\partial_y-z\partial_z
+\]
+は、やはりcomponentのlog tangentの基底となる。
+
+この写像は、log derivationがcomponent idealを保つことによって定まる。
+従ってchartの選択によらない。
+unitを含むchartではrelationに \(d\log u\) が加わるが、
+同じderivationのrestrictionによって定まる写像を比較しているため、
+局所同型は貼り合わさる。
+双対を取って\eqref{eq:forms-restriction}を得る。
+
+torsorを局所的に \(U\times H\) とtrivializeすると、
+torsor上のlog tangentはbaseのlog tangentと \(H\) 方向のtangentに分かれる。
+上のrestrictionは前者に作用し、後者には恒等写像を与える。
+この構成はtorsorの同型と両立するので \(H\)-descentを行うことができ、
+\eqref{eq:atiyah-restriction}を得る。
+ここではcomponentへのpullback log structure自体を、
+divisorial log structureと同一視していない。
+
+また\eqref{eq:atiyah}の商はlocally freeなので、
+componentへのtensor restrictionでこのexact sequenceを壊すTorは生じない。
+\(\theta\iota=\iota_1\) および同型性はrestrictionで保たれる。
+誘導接続\eqref{eq:induced-connection}と曲率\eqref{eq:curvature-eval}の計算も
+restrictionと両立する。
+
+最後に\eqref{eq:forms-restriction}の第二外冪を取ると
+\[
+\restr{\Omega^2_{X^{\log}/s_Q^{\log}}}{X_i}
+\simeq\omega_{X_i}(D_i).
+\]
+ここに\eqref{eq:log-canonical-trivial}を用いる。
+\end{proof}
+
+\subsection{Branch determinant（補助的結果）}
+% Source: I-04
+
+\begin{lemma}[Branch determinantとtorsionによる消滅]
+\label{lem:branch}
+定義\ref{def:branch}の仮定のもとで、\(B\) はeffective Cartier divisorであり、
+\begin{equation}
+\label{eq:branch-line}
+\OO_X(B)\simeq
+\det(V)\otimes\Omega^2_{X^{\log}/s_Q^{\log}}.
+\end{equation}
+各 \(X_i\) にもeffective Cartier divisorとして制限される。
+
+さらに\eqref{eq:log-canonical-trivial}を仮定すれば
+\[
+\OO_X(B)\simeq\det(V).
+\]
+この場合、\(\det(V)\) がtorsionなら \(B=0\) であり、\(\theta\) はstrictになる。
+\end{lemma}
+
+証明は付録\ref{app:preliminary}に置く。
+
+\begin{remark}
+\label{rem:character}
+\[
+\chi=\det\Ad_{\g/\h}:H\longrightarrow\GG_m
+\]
+がtrivial、またはfinite orderであることは、
+\(\det(V)\) がtorsionになる十分条件である。
+逆は主張しない。
+例えばtrivial torsorでは、characterの位数によらずassociated line bundleはtrivialである。
+
+また、\eqref{eq:log-canonical-trivial}から得る
+\(\OO_X(B)\simeq\det(V)\) の具体的な同型には、
+log canonical bundleのtrivializationの選択が関わる。
+この補題は以降の貼り合わせ定理や一次変形理論の証明には用いない。
+\end{remark}
+
+\subsection{Normal lineとfull boundary datum}
+% Source: I-05, I-06, I-07
+
+\begin{lemma}[Boundary Atiyah bundle]
+\label{lem:boundary-atiyah}
+\(D=D_{ij}\) とし、
+\[
+F_i=E_{H,i}|_D,\qquad
+A_i=T_{X_i}(-\log D_i)|_D,\qquad
+Q_{ij}=T_D(-\log P)
+\]
+と置く。このとき
+\begin{equation}
+\label{eq:normal-sequence}
+0\longrightarrow L_{ij}
+\longrightarrow A_i\xrightarrow{q_i}Q_{ij}
+\longrightarrow0,
+\qquad
+L_{ij}=\OO_D\ell_{ij},
+\end{equation}
+がある。
+\(D=(y=0)\subset X_i\) なら
+\(\ell_{ij}=y\partial_y|_D\) であり、これはcanonicalなgeneratorである。
+
+さらにcanonicalに
+\begin{equation}
+\label{eq:boundary-fiber-product}
+B_i:=
+\At(E_{H,i})(-\log D_i)|_D
+\simeq
+\At(F_i)(-\log P)\times_{Q_{ij}}A_i.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+triple pointから離れた点では、\(A_i\) は
+\(y\partial_y,\partial_z\) を基底に持ち、
+\(q_i\) は前者を零、後者を \(\partial_z\) に送る。
+triple pointでは、\(D_i=(yz=0)\) と書け、
+基底 \(y\partial_y,z\partial_z\) の像は
+\(0,z\partial_z\) である。
+これにより\eqref{eq:normal-sequence}を得る。
+局所方程式をunit倍してもnormal generatorのrestrictionは変わらない。
+
+torsor上のlog vector fieldを \(p_i^{-1}D\) に制限すると、
+\(F_i\) 上で \(P\) にlogarithmicなvector fieldを得る。
+これとbaseのanchorを組み合わせて
+\[
+B_i\longrightarrow
+\At(F_i)(-\log P)\times_{Q_{ij}}A_i
+\]
+を構成する。
+torsorの局所trivializationで、この写像は
+\[
+(a,v)\longmapsto((a,q_i(v)),v)
+\]
+となるので同型である。
+構成自体がintrinsicであるため、局所同型は貼り合わさる。
+\end{proof}
+
+\begin{definition}[Branchwise residue]
+\label{def:residue}
+\eqref{eq:boundary-fiber-product}のもとで
+\[
+\widetilde\ell_{ij}:=(0,\ell_{ij})\in B_i
+\]
+と置く。
+branchwise residueを
+\begin{equation}
+\label{eq:residue-definition}
+\rho_{ij}:=\theta_i(\widetilde\ell_{ij})
+\in H^0(D_{ij},\ad(E_{G,i})|_{D_{ij}})
+\end{equation}
+と定める。
+
+本稿では、接続 \(d+A\) の \(dy/y\) 係数をresidueとする。
+\cite{BDM}のhorizontal splittingによるresidueとの符号関係は
+\[
+R_{\mathrm{BDM}}=-\rho
+\]
+である。
+符号に関するこの比較は本稿ではここでのみ行う。
+\end{definition}
+
+\begin{definition}[Full boundary Cartan datum]
+\label{def:full-boundary-datum}
+\(\theta_i\) の \(D_{ij}\) へのrestrictionを
+\[
+\Theta_i:B_i\xrightarrow{\sim}F_i\times^H\g
+\]
+と書き、
+\[
+\calB_{ij}:=(F_i,\Theta_i)
+\]
+をfull boundary Cartan datumと呼ぶ。
+背景の \(A_i,Q_{ij},L_{ij}\) および
+\eqref{eq:boundary-fiber-product}も保持する。
+\end{definition}
+
+\subsection{境界構造定理}
+% Source: I-08 (Theorem A)
+
+\begin{theorem}[境界構造とresidue laws]
+\label{thm:boundary-structure}
+固定した \(M\) に対し、補題\ref{lem:restriction}を経由するcanonicalな同型
+\[
+\lambda^M_{ij}:A_i\xrightarrow{\sim}A_j
+\]
+があり、
+\begin{equation}
+\label{eq:normal-sign}
+\lambda^M_{ij}(\ell_{ij})=-\ell_{ji}
+\end{equation}
+を満たす。
+
+大域的strict geometryが与えられている場合、その共通adjoint bundle内では
+\begin{equation}
+\label{eq:residue-antisymmetry}
+\rho_{ij}+\rho_{ji}=0.
+\end{equation}
+full-compatibleなboundary identification \(g_{ij}:F_i\to F_j\) を用いる場合は
+\begin{equation}
+\label{eq:residue-transport}
+\Ad(g_{ij})\rho_{ij}+\rho_{ji}=0.
+\end{equation}
+
+大域的realizationのtriple point \(P_{ijk}\) では、
+共通の \(\ad(E_G)(P_{ijk})\) 内で
+\begin{equation}
+\label{eq:triple-residue}
+\rho_{ij}(P_{ijk})+\rho_{jk}(P_{ijk})+\rho_{ki}(P_{ijk})=0.
+\end{equation}
+
+また
+\[
+N_{ij}:=\beta_i(L_{ij})
+\]
+はcanonicalなnormal lineであり、
+\begin{equation}
+\label{eq:normal-quotient}
+0\longrightarrow N_{ij}
+\longrightarrow V_i|_{D_{ij}}
+\longrightarrow Q_{ij}
+\longrightarrow0
+\end{equation}
+がある。
+ここで \(V_i=E_{H,i}\times^H(\g/\h)\) である。
+tangent directionはこの列のquotientであって、canonicalなsublineではない。
+\end{theorem}
+
+\begin{proof}
+double chartでは
+\(\dlog x+\dlog y=0\) である。
+従って \(X_i=(x=0)\) 上の \(y\partial_y\) は、
+共通のrelative log tangentを経由すると
+\(X_j=(y=0)\) 上の \(-x\partial_x\) に対応する。
+これが\eqref{eq:normal-sign}である。
+
+normal liftにも同じ符号が生じる。
+大域的な \(\theta\) を作用させれば\eqref{eq:residue-antisymmetry}を得る。
+targetを \(g_{ij}\) で比較する場合は\eqref{eq:residue-transport}となる。
+
+triple chartを \(xyz=0\) とする。
+共通の局所trivializationで接続形式を
+\[
+A=a_x\,\dlog x+a_y\,\dlog y+a_z\,\dlog z
+\]
+と表示する。
+この表示は一意でなくてもよい。
+relation
+\(\dlog x+\dlog y+\dlog z=0\)
+により、三つのbranchwise residueはそれぞれ
+\[
+a_y-a_x,\qquad a_z-a_y,\qquad a_x-a_z
+\]
+となる。
+従って同一adjoint fiberでその和は零である。
+unitを含むchartで加わる \(d\log u\) は各component上のregular formであり、
+normal residueを持たない。
+
+最後に、strictnessにより \(\beta_i\) は同型である。
+\eqref{eq:normal-sequence}を \(\beta_i\) によって移すと
+\eqref{eq:normal-quotient}を得る。
+\end{proof}
+
+\begin{proposition}[Boundary connectionの降下に関する制限]
+\label{prop:no-boundary-connection}
+\(Q_{ij}\) のsectionの \(A_i\) へのliftを \(f\ell_{ij}\) だけ変更すると、
+誘導接続の作用は \(f\rho_{ij}\) だけ変わる。
+従ってこの接続は、一般には \(Q_{ij}\) 上の接続へ降下しない。
+
+strict caseでは
+\[
+\rho_{ij}\bmod\h=\beta_i(\ell_{ij})\ne0
+\]
+なので、このnormal ambiguityを消して接続を降下させることはできない。
+\end{proposition}
+
+\begin{proof}
+二つのliftの差は\eqref{eq:normal-sequence}により \(f\ell_{ij}\) である。
+そのcanonical normal liftにCartan mapを作用させると、
+定義\ref{def:residue}により差は \(f\rho_{ij}\) となる。
+strictnessはnormal lineを \(V_i|_D\) の非零lineへ同型に送るため、
+最後の主張が従う。
+\end{proof}
+
+\begin{remark}
+\label{rem:boundary-invariance}
+定理\ref{thm:boundary-structure}において、
+固定した \(M\) に対する \(\lambda^M_{ij}\)、normal line \(N_{ij}\)、
+および full restriction はcanonicalである。
+一方、tangent splittingとboundary connectionは、
+一般にcanonicalに存在するdataではない。
+したがって、boundary geometryを
+\((\rho,\text{line},\text{connection})\) の三つ組だけで代用しない。
+
+同じlog structureのchart変更では、上の構成はintrinsicに不変である。
+regular gauge \(g\) により局所sectionを \(q'=qg^{-1}\) と変更すると
+\[
+A'=\Ad(g)A-(dg)g^{-1},\qquad
+\rho'=\Ad(g|_D)\rho.
+\]
+inhomogeneous termはnormal residueを持たない。
+実際にlog structure自体を変えた場合のfull comparisonは
+第\ref{sec:variable-log}節で扱う。
+
+また、\eqref{eq:triple-residue}を
+\(\delta\rho=0\) と書く場合には、
+strata上のadjoint bundleのsectionとrestriction mapsからなる
+incidence coefficient systemを明示する。
+horizontal local systemやconstant coefficientsとは同一視しない。
+\end{remark}
+
+\subsection{Normal p-curvature（補助的結果）}
+% Source: I-09
+
+\begin{lemma}[Normal p-curvatureとresidue]
+\label{lem:p-curvature}
+normal log generator \(\ell\) について
+\[
+\ell^{[p]}=\ell,\qquad
+\psi_p(\ell)|_D=\rho^{[p]}-\rho.
+\]
+ここでp-curvatureの符号は、faithful representationにおいて
+\[
+\psi_p(v)=\nabla_v^p-\nabla_{v^{[p]}}
+\]
+となるものを採用する。
+この式にflatnessは不要である。
+
+従って
+\[
+\psi_p(\ell)|_D=0\iff\rho^{[p]}=\rho.
+\]
+この条件のもとで、faithful representationにおけるresidueの各fiberは
+対角化可能であり、固有値は \(\FF_p\) に属する。
+\end{lemma}
+
+証明は付録\ref{app:preliminary}に置く。
+
+\begin{remark}
+\label{rem:p-curvature-scope}
+補題\ref{lem:p-curvature}はlogarithmic connectionの既知の機構を
+本稿のCartan settingに適用したpreliminary resultである。
+一般の非平坦接続について、p-curvature全体を
+加法的なbundle morphismと仮定してはいない。
+またこの補題は、以下の貼り合わせ定理や一次変形理論の証明には用いない。
+regularityやcentralizerのsmoothnessもここからは従わない。
+\end{remark}
+
+%======================================================================
+\section{固定したlog structure上の貼り合わせ}
+\label{sec:gluing}
+%======================================================================
+
+本節では、semistable-type log structure \(M\) を固定したときの
+貼り合わせ問題を完全に決定する。
+ここで得られるのが本稿の主定理Iである。
+
+% Source: I-10 (Main Theorem I)
+
+\begin{theorem}[主定理I：固定log上のfull boundary貼り合わせ判定法]
+\label{thm:fixed-log-gluing}
+semistable-type log structure \(M\) と、
+各 \((X_i,D_i)\) 上のstrict logarithmic Cartan geometry
+\((E_{H,i},\theta_i)\) を固定する。
+
+double curve上のtorsor isomorphism \(g_{ij}:F_i\to F_j\) に対し、
+\eqref{eq:boundary-fiber-product}を用いて
+\begin{equation}
+\label{eq:lambda-atiyah}
+\Lambda^M_{ij}(a,v)
+=
+\bigl(\At(g_{ij})a,\lambda^M_{ij}v\bigr)
+\end{equation}
+と定める。これはcanonicalであり、\(g_{ij}\) のnormal derivativeを必要としない。
+
+指定されたcomponent geometriesを持つ大域的strict geometryが存在するための
+必要十分条件は、大域的な \(g_{ij}\) が存在して
+\begin{align}
+\Ad(g_{ij})\Theta_i&=\Theta_j\Lambda^M_{ij},
+\label{eq:full-compatibility}\\
+g_{ji}&=g_{ij}^{-1},
+\label{eq:inverse}\\
+g_{ki}g_{jk}g_{ij}&=1
+\quad\text{（全てのtriple pointで）}
+\label{eq:triple-cocycle}
+\end{align}
+を満たすことである。
+
+固定したdescent datumに対するgluingはglobal algebraicであり、
+component identificationsを保つ同型を除いて一意である。
+大域的strict geometryから、\eqref{eq:full-compatibility}--\eqref{eq:triple-cocycle}を
+満たすdescent datumへのrestriction functorは圏同値（特に充満忠実）である。
+\end{theorem}
+
+
+%============================================================
+% Main Theorem I: proof with independent-audit amendments (2026-10-24)
+%============================================================
+\begin{lemma}[SNC局所環のequalizer表示]
+\label{lem:snc-ring-equalizer}
+$X$ のdouble chart $xy=0$ およびtriple chart $xyz=0$ において、
+étale chart上の局所環をそれぞれ $R=S/(xy)$, $R=S/(xyz)$ とする。
+ここで $S$ はそのsmooth ambient chartの局所環で、$x,y,z$ は対応する
+相対的な正規交叉パラメータである。
+このとき
+\begin{align}
+S/(xy)&\xrightarrow{\sim}
+ S/(x)\times_{S/(x,y)}S/(y),\label{eq:double-ring-eq}\\
+S/(xyz)&\xrightarrow{\sim}
+ S/(xy)\times_{S/(xy,z)}S/(z),\label{eq:triple-ring-eq}\\
+S/(xy,z)&\xrightarrow{\sim}
+ S/(x,z)\times_{S/(x,y,z)}S/(y,z)\label{eq:triple-intersection-eq}
+\end{align}
+が成り立つ。特に、$j_i:X_i\hookrightarrow X$,
+$j_{ij}:D_{ij}\hookrightarrow X$ と書くと、自然な列
+\begin{equation}\label{eq:snc-cech-equalizer}
+0\longrightarrow\OO_X\longrightarrow
+\bigoplus_i(j_i)_*\OO_{X_i}\xrightarrow{\delta}
+\bigoplus_{i<j}(j_{ij})_*\OO_{D_{ij}}
+\end{equation}
+は左二項と中央項でexactである。
+ここで $\delta$ はpairwise restrictionsの差である。
+\end{lemma}
+
+\begin{proof}
+任意の可換環 $S$ とイデアル $I,J$ には
+$S/(I\cap J)\simeq S/I\times_{S/(I+J)}S/J$ が成り立つ。
+SNC座標では正規交叉パラメータの正則性から
+$(x)\cap(y)=(xy)$, $(xy)\cap(z)=(xyz)$,
+$(x,z)\cap(y,z)=(xy,z)$ である。これらを順に適用して
+\eqref{eq:double-ring-eq}--\eqref{eq:triple-intersection-eq}を得る。
+triple chartで三つの成分のsectionが各pairwise intersection上で一致すれば、
+まず$x=0$と$y=0$の二成分が$S/(xy)$上の一つのsectionを与える。
+このsectionと第三成分のsectionの$S/(xy,z)$へのrestrictionは、
+$S/(x,z)$および$S/(y,z)$への像がそれぞれ一致する。
+従って\eqref{eq:triple-intersection-eq}の単射性により、
+$S/(xy,z)$上で一致する。最後に\eqref{eq:triple-ring-eq}を適用する。
+これを各局所chartで検査すると\eqref{eq:snc-cech-equalizer}を得る。
+なお、右端への全射性は主張していない。
+\end{proof}
+
+\begin{lemma}[smooth affine torsorのeffective closed gluing]
+\label{lem:snc-torsor-gluing}
+$H$をsmooth affine $k$-groupとする。
+各$X_i$上のprincipal $H$-torsor $E_i$と、
+$D_{ij}$上のtorsor isomorphisms
+$g_{ij}:E_i|_{D_{ij}}\to E_j|_{D_{ij}}$が与えられ、
+$g_{ji}=g_{ij}^{-1}$および全triple pointで
+$g_{ki}g_{jk}g_{ij}=1$を満たすとする。
+このとき$X$上にprincipal $H$-torsor $E$と
+$E|_{X_i}\simeq E_i$が存在し、境界上の比較は$g_{ij}$である。
+この対象は、指定されたcomponent identificationsを保つ
+\emph{一意な}同型を除き一意である。
+\end{lemma}
+
+\begin{proof}
+ここでtorsorはfppf torsorを意味する。
+$H$はaffineかつsmoothなので、通常のfppf descentにより
+$E_i\to X_i$はaffine、smooth、surjective、finite presentationである。
+この段階ではclosed gluingを用いていない。
+$\mathcal A_i=(p_i)_*\OO_{E_i}$とし、$g_{ij}$による同定を用いて
+\begin{equation}\label{eq:torsor-algebra-equalizer}
+\mathcal A=\ker\left(
+\bigoplus_i(j_i)_*\mathcal A_i\longrightarrow
+\bigoplus_{i<j}(j_{ij})_*(\mathcal A_i|_{D_{ij}})
+\right)
+\end{equation}
+と定める。矢印は、同定後のrestrictionの差である。
+成分数は有限であり、closed immersionによるpushforwardと
+quasi-coherent sheaf間のkernelはquasi-coherentである。
+compatibleなtupleの積もcompatibleであるから、
+$\mathcal A$は単位元を持つquasi-coherent $\OO_X$-algebraである。
+差分写像そのものをalgebra homomorphismとみなす必要はない。
+
+このequalizerの形成はflat base changeと可換である。
+実際、affine open上でflat tensorはkernelを保ち、
+closed immersionについてのbase changeはmoduleのtensorそのものである。
+また$k[H]$は$k$上flatである。各coactionの両立性と
+\eqref{eq:torsor-algebra-equalizer}を$k[H]$でtensorしたkernel表示により
+\[
+\mathcal A\longrightarrow\mathcal A\otimes_k k[H]
+\]
+が定まる。coassociativityとcounitも各成分で検査できる。
+従って$E=\Spec_X\mathcal A$は右$H$-actionを持つaffine $X$-schemeである。
+
+幾何点$\bar x$を固定し、$T=\OO^{\mathrm{sh}}_{X,\bar x}$と置く。
+点を通らない成分を除き、étale SNC chartを選ぶ。
+以下、$x,y,z$はその座標の$T$における像を表す。
+補題\ref{lem:snc-ring-equalizer}の表示は、
+strict henselizationのflatnessによって$T$上でも成立する。
+各component ring $T_i$は$T$の商なのでstrict henselian local ringである。
+その上の$E_i$のclosed fiberは非空smooth schemeである。
+\emph{Stacks Project, Lemma 33.25.6, Tag 056U}によれば、
+基礎体上separableな剰余体を持つ閉点はsmooth schemeで稠密である。
+ここでは基礎体がseparably closedなので、これらは有理点であり、
+closed fiberが非空であることから、そのような点が存在する。
+その点はsectionへ持ち上がる。実際、affine smooth $T_i$-schemeの
+coordinate algebraにTag 0H74を適用し、
+$T_i$の極大イデアルを法とする点を持ち上げればよい。
+従って各$E_i$は$T_i$上でtrivialである。
+
+用いるliftingを明記する。henselian local ring $B$の任意のproper ideal
+$J$について$(B,J)$はhenselian pairである
+\emph{(Stacks Project, Lemma 15.11.9, Tag 0DYDを
+$J\subset\mathfrak m_B$に適用)}。
+smooth $k$-algebra $k[H]$に
+\emph{Lemma 15.13.3, Tag 0H74}を適用すると
+\[
+H(B)\longrightarrow H(B/J)
+\]
+は全射である。$J$がnilpotentである必要はない。
+
+double chartでは、$T_x=T/(x)$、$T_y=T/(y)$、
+$T_{xy}=T/(x,y)$と書く。
+trivializations $\tau_i:H_{T_i}\to E_i$を選び、
+$g_{12}\tau_1=\tau_2L_{h_{12}}$と書く。
+ここで$L_h$はleft multiplicationであり、$h_{12}\in H(T_{xy})$である。
+$h_{12}$を$H(T_y)$へ持ち上げ、$\tau_2$を変更すると$h_{12}=1$となる。
+従って二つのtrivializationsは境界で一致する。
+
+triple chartでも、まず同じ操作で$h_{12}=1$とする。
+第三成分との比較を$h_{13}\in H(T/(x,z))$、
+$h_{23}\in H(T/(y,z))$と書くと、cocycleは
+\[
+h_{13}=h_{23}h_{12}=h_{23}\quad\text{in }H(T/(x,y,z))
+\]
+を与える。曲面のSNC triple intersectionはreducedな零次元schemeなので、
+全triple pointでの条件はこのscheme上での等式を意味する。
+補題\ref{lem:snc-ring-equalizer}と$H$のaffinenessから
+\[
+T/(xy,z)=T/(x,z)\times_{T/(x,y,z)}T/(y,z),
+\]
+\[
+H(T/(xy,z))=
+H(T/(x,z))\times_{H(T/(x,y,z))}H(T/(y,z))
+\]
+である。従って二つの比較は$h\in H(T/(xy,z))$を与える。
+henselian pair $(T/(z),(xy))$で$h$を$H(T/(z))$へ持ち上げ、
+第三のtrivializationを変更すると、全ての比較が恒等になる。
+一成分だけを通る点では最初のtrivializationだけでよい。
+
+次に、この\emph{compatibleなcomponent sections}を実際のétale近傍へ降ろす。
+affineなpointed étale近傍$U_\alpha$の系について
+$\Spec T=\varprojlim U_\alpha$であり、
+$\Spec T_i=\varprojlim(U_\alpha\times_X X_i)$である。
+各$E_i\to X_i$がfinite presentationであるため、上で選んだsectionは
+ある$U_\alpha\times_X X_i$上のsectionへ降りる。
+有限個の等式$g_{ij}(s_i)=s_j$も、さらに近傍を進めれば成立する。
+これはfinite presentationのlimit property
+\emph{(Stacks Project, Proposition 32.6.1, Tag 01ZC;
+affineの場合はLemma 10.127.3, Tag 00QO)}による。
+ここでfinite presentationを使う対象は既知の$E_i$であり、
+構成中の$E$ではない。
+
+こうして得たétale近傍$U\to X$上では、component torsorsは
+全境界で一致するtrivializationsを持つ。
+equalizerのflat base change、および
+\eqref{eq:snc-cech-equalizer}を$k[H]$でtensorした列から
+\[
+\mathcal A|_U\simeq\OO_U\otimes_k k[H]
+\]
+を$H$-coactionと両立するalgebra同型として得る。
+従って$E|_U\simeq U\times H$であり、これらの$U$は$X$をétaleに覆う。
+よって$E\to X$はfaithfully flatかつlocally of finite presentationであり、
+\[
+E\times_k H\longrightarrow E\times_X E,
+\qquad(e,h)\longmapsto(e,eh)
+\]
+は同型である。これは各$U$上で通常のtrivial torsor identityである。
+従って$E$はprincipal $H$-torsorである。
+また$E\to X$はaffineなのでquasi-compactかつquasi-separatedであり、
+finite presentationでもある。
+
+射影$\mathcal A\to(j_i)_*\mathcal A_i$から得るcanonical map
+$\mathcal A\otimes_{\OO_X}\OO_{X_i}\to\mathcal A_i$は、
+上の$U\times_X X_i$上でtrivial torsorの同型となる。
+従ってfaithfully flat descentにより大域的にも同型であり、
+比較は構成上$g_{ij}$に一致する。
+この議論は、nonflatなcomponent restrictionとkernelが
+一般に可換だと仮定していない。
+
+最後に任意の別のrealization $E'$のcoordinate algebraを$\mathcal B$とする。
+$E'\to X$はflat affineなので$\mathcal B$はflatな$\OO_X$-moduleである。
+\eqref{eq:snc-cech-equalizer}を$\mathcal B$でtensorすると、
+$\mathcal B$もそのcomponent restrictionsのequalizerとなる。
+指定された同定によりこのequalizerは\eqref{eq:torsor-algebra-equalizer}と同じであり、
+一意な$H$-equivariant algebra同型$\mathcal B\simeq\mathcal A$を得る。
+これが要求された一意性を証明する。
+\end{proof}
+
+\begin{lemma}[境界上のAtiyah comparisonの自然性]
+\label{lem:snc-atiyah-comparison}
+$X$上の任意のprincipal $H$-torsor $E_H$に対して、
+補題\ref{lem:restriction}によるcomponent restrictionsを
+境界で比較した写像は、その境界同定$g_{ij}$について
+\begin{equation}\label{eq:snc-atiyah-natural-comparison}
+(a,v)\longmapsto
+\bigl(\At(g_{ij})a,\lambda^M_{ij}v\bigr)
+=\Lambda^M_{ij}(a,v)
+\end{equation}
+である。特に補題\ref{lem:snc-torsor-gluing}で構成したtorsorにも適用できる。
+さらに、この右辺は任意のboundary torsor同型$g_{ij}$について定義でき、
+normal方向への延長やその導関数を要しない。
+\end{lemma}
+
+\begin{proof}
+$D=D_{ij}$、$Q=T_D(-\log P)$とする。
+relative log derivationは各component idealとその和を保つ。
+従って共通の$\Tlog|_D$から$Q$へのrestrictionが定まり、
+\[
+q_j\lambda^M_{ij}=q_i
+\]
+である。triple chartでは、このrestrictionは
+$(a_x,a_y,a_z)$、$a_x+a_y+a_z=0$に対して
+$a_z z\partial_z$を対応させ、両成分で同じである。
+double chartでは残るsmooth座標方向へのrestrictionである。
+これはderivationのrestrictionなのでchartの選択に依存しない。
+また$\At(g_{ij})$は$Q$上の恒等写像を被覆する。
+従って\eqref{eq:snc-atiyah-natural-comparison}は
+補題\ref{lem:boundary-atiyah}のfiber product上で定義される。
+
+大域的$E_H$がある場合、$F=E_H|_D$と置く。
+torsor上のlog derivationのrestrictionとbase anchorはcanonical map
+\[
+\Atlog(E_H)|_D\longrightarrow
+\At(F)(-\log P)\times_Q\Tlog|_D
+\]
+を与える。$E_H$をétale局所的にtrivializeすると、この写像は
+$(c,v)\mapsto((c,q(v)),v)$となり同型である。
+component側の同型も同じrestrictionから構成されるので、
+$E_H|_{X_i}\simeq E_{H,i}$による表示を変えたときの比較は
+まさに\eqref{eq:snc-atiyah-natural-comparison}である。
+\eqref{eq:atiyah-restriction}もtorsor上のlog derivationのrestrictionから
+構成されるため、torsor同型についてnaturalである。
+従ってmorphism descentでも、Cartan mapsとの可換性を成分上で検査できる。
+この証明はtorsorのclosed gluingを使用しない。
+
+normal derivativeが不要なことを環上でも確認する。
+component上のboundary idealを$J$、log vector fieldを$v$とすると
+$v(J)\subset J$であり、任意のregular function $f$について
+\[
+v(f)\bmod J=q_i(v)(f\bmod J)
+\]
+となる。従って境界上で一致する二つの$H$-valued mapの延長は、
+$k[H]$の各関数に対して、境界上で同じ微分を与える。
+normal logarithmic generatorは$Q$で零なので、この項に寄与しない。
+triple pointでも$Q$の局所生成元は$z\partial_z$であり、同じ論証が成立する。
+必要なのは境界上の$\At(g_{ij})$に既に含まれる微分だけである。
+\end{proof}
+
+\begin{proof}[主定理Iの証明]
+\eqref{eq:lambda-atiyah}が定義されることは
+補題\ref{lem:boundary-atiyah}と
+$q_j\lambda^M_{ij}=q_i$から従う。
+必要性について、大域的$(E_H,\theta)$と指定成分への同定を取り、
+共通のboundary restrictionsから$g_{ij}$を得る。
+これらはinverse relationとtriple cocycleを満たす。
+任意の大域的torsorに適用できる
+補題\ref{lem:snc-atiyah-comparison}によって、
+$\theta$のrestrictionは\eqref{eq:full-compatibility}を満たす。
+
+逆に、条件を満たす大域的な$g_{ij}$が与えられたとする。
+補題\ref{lem:snc-torsor-gluing}により$E_H$を構成する。
+$\mathcal V=\ad(E_G)$、$\mathcal U=\Atlog(E_H)$と置く。
+前者はassociated vector bundleであり、後者は
+étale局所的に$\OO_X\otimes_k\h\oplus\Tlog$なので、両者はlocally freeである。
+補題\ref{lem:restriction}によってそのcomponent restrictionsは
+指定されたbundlesと一致する。
+従ってlocally free sheaf
+\[
+\mathscr F=\mathcal Hom_{\OO_X}(\mathcal U,\mathcal V)
+\]
+に\eqref{eq:snc-cech-equalizer}をtensorし、closed immersionのprojection formulaを使うと
+\begin{equation}\label{eq:cartan-hom-equalizer}
+0\longrightarrow\mathscr F\longrightarrow
+\bigoplus_i(j_i)_*(\mathscr F|_{X_i})\longrightarrow
+\bigoplus_{i<j}(j_{ij})_*(\mathscr F|_{D_{ij}})
+\end{equation}
+が左と中央でexactである。
+finite locally freeなsourceに対するHomのbase changeにより、
+各$\theta_i$は中央項のsectionとみなせる。
+補題\ref{lem:snc-atiyah-comparison}とfull compatibilityによって
+その差分は零である。大域切断関手の左完全性から、
+一意な$\theta:\mathcal U\to\mathcal V$を得る。
+同様に$\mathcal Hom(\ad(E_H),\mathcal V)$のequalizerのinjectivityから
+$\theta\iota=\iota_1$を得る。
+
+任意の$x\in X$と$x\in X_i$に対し、
+$\theta\otimes\kappa(x)=\theta_i\otimes\kappa(x)$は同型である。
+両bundleは同じrankを持つので、$\det\theta$は各局所環でunitであり、
+$\theta$は同型である。よって$(E_H,\theta)$は所望のstrict geometryである。
+
+morphism descentを確認する。二つの大域的torsor $E_H,E'_H$と、
+そのcomponent morphisms $f_i$が境界で
+$g'_{ij}f_i=f_jg_{ij}$を満たすとする。
+両torsorを同時に自明化するétale coverを選び、そのaffine openを$U$とする。
+補題\ref{lem:snc-ring-equalizer}の列はétale base change後もexactなので、
+$R=\Gamma(U,\OO_U)$、$R_i=\Gamma(U\times_X X_i,\OO)$、
+$R_{ij}=\Gamma(U\times_X D_{ij},\OO)$について
+\[
+H(R)=\operatorname{Eq}\left(
+\prod_iH(R_i)\rightrightarrows\prod_{i<j}H(R_{ij})\right).
+\]
+これは$H(R)=\Hom_{k\text{-alg}}(k[H],R)$が環のlimitを保つことによる。
+従って$f_i$は$U$上で一意なequivariant morphismを定める。
+二つのこのような$U$のoverlapでも、さらにaffineに細分して同じ一意性を適用できる。
+よって通常のétale descent for morphismsにより、大域的$f$を得る。
+equivariant torsor morphismは同型である。
+Cartan mapsとの可換性は対応するHom sheafのequalizerのinjectivityで
+componentごとに検査できる。
+最後にtorsorの一意性と$\theta$の一意性を合わせると、
+固定したdescent datumのrealizationはcomponent identificationsを保つ
+一意な同型を除いて一意である。
+\end{proof}
+
+\begin{remark}
+\label{rem:gluing-proof-status}
+主定理Iのclosed gluingは、SNC局所環のequalizer、
+henselian-pair lifting、compatibleなcomponent sectionsのétale近傍への降下、
+および境界Atiyah comparisonによって証明される。
+liftingにはStacks Project, Tag 0H74を、近傍への降下にはTag 01ZCを用いる。
+componentへのnonflat base changeは局所自明化後に検証しており、
+任意のbase changeがkernelを保つという仮定を置かない。
+以上は本稿で指定したsemistable chartsとsmooth affine algebraic groupsの
+仮定のもとでの主定理Iの証明である。
+\end{remark}
+
+
+\begin{example}[Residue matchingだけでは不十分]
+\label{ex:residue-not-enough}
+局所モデル \(xy=0\) を考え、
+\(X_i=(x=0)\)、\(X_j=(y=0)\) とする。
+これは注意\ref{rem:scope-local}の意味での非固有chart上の例である。
+\(H=1\)、\(G=\GG_a^2\) とし、そのLie algebraの基底を \(e_1,e_2\) とする。
+
+\(c\in k^\times\setminus\{1\}\) を選び、
+\[
+\theta_i(y\partial_y)=e_1,\qquad
+\theta_i(\partial_z)=e_2,
+\]
+\[
+\theta_j(x\partial_x)=-e_1,\qquad
+\theta_j(\partial_z)=c e_2
+\]
+と定める。
+これらはstrictなlog coframesである。
+
+normal comparisonは
+\(y\partial_y\mapsto-x\partial_x\)
+なのでresidue compatibilityは成立する。
+しかしtangent direction \(\partial_z\) の像は一致せず、
+\eqref{eq:full-compatibility}は成立しない。
+従ってresidue matchingはCartan gluingの十分条件ではない。
+\end{example}
+
+%======================================================================
+\section{三重点におけるdescent obstruction}
+\label{sec:triple-obstruction}
+%======================================================================
+
+定理\ref{thm:fixed-log-gluing}の条件のうち、
+\eqref{eq:full-compatibility}と\eqref{eq:inverse}を満たす
+pair mapsが大域的に存在したとしても、
+\eqref{eq:triple-cocycle}は残る。
+本節ではこの残余条件を分離して記述する。
+
+\subsection{Boundary automorphism sheaf}
+% Source: I-11
+
+\begin{definition}[Boundary Cartan automorphism sheaf]
+\label{def:boundary-aut}
+\[
+\mathscr A_{ij}:=\Aut_{\Car}(\calB_{ij})
+\]
+を、full boundary Cartan datumを保つ \(H\)-torsor automorphismsのétale sheafとする。
+
+具体的に \(a:F_i\to F_i\) に対し、
+\[
+\Lambda_a(b,v)=(\At(a)b,v)
+\]
+と置くと、条件は
+\[
+\Ad(a)\Theta_i=\Theta_i\Lambda_a
+\]
+である。
+これは背景のlog tangent dataを固定するfull automorphismsのsheafであり、
+一般に単なるresidue centralizerではない。
+\end{definition}
+
+\subsection{Defectと非可換変更則}
+% Source: I-12 (Theorem C)
+
+\begin{theorem}[三重点の非可換descent obstruction]
+\label{thm:triple-obstruction}
+固定 \(M\) に対し、double curves全体上のfull-compatibleな
+大域的maps \(g_{ij}\) を選び、
+\(g_{ji}=g_{ij}^{-1}\) とする。
+三重点で
+\begin{equation}
+\label{eq:triple-defect}
+c_{ijk}:=g_{ki}g_{jk}g_{ij}
+\end{equation}
+と置く。
+これは \(i\) 成分のfull point Cartan datumのautomorphismである。
+
+intrinsicなresidue centralizerとの間には
+\begin{equation}
+\label{eq:aut-centralizer}
+\Aut_{\Car}(\calB)
+\subseteq Z_{\Ad(F)}(\rho)
+\end{equation}
+がある。
+ここで \(\Ad(F)=F\times^H H\) はconjugationによるassociated group sheafである。
+
+target側の大域的boundary automorphismsにより
+\[
+g'_{ij}=a_{ij}g_{ij}
+\]
+と変更すると、三重点で
+\begin{equation}
+\label{eq:nonabelian-change}
+\begin{split}
+c'_{ijk}
+={}&a_{ki}
+\bigl(g_{ki}a_{jk}g_{ki}^{-1}\bigr)\\
+&\cdot
+\bigl((g_{ki}g_{jk})a_{ij}(g_{ki}g_{jk})^{-1}\bigr)c_{ijk}.
+\end{split}
+\end{equation}
+inverse relationを保つため
+\[
+a_{ji}=g_{ij}^{-1}a_{ij}^{-1}g_{ij}
+\]
+とする。
+
+従って大域的gluingの残る条件は、
+実際の大域的boundary automorphismsによって、
+全defectを同時に \(1\) にできることである。
+\end{theorem}
+
+\begin{proof}
+triple pointでは、各componentの二つのboundary restrictionsは、
+同じ
+\(\At(E_{H,i})(-\log D_i)\allowbreak|_P\)
+から来る。
+また \(\lambda^M_{ij}\) は共通の大域的log tangent fiberを経由するので、
+三辺に沿う合成は恒等である。
+full compatibilityを三回合成すると、
+\eqref{eq:triple-defect}がfull point Cartan mapを保つことが分かる。
+
+boundary automorphism \(a\) のcompatibilityを
+canonical normal liftに適用する。
+backgroundのnormal generatorは固定されるので
+\[
+\Ad(a)\rho=\rho.
+\]
+これが\eqref{eq:aut-centralizer}である。
+
+次に積を直接展開すると
+\[
+c'_{ijk}=a_{ki}g_{ki}a_{jk}g_{jk}a_{ij}g_{ij}.
+\]
+各automorphismを \(i\) 側へtransportするように括り直せば
+\eqref{eq:nonabelian-change}を得る。
+
+二つのfull-compatibleなpair mapsの差はtarget側の
+full boundary automorphismである。
+従って上の変更は、pair mapsの全ての許容変更を記述する。
+全defectが \(1\) になれば定理\ref{thm:fixed-log-gluing}を適用できる。
+逆に大域的gluingを与えるpair mapsがあれば、
+元のpair mapsとの差によって全defectを消せる。
+\end{proof}
+
+\begin{example}[Boundary automorphismsとcentralizerの差]
+\label{ex:centralizer}
+\[
+G=\GG_a^2\rtimes\GG_m,\qquad H=\GG_m
+\]
+とし、\(t\in H\) がtranslation部分に
+\[
+e_1\longmapsto e_1,\qquad e_2\longmapsto t e_2
+\]
+として作用するとする。
+smooth pair \(D=(y=0)\subset\mathbf A_k^2\) 上のtrivial \(H\)-torsorに、
+translation部分のcoframe
+\[
+e_1\,\dlog y+e_2\,dz
+\]
+と零の \(\h\)-connection coefficientを用いたstrict structureを置く。
+
+residueは \(e_1\) なので全ての \(H\) がこれをcentralizeする。
+一方、定数 \(t\ne1\) はtangent image \(e_2\) を \(t e_2\) に変える。
+従ってfull boundary datumを保たない。
+よって\eqref{eq:aut-centralizer}は一般にstrict inclusionである。
+\end{example}
+
+\begin{remark}
+\label{rem:pairwise-local}
+pairwise full-compatible mapsのsheafが局所的に非空なら、
+それは実際のboundary automorphism sheavesの下でbitorsorになる。
+しかし、その局所非空性とdouble curve全体上の大域的sectionの存在は別条件である。
+定理\ref{thm:triple-obstruction}では後者を仮定している。
+\end{remark}
+
+\subsection{可換な特別な場合}
+% Source: I-13, I-14
+
+\begin{proposition}[Abelian incidence obstruction]
+\label{prop:abelian}
+次を追加仮定する。
+\begin{enumerate}
+\item 使用するautomorphism groupsがabelianである。
+\item transportがcoherentである。
+\item defects、restriction、およびtransportを記録する
+incidence coefficient system \(\mathscr S\) がある。
+\item edge groupsが、指定された問題で許容する実際の大域的modificationsを全て表す。
+\end{enumerate}
+このとき
+\[
+[c]\in H^2(\Gamma,\mathscr S)
+\]
+を定義でき、
+\[
+[c]=0
+\iff
+\text{pairwise dataを許容修正によって大域的に貼り合わせられる}
+\]
+が成立する。
+ここで \(\Gamma\) は \(X\) のincidence complexである。
+\end{proposition}
+
+\begin{proof}
+向きを選んだincidence cochainsを用いる。
+二次cochainsはtriple pointsのgroupsの積であり、
+一次cochainsは大域的edge modification groupsの積である。
+SNC曲面のincidence complexには三次cellがないため、
+defect cochain \(c\) は二次cocycleである。
+
+可換性とcoherent transportにより、
+\eqref{eq:nonabelian-change}は加法記法で
+\[
+c'=c+\delta a
+\]
+となる。
+従って全defectを消せることは \(c\) がcoboundaryであることに等しい。
+edge cochainsが実際の大域的modificationsを表すという仮定により、
+cochainの修正を実際のpair mapsの修正として実現できる。
+定理\ref{thm:fixed-log-gluing}から結論を得る。
+\end{proof}
+
+\begin{remark}
+\label{rem:abelian-scope}
+上の仮定なしに、一般のobstructionを通常の
+\(H^2(\Gamma,\mathscr A)\) と呼ばない。
+特にconstant coefficients、torus coefficients、
+および \(\Gamma\simeq S^2\) は一般には仮定しない。
+pointwiseな修正がdouble curve全体へ延長することも自動的ではない。
+\end{remark}
+
+\begin{corollary}[三重点のない場合]
+\label{cor:no-triple}
+三重点がなく、各double curve上に大域的full-compatibleなpair mapが存在すれば、
+component geometriesは大域的に貼り合わさる。
+\end{corollary}
+
+\begin{proof}
+inverse relationを満たすように逆向きのmapを選ぶ。
+三重点がないのでtriple cocycle条件は空である。
+定理\ref{thm:fixed-log-gluing}を適用する。
+\end{proof}
+
+\begin{remark}
+\label{rem:type-II-III}
+Type IIのchainで三重点がない場合、系\ref{cor:no-triple}が適用される。
+pairwise mapsの存在問題は残る。
+Type IIIではtriple defectsが追加条件になり得るが、
+非零obstructionが必ず存在することや、
+dual complexが \(S^2\) であることを本稿の仮定だけからは結論しない。
+\end{remark}
+
+%======================================================================
+\section{semistable log structureの変更}
+\label{sec:variable-log}
+%======================================================================
+
+固定 \(M\) に対するgluingと、
+gluingを可能にするsemistable-type \(M\) 自体の存在を区別する。
+本節では、許容されるunit変更によって二つのlog structuresを比較する。
+ここでの「可変log」は特殊fiberの構造の変更であり、
+第\ref{sec:variable-direction}節で扱う一次の基底方向とは異なる。
+
+% Source: I-15 (Theorem D)
+
+\begin{theorem}[Unit shearとcompatibility]
+\label{thm:unit-variation}
+double chartで規約を
+\[
+t=xy/u
+\]
+とし、対応するlog structureを \(M^u\) と書く。
+このとき
+\begin{equation}
+\label{eq:unit-lambda}
+\lambda^u_{ij}
+=
+\lambda^1_{ij}
++\ell_{ji}\otimes
+\bigl(d\log(u|_D)\circ q_i\bigr).
+\end{equation}
+
+固定したtorsor isomorphism \(g:F_i\to F_j\) に対し、
+\[
+\Delta_g^1:=\Ad(g)\Theta_i-\Theta_j\Lambda_g^1
+\]
+と置く。
+\(\pi_i:B_i\to Q_{ij}\) をnatural projectionとすると
+\begin{equation}
+\label{eq:unit-delta}
+\Delta_g^u
+=
+\Delta_g^1-
+\rho_{ji}\otimes
+\bigl(d\log(u|_D)\circ\pi_i\bigr).
+\end{equation}
+
+residue compatibilityを仮定すれば、
+\(\Delta_g^1\) は
+\[
+\delta_g:Q_{ij}\longrightarrow F_j\times^H\g
+\]
+に因子化し、
+\begin{equation}
+\label{eq:unit-compatibility}
+g\text{ が }M^u\text{-compatible}
+\iff
+\delta_g=\rho_{ji}\otimes d\log(u|_D)
+\end{equation}
+となる。
+\end{theorem}
+
+\begin{proof}
+relative log differentialのrelationは
+\[
+\dlog x+\dlog y=d\log u
+\]
+である。
+double chartのlog derivationを
+\[
+b_xx\partial_x+b_yy\partial_y+a\partial_z
+\]
+と書く。
+\(D=(x=y=0)\) 上でrelationを評価すると
+\[
+b_x+b_y=a\partial_z\log(u|_D).
+\]
+従って \(X_i=(x=0)\) 側の
+\(b_y\ell_{ij}+a\partial_z\)
+は \(X_j=(y=0)\) 側で
+\[
+-b_y\ell_{ji}+a\partial_z
++a\partial_z\log(u|_D)\,\ell_{ji}
+\]
+に対応する。
+これが\eqref{eq:unit-lambda}である。
+
+triple point付近では
+\[
+\dlog x+\dlog y+\dlog z=d\log u
+\]
+を用いる。
+\(D_{ij}=(x=y=0)\) 上で
+\[
+b_x=-b_y-b_z+b_z z\partial_z\log(u|_D)
+\]
+となる。
+\(Q_{ij}\) のgeneratorは \(z\partial_z\) なので、
+同じ式\eqref{eq:unit-lambda}がtriple pointまで成立する。
+
+\eqref{eq:boundary-fiber-product}における
+\(\Lambda_g^u-\Lambda_g^1\) は、
+normal liftと \(d\log(u|_D)\circ\pi_i\) のtensor積である。
+これに \(\Theta_j\) を作用させるとnormal liftの像は \(\rho_{ji}\) になる。
+\(\Delta_g\) の定義から\eqref{eq:unit-delta}を得る。
+
+最後に \(\Delta_g^1\) は縦方向で零である。
+residue compatibilityのもとではnormal line上でも零となるので、
+商 \(Q_{ij}\) に因子化する。
+\eqref{eq:unit-delta}が零になる条件が
+\eqref{eq:unit-compatibility}である。
+\end{proof}
+
+\begin{remark}
+\label{rem:unit-limit}
+log structureを変更して補正できるのは、
+residue方向のnormal--tangent mismatchのうち
+\(d\log(\text{unit})\) 型のものだけである。
+例\ref{ex:residue-not-enough}では、
+この変更は \(e_1\) 方向のshearしか与えず、
+\(e_2\) と \(c e_2\) の差を補正できない。
+したがって、classical d-semistabilityを与えるsemistable local modelが
+存在しても、指定されたCartan dataの局所的なfull compatibilityは
+保証されない。
+\end{remark}
+
+%======================================================================
+\section{Cartan d-semistabilityと大域的実現}
+\label{sec:realization}
+%======================================================================
+
+\subsection{定義}
+% Source: I-16, I-17
+
+\begin{definition}[Cartan d-semistability]
+\label{def:cartan-d-semistability}
+component data
+\[
+\calC=\bigl(X,(E_{H,i},\theta_i)_i\bigr)
+\]
+を固定する。
+\(\calC\) がCartan d-semistableであるとは、
+あるsemistable-type log structure \(M\) と、
+double curves上の大域的torsor isomorphisms \(g_{ij}\) が存在し、
+\eqref{eq:full-compatibility}、
+\eqref{eq:inverse}、
+\eqref{eq:triple-cocycle}
+を満たすことをいう。
+ここで \(M\) は存在量化されている。
+
+この条件がétale局所的に成立するとき、
+locally Cartan d-semistableという。
+\end{definition}
+
+\begin{definition}[Realization groupoids]
+\label{def:realization-groupoids}
+\(X\) のétale site上で、次の三つのfibered groupoidsを考える。
+対象の基礎データは、semistable-type \(M\) と
+大域的strict geometry \((E_H,\theta)\) である。
+
+\begin{enumerate}
+\item
+\(\calD_{\calC}^{\mathrm{fr}}\)（framed）では、
+各component restrictionと指定された \((E_{H,i},\theta_i)\) との
+大域的Cartan isomorphisms \(\epsilon_i\) を対象の一部に含める。
+
+\item
+\(\calD_{\calC}^{\mathrm{ex}}\)（exact-unframed）では、
+各component restrictionが指定geometryと大域的に同型であることを要求するが、
+\(\epsilon_i\) は選ばない。
+
+\item
+\(\calD_{\calC}^{\mathrm{loc}}\)（locally isomorphic）では、
+各component restrictionが指定geometryとétale局所的に同型であることだけを要求する。
+\end{enumerate}
+
+射は、underlying schemeと基底を保つlog isomorphism、
+およびその上のCartan isomorphismからなる。
+framed版ではcomponent identificationsも保つ。
+主対象は \(\calD_{\calC}^{\mathrm{ex}}\) である。
+
+固定 \(M\) のfiberでは、\(M\) とその同定を固定し、
+log structure上の射を恒等とする。
+\end{definition}
+
+\subsection{\texorpdfstring{固定 \(M\)}{固定 M} のdescent groupoid}
+% Source: I-18, I-19
+
+\begin{proposition}[Fixed-\(M\) descent equivalence]
+\label{prop:descent-groupoid}
+固定した \(M\) に対し
+\begin{equation}
+\label{eq:groupoid-equivalence}
+\calD_{\calC,M}^{\mathrm{ex}}
+\simeq\Desc_{\Car}^M(\calC)
+\end{equation}
+がある。
+
+右辺のobjectsは
+\eqref{eq:full-compatibility}--\eqref{eq:triple-cocycle}
+を満たす \(g_{ij}\) であり、
+morphismsはcomponent Cartan automorphisms \(a_i\) で
+\begin{equation}
+\label{eq:vertex-morphism}
+g'_{ij}=a_jg_{ij}a_i^{-1}
+\end{equation}
+を満たすものとする。
+\end{proposition}
+
+\begin{proof}
+descent datumから定理\ref{thm:fixed-log-gluing}により大域的objectを得る。
+逆にexact realizationにcomponent identifications \(\epsilon_i\) を選ぶと、
+double curve上で
+\[
+g_{ij}=\epsilon_j\epsilon_i^{-1}
+\]
+が定まる。
+これはfull compatibilityとtriple cocycleを満たす。
+異なる \(\epsilon_i\) の選択は
+\eqref{eq:vertex-morphism}による同型を与える。
+
+大域的morphism \(h\) に対し
+\[
+a_i=\epsilon_i' h|_{X_i}\epsilon_i^{-1}
+\]
+と置けば\eqref{eq:vertex-morphism}を満たす。
+逆にそのようなcomponent morphismsは
+定理\ref{thm:fixed-log-gluing}のmorphism descentによって一意に貼り合わさる。
+従って構成は本質的全射かつ充満忠実である。
+\end{proof}
+
+\begin{corollary}[大域的自己同型群]
+\label{cor:global-aut}
+固定 \(M\) のrealization \(\xi\) をdescent datum \(g_{ij}\) で表示すると
+\begin{equation}
+\label{eq:global-aut}
+\Aut_M(\xi)
+=
+\left\{
+(a_i)\in\prod_i\Aut_{\Car}(E_{H,i},\theta_i):
+g_{ij}a_i=a_jg_{ij}\text{ on }D_{ij}
+\right\}.
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+命題\ref{prop:descent-groupoid}をobjectの自己同型に適用する。
+\end{proof}
+
+\begin{remark}
+\label{rem:edge-vs-vertex}
+\eqref{eq:global-aut}はcomponent automorphismsのrestrictionとtransportのequalizerである。
+これはboundary automorphism sheaf \(\mathscr A_{ij}\) そのものではない。
+また、完成したobjects間の射である \(a_i\) と、
+triple defectを修正するedge automorphisms \(a_{ij}\) は異なる。
+後者がcomponent全体へ延長するとは限らない。
+\end{remark}
+
+\subsection{三種類のgroupoidのlocality}
+% Source: I-20
+
+\begin{proposition}[stackとprestackの区別]
+\label{prop:stack-properties}
+\(\calD_{\calC}^{\mathrm{fr}}\) と
+\(\calD_{\calC}^{\mathrm{loc}}\) はétale stacksである。
+一方、\(\calD_{\calC}^{\mathrm{ex}}\) は一般にはprestackであり、
+stackとは限らない。
+\end{proposition}
+
+\begin{proof}
+compatibleなétale descent dataに対し、
+log structureのmonoid sheavesと構造射、
+principal torsor、およびCartan bundle mapを貼り合わせる。
+exact sequenceとの両立と同型性はétale局所的に検査できる。
+framed版では \(\epsilon_i\) もdescent datumの一部なので貼り合わさる。
+locally-isomorphic版ではcomponent条件自体がétale局所的である。
+従って両者でeffective descentが成立する。
+
+exact-unframed版でも、固定した二対象の間のmorphismsはsheafをなす。
+しかし「指定geometryと大域的に同型」という対象の条件は局所条件ではない。
+例\ref{ex:nonstack}でeffective descentの失敗を確認できる。
+\end{proof}
+
+\begin{example}[Exact-unframed条件のdescentの失敗]
+\label{ex:nonstack}
+\(C\) を楕円曲線、\(\omega_C\) を零を持たないregular differentialとする。
+\(Z=C\times\GG_m\) 上で
+\[
+H=\GG_m,\qquad G=\GG_m\times\GG_a^2
+\]
+を取り、trivial \(H\)-torsor、零の \(H\)-connection、
+translation coframe
+\[
+(\omega_C,dt/t)
+\]
+によるgeometryを \(\xi_0\) とする。
+
+\(C\) 上の非自明なtorsion line bundle \(L\) を、
+その位数が \(p\) と互いに素となるように選ぶ。
+\(L\) はfinite étale cover上でtrivialになり、
+そのconstant transition functionsによりconnectionを持つ。
+\(Z\) へpullbackした \(L\) のframe torsorと同じtranslation coframeから
+geometry \(\xi_L\) を得る。
+
+\(\xi_L\) はétale局所的に \(\xi_0\) と同型だが、
+大域的には同型でない。
+実際、torsorが同型なら \(L\) のpullbackがtrivialとなり、
+\(t=1\) へのrestrictionにより \(L\) 自身がtrivialとなってしまう。
+
+局所的な \(\xi_0\) を \(L\) のtransition functionsで貼るdescent datumは、
+exact-unframed groupoid内の局所objectsとmorphismsからなる。
+そのdescentは \(\xi_L\) であり、指定された大域的同型条件を満たさない。
+これがeffective descentの失敗である。
+\end{example}
+
+\begin{example}[大域的compatibilityはsheaf条件ではない]
+\label{ex:compatible-presheaf}
+前例と同じ \(C,L,\omega_C\) を用い、
+\[
+Y=C\times\Spec k[x,y]/(xy)
+\]
+にstandard semistable log structureを入れる。
+これも注意\ref{rem:scope-local}の意味での非固有モデル上の例である。
+二成分 \(Y_i=(x=0)\)、\(Y_j=(y=0)\) 上で、
+\(H=\GG_m\)、\(G=\GG_m\times\GG_a^2\) 型のgeometryを取る。
+
+\(Y_i\) 上のtorsorはtrivial、\(Y_j\) 上のtorsorは \(L\) のpullbackのframe torsorとする。
+それぞれのtranslation coframeを
+\[
+(\dlog y,\omega_C),\qquad
+(-\dlog x,\omega_C)
+\]
+とし、\(H\)-connectionにはtrivial connectionと
+\(L\) のfinite étale trivializationから得るconnectionを用いる。
+
+\(L\) をtrivializeするétale cover上ではfull-compatibleなpair mapが存在する。
+しかしdouble curve \(C\) 全体では、
+\(\OO_C\) と \(L\) のframe torsorsが同型でないため、
+大域的pair mapは存在しない。
+log structureを変更してもこのtorsor同型の不存在は変わらない。
+
+従って、大域的realizationを許すlog classesのpresheafには、
+互いに一致する局所sectionがあるにもかかわらず、
+対応する大域的sectionが存在しない。
+
+一方、両成分のtorsorをtrivialとした大域的geometryは存在し、
+指定された二成分のgeometryとétale局所的に同型である。
+よってこの例ではlocally-isomorphicな大域的realizationがあっても、
+exact realizationは存在しない。
+\end{example}
+
+\begin{remark}
+\label{rem:no-h1-class}
+例\ref{ex:compatible-presheaf}により、
+大域的compatibleなlog classesを無条件にsheafまたはtorsorとみなすことはできない。
+従って本稿では
+\[
+ob_{\calC}(X)\in H^1(X,U_{\calC}/G_{\calC})
+\]
+というclassを定義しない。
+これは、foliated d-semistabilityにおける
+CPVのtorsorと \(H^1\) の形式 \cite{CPV}を、
+Cartan geometryへ単純に置換する議論ではない。
+\end{remark}
+
+\subsection{大域的実現の存在条件}
+% Source: I-21 (Main Theorem II), I-22
+
+\begin{theorem}[主定理II：Cartan d-semistabilityと大域的実現]
+\label{thm:cartan-d-semistability}
+共通設定のもとでcomponentwise strict logarithmic Cartan geometries
+\[
+\calC=\bigl(X,(E_{H,i},\theta_i)_i\bigr)
+\]
+を与える。次の条件は同値である。
+\begin{enumerate}
+\item
+あるsemistable-type log structure \(M\) 上に、
+各component restrictionが指定geometryと大域的に同型な
+大域的strict logarithmic Cartan geometryが存在する。
+
+\item
+ある \(M\) と大域的pairwise full-compatible maps \(g_{ij}\) が存在し、
+inverse relationと全triple cocycleを満たす。
+
+\item
+ある \(M\) と大域的pairwise full-compatible mapsが存在し、
+それらのtriple defectsを実際の大域的boundary automorphismsによって
+全て同時に消せる。
+
+\item
+\(\calD_{\calC}^{\mathrm{ex}}(X)\ne\varnothing\)。
+
+\item
+\(\calD_{\calC}^{\mathrm{fr}}(X)\ne\varnothing\)。
+
+\item
+\(\calC\) はCartan d-semistableである。
+\end{enumerate}
+
+固定 \(M\) 上のrealizationsとそのmorphismsは
+\eqref{eq:groupoid-equivalence}によって記述される。
+また、locally Cartan d-semistableであることは
+これらのgroupoidsのétale local nonemptinessと同値であり、
+\(\calD_{\calC}^{\mathrm{loc}}(X)\ne\varnothing\) だけでは
+exact realizationの存在を保証しない。
+\end{theorem}
+
+\begin{proof}
+第一条件と第二条件の同値は定理\ref{thm:fixed-log-gluing}による。
+第二条件と第三条件の同値は、
+定理\ref{thm:triple-obstruction}の変更則と、
+full-compatible pair mapsの差がboundary automorphismであることによる。
+第一条件と第四条件の同値は
+定義\ref{def:realization-groupoids}による。
+第二条件と第六条件の同値は
+定義\ref{def:cartan-d-semistability}である。
+
+第四条件と第五条件の同値を示す。
+exact realizationではcomponentごとの大域的同型が存在するので、
+それらを選べばframed realizationを得る。
+逆にframingを忘れればexact realizationを得る。
+同じ議論をétale局所で行えばlocal版の主張を得る。
+最後の非保証は例\ref{ex:compatible-presheaf}による。
+\end{proof}
+
+\begin{corollary}[classical d-semistabilityとの関係]
+\label{cor:classical-d-semistability}
+Cartan d-semistabilityはclassical d-semistabilityを含意する。
+\end{corollary}
+
+\begin{proof}
+定義\ref{def:cartan-d-semistability}によりsemistable-type log structure \(M\) が存在する。
+これは、本稿で採用するSNCのsemistable log structureと
+classical d-semistabilityの対応において、
+classical d-semistabilityを与える
+\cite{Kato89,PB,CPV}。
+\end{proof}
+
+逆向きの一般的主張はしない。
+例\ref{ex:residue-not-enough}と定理\ref{thm:unit-variation}は、
+classicalなsemistable local modelがあっても、
+指定されたCartan dataの局所的full compatibilityが保証されないことを示す。
+
+\begin{remark}[貼り合わせ条件の代替不可能性]
+\label{rem:residue-not-substitute}
+residue matching \eqref{eq:residue-transport} および
+triple residue relation \eqref{eq:triple-residue} は、
+定理\ref{thm:cartan-d-semistability}の必要十分条件の代わりにはならない。
+前者はfull boundary datumのnormal部分しか記録せず、
+後者は大域的adjoint fiber内の加法的関係であって、
+torsor mapsの非可換triple cocycleを消す条件ではない。
+\end{remark}
+
+\medskip
+\noindent
+以上で、特殊fiber上の大域的実現の存在問題に関する本稿の議論を終える。
+次節以降では、この存在条件が満たされる場合を出発点として、
+別の問題である一次変形を扱う。
+
+%======================================================================
+\section{一次変形複体}
+\label{sec:first-order-complexes}
+%======================================================================
+
+\subsection{設定の切り替え}
+% Source: II-01
+
+前節までで、component dataから大域的実現が得られるための条件を確定した。
+\emph{以後、その条件が満たされる場合を考え、
+一つの大域的strict logarithmic Cartan geometry
+\[
+\xi=(E_H,\theta)
+\]
+と、それが載るSNCL射 \(f:\Xlog\to\sQ\) を固定する。}
+この条件が常に成立すると主張するものではない。
+既に \(\xi\) が与えられている場合にも、以下の議論はそのまま適用される。
+
+本節以降で扱うのは、固定した \(\xi\) を一次の範囲で動かせるかという問題であり、
+第\ref{sec:definitions}節から第\ref{sec:realization}節までの
+descent・存在問題とは別の問題である。
+特に、第\ref{sec:first-order-complexes}節以降の結果を
+それ以前の定理の証明に用いることはない。
+係数群やdefect classも同一視しない。
+
+記号は第\ref{subsec:notation}節の\eqref{eq:locked-notation}に従う。
+flatnessは仮定せず、標数 \(2\) も除外しない。
+曲率は\eqref{eq:curvature-eval}の評価式で扱う。
+
+\subsection{一次変形問題と符号規約}
+
+対象とする一次変形問題は次の四つであり、これらを区別する。
+すべて特殊fiberのmarkingを持ち、射はそれを保つ。
+指定した基底chartも保ち、基底のlog自己同型では割らない。
+component framingは要求しない。
+
+\begin{center}
+\begin{tabular}{@{}p{7.5zw}p{17zw}p{14zw}@{}}
+\hline
+問題 & 固定するもの & 変形するもの\\
+\hline
+fixed-log Cartan & log schemeの自明な厚み付け、零の基底方向 & \(E_H,\theta\)\\
+underlying relative log & 零の基底方向 & underlying log scheme\\
+total relative Cartan & 零の基底方向 & underlying log scheme、\(E_H,\theta\)\\
+variable-base & --- & 基底方向も可変\\
+\hline
+\end{tabular}
+\end{center}
+
+underlying deformationsは、元のsemistable typeを延長する
+marked log smooth deformationsとする。
+
+二項複体では \(\shH,\shA\) をdegree \(0\)、\(\shV\) をdegree \(1\) に置く。
+Čech degreeを \(q\) として
+\[
+d_{\mathrm{Tot}}=\delta+(-1)^q d_{\mathcal K}
+\]
+とする。従って、\(D\) を該当する複体のdifferentialとして
+\begin{equation}
+\label{eq:total-differential}
+\begin{aligned}
+d_{\mathrm{Tot}}b&=(\delta b,Db),\\
+d_{\mathrm{Tot}}(a,\alpha)&=(\delta a,\delta\alpha-Da),\\
+d_{\mathrm{Tot}}(r,\gamma)&=(\delta r,\delta\gamma+Dr).
+\end{aligned}
+\end{equation}
+hypercohomologyは \(X_{\text{\'et}}\) 上の
+\(k\)-vector-space sheavesの複体として取る。
+Čech計算には各項に対してacyclicなcover、
+必要ならaffine étale hypercoverを用いる。
+
+\subsection{Fixed-log Cartan複体}
+% Source: II-02, II-03
+
+\begin{definition}[Fixed-log Cartan複体]
+\label{def:K-fix}
+\(\phi\in\shH\) に対応するverticalなinvariant log derivationを
+\(\widetilde\phi\) とし、pullbackの符号規約により
+\[
+D_\theta\phi:=\mathcal L_{\widetilde\phi}\omega
+=\nablaad\iota_1(\phi)
+\]
+と定める。
+局所的には \(D_\theta\phi=d_{\log}\phi+[A,\phi]\) である。
+このとき
+\begin{equation}
+\label{eq:Dtheta-leibniz}
+D_\theta(f\phi)=fD_\theta\phi+d_{\log}f\otimes\iota_1(\phi)
+\end{equation}
+であり、\(D_\theta\) は一般に \(\OO_X\)-linearではない。
+
+canonicalな二項 \(k\)-sheaf complexを
+\begin{equation}
+\label{eq:K-fix}
+\Kfix=\bigl[\,\shH\xrightarrow{\ D_\theta\ }\shV\,\bigr],
+\qquad\deg=0,1
+\end{equation}
+と定める。
+各項はlocally freeな \(\OO_X\)-moduleだが、
+この複体は \(\OO_X\)-moduleの複体ではない。
+\end{definition}
+
+\begin{proposition}[Fixed-logの一次分類]
+\label{prop:fixed-log-classification}
+零の基底方向でlog schemeの自明な厚み付けを固定した
+marked fixed-log deformation groupoidについて
+\begin{equation}
+\label{eq:fixed-log-classification}
+T^0_{\xi,\mathrm{fix}}=\Hyp^0(\Kfix),
+\qquad
+T^1_{\xi,\mathrm{fix}}=\Hyp^1(\Kfix).
+\end{equation}
+Čech表示では、cocycle条件と同値関係は
+\begin{equation}
+\label{eq:fixed-log-cech}
+\delta\phi=0,\quad \delta\alpha=D_\theta\phi,
+\qquad
+(\phi,\alpha)\sim(\phi+\delta\psi,\ \alpha+D_\theta\psi)
+\end{equation}
+で与えられる。
+分類自体はcanonicalであり、cochain表示のみが局所選択に依存する。
+\end{proposition}
+
+\begin{proof}
+まずvariation sheafを決定する。
+固定した \(E_H\) 上で \(\theta_\varepsilon=\theta+\varepsilon\alpha\) とすると、
+縦方向の条件はちょうど \(\alpha\circ\iota=0\) である。
+\eqref{eq:atiyah}の商が \(T\) なので、商への因子化により
+\[
+\alpha\in\Hom_{\OO_X}(T,\shG)=\Omega\otimes\shG=\shV
+\]
+となる。最後の同型には \(T\) の局所自由性を用いる。
+また
+\[
+(\theta+\varepsilon\alpha)^{-1}=\theta^{-1}-\varepsilon\theta^{-1}\alpha\theta^{-1}
+\]
+なので、同型性に追加条件は生じない。
+
+次にgaugeの符号を固定する。
+\(E_H\) の右作用を用い、\(\phi\in\shH(U)\) に対する
+gauge automorphismを \(F_\phi(q)=q(1+\varepsilon\phi(q))\) と書く。
+Cartan formのequivarianceと縦方向の再現性から、\(b=1+\varepsilon\phi\) に対し
+\[
+F_\phi^*\omega=\Ad(b^{-1})\omega+b^{-1}d_{\log}b
+=\omega+\varepsilon\bigl(d_{\log}\phi+[\omega,\phi]\bigr)
+\]
+であり、これが \(D_\theta\phi\) である。
+この差は縦方向で零かつ \(H\)-equivariantなので \(\shV\) の切断に降下する。
+flatnessは用いていない。
+\eqref{eq:Dtheta-leibniz}はlog Cartan formulaから直ちに従う。
+
+étale局所section \(s_j=s_ig_{ij}\) を取り、変形を左から
+\(g_{ij}^\varepsilon=(1+\varepsilon\phi_{ij}^{(i)})g_{ij}\) と書く。
+三重交差でのcocycle条件は
+\[
+\phi_{ik}^{(i)}=\phi_{ij}^{(i)}+\Ad(g_{ij})\phi_{jk}^{(j)},
+\]
+すなわちintrinsicな記法で \(\delta\phi=0\) である。
+局所Cartan formsを \(A_i+\varepsilon\alpha_i\) と書くと、
+元のtransition lawの一次部分から
+\[
+\Ad(g_{ij})\alpha_j-\alpha_i=D_\theta\phi_{ij},
+\]
+すなわち \(\delta\alpha=D_\theta\phi\) を得る。
+局所同型 \(b_i=1-\varepsilon\psi_i\) による変更は
+\eqref{eq:fixed-log-cech}の同値関係を与える。
+
+逆に\eqref{eq:fixed-log-cech}を満たすpairから
+\(g_{ij}^\varepsilon\) と局所Cartan formsが貼り合い、
+strictnessはnilpotent liftingにより保たれる。
+自己同型については、大域的に貼り合う条件が \(\delta\psi=0\)、
+Cartan formを保つ条件が \(D_\theta\psi=0\) である。
+以上より\eqref{eq:fixed-log-classification}を得る。
+\end{proof}
+
+\begin{remark}
+\label{rem:bundle-only-insufficient}
+命題\ref{prop:fixed-log-classification}から
+\[
+H^0(\shH)\xrightarrow{D_\theta}H^0(\shV)
+\longrightarrow T^1_{\xi,\mathrm{fix}}
+\longrightarrow H^1(\shH)
+\xrightarrow{D_{\theta,*}}H^1(\shV)
+\]
+を得る。
+従って、指定されたbundle deformation \([\phi]\) にCartan formが延長する条件は
+\([D_\theta\phi]=0\) である。
+\(H^1(\shH)\) だけでは一次変形を記述できない。
+例えば \(H=1\) ならbundle deformationは零だが、
+固定bundle上の任意の \(\alpha\in H^0(\shV)\) が
+一次のCartan variationを与える。
+\end{remark}
+
+\subsection{Underlying relative log理論}
+% Source: II-04
+
+Cartan structureを完全に忘れた問題を、独立に用意する。
+以下はfixed-log Cartan理論の帰結として導くものではない。
+
+\begin{proposition}[Underlying relative logの一次理論]
+\label{prop:underlying-log}
+零の基底方向について
+\begin{equation}
+\label{eq:underlying-classification}
+T^0_{\log}=H^0(T),\qquad
+T^1_{\log,\mathrm{rel}}=H^1(T).
+\end{equation}
+自明な変形が \(H^1(T)\) の原点を与える。
+また、局所log liftsのtriple defectsは \(T\)-valuedなČech \(2\)-cocycleを与え、
+その受け皿は \(H^2(T)\) である。
+\end{proposition}
+
+\begin{proof}
+relative log derivationは対 \((D,\delta)\) であって
+\[
+D(\alpha(m))=\alpha(m)\delta(m),\qquad
+\delta(mn)=\delta(m)+\delta(n)
+\]
+を満たし、基底のlog structure上で \(\delta=0\) となるものである。
+unitについては \(\delta(u)=D(u)/u\) となる。
+対応するinfinitesimal automorphismは
+\[
+a\longmapsto a+\varepsilon D(a),\qquad
+m\longmapsto m(1+\varepsilon\delta(m))
+\]
+であり、逆も同様に得られる。
+ordinary derivation \(D\) だけではlog structureと基底に関する条件を
+記録できないので、\(T\) を \(T_X\) に置き換えることはできない。
+これが第一式である。
+
+零の基底方向では自明な大域的変形
+\(\Xlog\times_{\sQ}S^{\log}_{\Aeps,0}\) が存在し、分類の原点になる。
+log smoothnessにより、適切なaffine étale cover上で
+任意の変形をこの自明な変形と同定できる。
+overlap上の差を \(F_{ij}=1+\varepsilon v_{ij}\)、\(v_{ij}\in T(U_{ij})\) と書くと、
+三重交差の条件は \(\delta v=0\) であり、
+局所同定を \(1-\varepsilon w_i\) で変更すると \(v\mapsto v+\delta w\) となる。
+これが第二式である。
+
+small extension \(0\to I\to A'\to A\to0\)（\(\mathfrak m_{A'}I=0\)）
+に対しては、log smoothnessにより局所liftを選び、
+overlap上で元の同定をliftする同型 \(F_{ij}\) を取る。
+三重交差のdefect
+\(F_{ij}F_{jk}F_{ki}=1+c_{ijk}\) は \(T(U_{ijk})\otimes_kI\) に属し、
+\(I^2=0\) によりkernel内の合成は加法となるので、
+四重交差の結合律から \(\delta c=0\) を得る。
+選択の変更はcoboundaryを加えるだけなので、
+classは \(H^2(T)\otimes_kI\) にcanonicalに定まる。
+\end{proof}
+
+\begin{remark}
+\label{rem:obspace-vs-obstruction}
+命題\ref{prop:underlying-log}は「実際に生じる障害類」と
+「その受け皿」を区別して述べている。
+また \(L^{\log}_{X/s_Q}\simeq\Omega[0]\) と \(\Omega\) の局所自由性から
+\[
+\Ext^i_{\OO_X}(\Omega,\OO_X\otimes_kI)\simeq H^i(T)\otimes_kI
+\]
+となるが、これらのcohomology群だけから高次の変形構造を復元できるとは
+主張しない。
+\end{remark}
+
+\subsection{Total Cartan作用素と全体複体}
+% Source: II-05, II-06, II-07, II-08
+
+\begin{definition}[Total infinitesimal Cartan作用素]
+\label{def:total-operator}
+\(a\in\shA\) に対応する \(H\)-invariant relative log derivationを
+\(\widetilde a\) とし、
+\begin{equation}
+\label{eq:Dtot-def}
+\Dtot(a):=\mathcal L_{\widetilde a}\omega
+\end{equation}
+と定める。
+ここで用いるのはordinary vector fieldの部分だけではなく、
+invariant relative log derivation全体である。
+\end{definition}
+
+\begin{lemma}[降下、曲率公式、Leibniz rule]
+\label{lem:total-operator}
+\eqref{eq:Dtot-def}はhorizontalかつ \(H\)-equivariantであり、
+\(\shV\) の切断に降下する。
+さらに\eqref{eq:curvature-eval}の曲率を用いて
+\begin{equation}
+\label{eq:curvature-formula}
+\Dtot(a)=\nablaad\theta(a)+\iota_{\sigma(a)}K
+\end{equation}
+が成立する。
+特に
+\begin{equation}
+\label{eq:Dtot-vertical}
+\Dtot\circ\iota=D_\theta,
+\qquad
+\Dtot(fa)=f\Dtot(a)+d_{\log}f\otimes\theta(a).
+\end{equation}
+従って \(\Dtot\) も一般に非 \(\OO_X\)-linearな一次微分作用素である。
+flatnessは不要であり、標数 \(2\) でもそのまま成立する。
+\end{lemma}
+
+\begin{proof}
+定数 \(\zeta\in\h\) に対するfundamental vertical fieldを \(\zeta^\#\) とする。
+\(H\)-invarianceにより
+\[
+[\widetilde a,\zeta^\#]=0,\qquad\omega(\zeta^\#)=\zeta
+\]
+なので
+\[
+(\mathcal L_{\widetilde a}\omega)(\zeta^\#)
+=\widetilde a(\zeta)-\omega([\widetilde a,\zeta^\#])=0.
+\]
+equivarianceも保たれるため、Lie derivativeは \(\shV\) に降下する。
+
+equivarianceから \(\mathcal L_{\zeta^\#}\omega=-[\zeta,\omega]\) であり、
+Cartan formulaにより \(K(\zeta^\#,w)=0\)、すなわち \(K\) はhorizontalである。
+従って \(\iota_{\widetilde a}K=\iota_{\sigma(a)}K\) はanchorのみに依存する。
+
+\(s=\theta(a)=\omega(\widetilde a)\) と置くと、任意のrelative log vector field \(w\) に対し
+\[
+\begin{aligned}
+\mathcal L_{\widetilde a}\omega(w)
+&=d_{\log}s(w)+d_{\log}\omega(\widetilde a,w)\\
+&=d_{\log}s(w)+[\omega(w),s]+K(\widetilde a,w)
+\end{aligned}
+\]
+となる。
+第一項と第二項が \(\nablaad s\) であるから\eqref{eq:curvature-formula}を得る。
+verticalな \(a=\iota\phi\) では \(\sigma(a)=0\) なので曲率項が消え、
+\(\Dtot(\iota\phi)=\nablaad\iota_1(\phi)=D_\theta\phi\) となる。
+最後に
+\[
+\mathcal L_{f\widetilde a}\omega
+=f\mathcal L_{\widetilde a}\omega+d_{\log}f\otimes\omega(\widetilde a)
+\]
+から\eqref{eq:Dtot-vertical}の第二式を得る。
+以上の計算は \(\varepsilon^2=0\) と群作用の一次展開だけを用い、
+\(\tfrac12\) や指数写像を必要としない。
+\end{proof}
+
+\begin{remark}[局所表示]
+\label{rem:Dtot-local}
+局所torsor sectionによる表示 \(a=(v,\phi)\) では
+\[
+\Dtot(v,\phi)=\mathcal L_vA+d_{\log}\phi+[A,\phi]
+\]
+となる。
+これは基底方向の移動とbundle gaugeの双方を含む直接の局所式である。
+\end{remark}
+
+\begin{remark}[曲率項を落とせないこと]
+\label{rem:curvature-needed}
+\eqref{eq:curvature-formula}の曲率項は一般に除去できない。
+実際、\(H=1\)、\(G=\GG_a^2\)、\(X=\mathbf A_k^2\) 上で
+\[
+\omega=(dx,\ dy+y\,dx),\qquad a=\partial_x
+\]
+とすると \(\mathcal L_a\omega=0\) だが
+\(\nablaad\theta(a)=(0,dy)\ne0\) である。
+詳細は付録\ref{app:counterexamples}の例\ref{ex:curvature-term}に置く。
+\end{remark}
+
+\begin{definition}[Total relative複体]
+\label{def:K-tot}
+\begin{equation}
+\label{eq:K-tot}
+\Ktot=\bigl[\,\shA\xrightarrow{\ \Dtot\ }\shV\,\bigr],
+\qquad\deg=0,1
+\end{equation}
+を二項の \(k\)-sheaf complexとする。
+この複体が記述するのは、基底方向 \(0\) のtotal relative問題である。
+\end{definition}
+
+\begin{proposition}[Total relativeの一次分類]
+\label{prop:total-classification}
+基底方向 \(0\) について
+\begin{equation}
+\label{eq:total-classification}
+T^0_{\mathrm{tot}}=\Hyp^0(\Ktot),
+\qquad
+T^1_{\mathrm{tot,rel}}=\Hyp^1(\Ktot).
+\end{equation}
+Čech dataと同値関係は
+\begin{equation}
+\label{eq:total-cech}
+\delta a=0,\quad \delta\alpha=\Dtot a,
+\qquad
+(a,\alpha)\sim(a+\delta b,\ \alpha+\Dtot b)
+\end{equation}
+である。
+\end{proposition}
+
+\begin{proof}
+基底方向 \(0\) では、命題\ref{prop:underlying-log}の議論により
+underlying log deformationを適切なétale cover上で自明化でき、
+さらにsmooth \(H\)-torsorの局所同定を選べるので、
+各局所deformationを中心対象の自明な厚み付けと比較できる。
+
+貼合せ写像の向きを \(j\to i\) とし
+\[
+F_{ij}=1+\varepsilon\widetilde a_{ij},\qquad
+\omega_i^\varepsilon=\omega+\varepsilon\alpha_i
+\]
+と書く。cochainsは中心の \(E_H\) を用いたintrinsicな表示とする。
+三重交差の条件 \(F_{ij}F_{jk}=F_{ik}\) は \(\delta a=0\) と同値である。
+Cartan formのcompatibility \(\omega_j^\varepsilon=F_{ij}^*\omega_i^\varepsilon\) の
+一次部分は \(\delta\alpha=\Dtot a\) を与える。
+局所同型を \(1-\varepsilon\widetilde b_i\) と取れば
+\eqref{eq:total-cech}の同値関係を得る。
+
+逆に\eqref{eq:total-cech}からunderlying log schemes、torsors、
+Cartan mapsが貼り合う。
+縦方向の条件は \(\alpha_i\in\shV\) により保たれ、
+同型性はnilpotent厚み付け上で自動的に保たれる。
+\end{proof}
+
+\begin{remark}[naiveな三項複体は成立しない]
+\label{rem:naive-three-term}
+第二のdifferentialとしてcovariant exterior derivative \(\nablaad\) を
+無条件に付け加えることはできない。
+実際、一般に
+\[
+\nablaad D_\theta\phi=[K,\iota_1\phi]
+\]
+であり、これは零とは限らない。
+非平坦な具体例は付録\ref{app:counterexamples}の例\ref{ex:naive-three-term}に与える。
+二項複体\eqref{eq:K-tot}では、曲率は作用素自身のcoupling termとして現れる。
+\(K=0\) の場合には \(\Dtot=\nablaad\theta\) と簡約されるが、
+これはliftのflatnessが保たれることを意味しない。
+\end{remark}
+
+%======================================================================
+\section{相対的なCartan持ち上げ障害}
+\label{sec:relative-obstruction}
+%======================================================================
+
+本節では基底方向を \(0\) に固定し、
+underlying側の一次変形にCartan構造を持ち上げる条件を記述する。
+
+% Source: II-09
+
+\begin{theorem}[基本完全列]
+\label{thm:fundamental-exact-sequence}
+canonicalな \(k\)-sheaf complexesの短完全列
+\begin{equation}
+\label{eq:fundamental-ses}
+0\longrightarrow\Kfix\longrightarrow\Ktot\longrightarrow T[0]\longrightarrow0
+\end{equation}
+がある。
+対応するlong exact sequenceの必要部分は
+\begin{equation}
+\label{eq:les}
+\begin{aligned}
+0\to{}&\Hyp^0(\Kfix)\to\Hyp^0(\Ktot)\to H^0(T)
+\xrightarrow{\ \partial_\theta^0\ }\Hyp^1(\Kfix)\\
+\to{}&\Hyp^1(\Ktot)\to H^1(T)
+\xrightarrow{\ \partial_\theta\ }\Hyp^2(\Kfix)
+\end{aligned}
+\end{equation}
+であり、これにより二つの連結写像 \(\partial_\theta^0,\partial_\theta\) を定義する。
+\end{theorem}
+
+\begin{proof}
+degree \(0\) ではAtiyah完全列\eqref{eq:atiyah}、
+degree \(1\) では \(\shV\) 上の恒等写像を用いる。
+すなわち
+\[
+\begin{array}{ccccccccc}
+0&\to&\shH&\to&\shA&\xrightarrow{\ \sigma\ }&T&\to&0\\
+&&\downarrow D_\theta&&\downarrow \Dtot&&\downarrow 0&&\\
+0&\to&\shV&\xrightarrow{\ \id\ }&\shV&\to&0&&
+\end{array}
+\]
+である。
+補題\ref{lem:total-operator}の\eqref{eq:Dtot-vertical}により
+左の正方形は可換であり、右の正方形は \(\shV\to0\) なので可換である。
+欠落項はなく、flatnessも必要ない。
+\eqref{eq:les}はこの短完全列のhypercohomology long exact sequenceの一部である。
+末尾に \(0\) を付け加える主張はしない。
+\end{proof}
+
+% Source: II-10
+
+\begin{proposition}[連結写像と持ち上げ可能性]
+\label{prop:relative-obstruction}
+\([v]\in H^1(T)\) のČech representative \(v\) を
+\(\shA\)-valued cochain \(a\) にliftすると
+\begin{equation}
+\label{eq:connecting-cocycle}
+\partial_\theta([v])=\bigl[(\delta a,\ -\Dtot a)\bigr]
+\end{equation}
+であり、これは選択によらない。
+さらに
+\begin{equation}
+\label{eq:connecting-vanishing}
+\partial_\theta([v])=0
+\iff
+[v]\text{ をunderlying classとするtotal Cartan一次変形が存在する}.
+\end{equation}
+
+また、underlying deformation \(\eta\) とそれへの同定を固定した
+\(2\)-fiberが非空なら、その同型類は \(\Hyp^1(\Kfix)\)-torsorであり、
+各対象の自己同型は \(\Hyp^0(\Kfix)\) で記述される。
+一方、同型類の写像の単なる非空fiberは
+\begin{equation}
+\label{eq:pi0-fiber}
+\Hyp^1(\Kfix)\big/\im\partial_\theta^0
+\end{equation}
+のtorsorである。両者を同一視しない。
+\end{proposition}
+
+\begin{proof}
+\(\delta v=0\) を \(a\) にliftすると \(\sigma(\delta a)=\delta v=0\) なので
+\(\delta a\) は \(\shH\)-valuedである。
+\eqref{eq:total-differential}に従い
+\[
+d_{\mathrm{Tot}}(a,0)=(\delta a,-\Dtot a)
+\]
+であり、その微分は
+\[
+\delta^2a=0,\qquad
+-\delta\Dtot a+D_\theta(\delta a)=0
+\]
+となるので、これはtotal degree \(2\) のcocycleである。
+別のlift \(a'=a+\eta\)（\(\eta\in\check C^1(\shH)\)）を取ると
+representativeの差は \(d_{\mathrm{Tot}}(\eta,0)\) であり、classは変わらない。
+\(v'=v+\delta w\) とし \(w\) の局所liftを \(b\in\check C^0(\shA)\) と取れば
+\(a'=a+\delta b\) を使え、差は \(d_{\mathrm{Tot}}(0,-\Dtot b)\) である。
+従って\eqref{eq:connecting-cocycle}は \([v]\) のみに依存し、
+これは\eqref{eq:fundamental-ses}の連結準同型の定義そのものである。
+
+\eqref{eq:connecting-vanishing}を示す。
+classが零で
+\[
+(\delta a,-\Dtot a)=(\delta\eta,\ \delta\beta-D_\theta\eta)
+\]
+と書けたとする。
+\(\widehat a=a-\eta\)、\(\alpha=-\beta\) と置けば
+\[
+\delta\widehat a=0,\qquad
+\delta\alpha=\Dtot\widehat a,\qquad
+\sigma(\widehat a)=v
+\]
+となるので、命題\ref{prop:total-classification}により求める変形を得る。
+逆は、total cocycleの存在から連結classがcoboundaryとなることによる。
+
+最後にfiberの記述を示す。
+underlying objectとそれへの同定を固定した場合、
+一つのliftとの差はfixed-log cocycleであり、
+その変更はfixed-log coboundaryである。
+従って非空な \(2\)-fiberの同型類は \(\Hyp^1(\Kfix)\)-torsorになる。
+同定を忘れると \(H^0(T)\) による自己同型も同一視され、
+その作用は \(\partial_\theta^0\) で記述される。
+\eqref{eq:les}のexactnessから商\eqref{eq:pi0-fiber}を得る。
+\end{proof}
+
+\begin{remark}[非 \(\OO_X\)-線形性と二種類のfiber]
+\label{rem:two-fibers}
+この差は実際に生じる。
+\(H=1\)、flat coframe \(\omega=(dx,dy)\) の場合、
+\[
+\Dtot(\partial_x)=0,\qquad
+\Dtot(x\partial_x)=(dx,0)\ne0
+\]
+であり、underlying infinitesimal automorphism \(x\partial_x\) は
+\(\partial_\theta^0(x\partial_x)=(dx,0)\ne0\) を与える。
+固定したunderlying同定のもとでは異なるform variationsが、
+それを忘れると同型になり得る。
+同じ計算は \(\Dtot\) が \(\OO_X\)-linearでないことも示している。
+\end{remark}
+
+\begin{remark}[次節への移行]
+\label{rem:to-variable}
+\(\partial_\theta\) は \(H^1(T)\) 上で定義された線形写像である。
+次節で扱う非零の基底方向 \(c\) について、
+\(\mathcal P_c\) は一般にcanonicalな原点を持たないので、
+\(\partial_\theta\) をその点に直接適用することはできない。
+実際 \(\partial_\theta(c)\) という式は型が合わず、本稿では定義しない。
+\end{remark}
+
+%======================================================================
+\section{可変な一次smoothing方向}
+\label{sec:variable-direction}
+%======================================================================
+
+本節では基底方向自体を動かす。
+ここでの「可変」は一次の基底parameterに関するものであり、
+第\ref{sec:variable-log}節の特殊fiber上のlog structureの変更とは異なる。
+
+\subsection{方向の空間とrealization torsor}
+% Source: II-11
+
+\begin{proposition}[可変基底の完全列と \(\mathcal P_c\)]
+\label{prop:variable-base}
+\[
+R_Q=k[[Q]],\qquad \mathfrak m_Q\subset R_Q,\qquad
+V_Q:=(\mathfrak m_Q/\mathfrak m_Q^2)^\vee
+\]
+と置く。
+生成元を選ぶと \(c\in V_Q\) はchart \(q_a\mapsto c_a\varepsilon\) に対応する。
+
+普遍一次基底 \(R_Q/\mathfrak m_Q^2\) へのlog lifting defectを評価して得られる
+canonicalな \(k\)-線形写像を
+\[
+\obf_f:V_Q\longrightarrow H^2(T)
+\]
+と書く。このとき
+\begin{equation}
+\label{eq:variable-base-sequence}
+0\longrightarrow H^1(T)\longrightarrow T^1_{\log,\mathrm{var}}
+\longrightarrow V_Q\xrightarrow{\ \obf_f\ }H^2(T)
+\end{equation}
+が成立する。
+
+方向 \(c\) のmarked underlying realization classes全体を
+\begin{equation}
+\label{eq:Pc}
+\mathcal P_c:=\pi_0\,\mathfrak{Def}^{\log}_{X,f}(\Aeps,c)
+\end{equation}
+と定めると
+\[
+\mathcal P_c\ne\varnothing\iff\obf_f(c)=0
+\]
+であり、非空なら \(\mathcal P_c\) は \(H^1(T)\)-torsorである。
+これは一般にcanonicalな原点を持たない。
+\end{proposition}
+
+\begin{proof}
+\(J=\mathfrak m_Q/\mathfrak m_Q^2\)、\(B_1=R_Q/\mathfrak m_Q^2\) と置く。
+\(B_1\) 上の局所log liftsとoverlap isomorphismsのtriple defectは、
+命題\ref{prop:underlying-log}の計算により
+\[
+o_f^{\mathrm{univ}}\in H^2(T)\otimes J
+\]
+を定める。局所選択の変更はcoboundaryを加えるだけなのでclassはcanonicalであり、
+その \(c\in J^\vee\) による評価が \(\obf_f(c)\) である。
+
+representative \(o(c)\) に対し、方向 \(c\) の大域的gluingは
+\[
+\delta v=-o(c)
+\]
+を満たす \(1\)-cochain \(v\) を見つけることに等しい。
+解が存在することと \(\obf_f(c)=0\) は同値であり、
+解の差をcoboundariesで割ると \(H^1(T)\) を得る。
+これにより\eqref{eq:variable-base-sequence}と
+\(\mathcal P_c\) のtorsor構造が従う。
+
+非零の指定方向では自明な積との局所同定は使えないので、
+大域的なreference liftを選んで初めて \(\mathcal P_c\) を \(H^1(T)\) と同定できる。
+従って\eqref{eq:variable-base-sequence}を
+\(T^1_{\log,\mathrm{var}}=H^1(T)\oplus V_Q\) と無条件に書くことはできない。
+\end{proof}
+
+\begin{remark}[局所モデル]
+\label{rem:local-model}
+標準的なlog smooth family
+\[
+xy=q_a\qquad\text{または}\qquad xyz=q_a
+\]
+を \(q_a\mapsto c_a\varepsilon\) でbase changeすれば局所liftを得る。
+\(c_a\ne0\) のとき、対応するordinary scheme deformationは一般に非自明である。
+実際 \(xy=0\) 上で \((x+\varepsilon a)(y+\varepsilon b)=\varepsilon(xb+ya)\) を
+\(c_a\varepsilon\) と等置するとdouble locusで矛盾し、
+triple modelでも \(c_a\in(yz,xz,xy)\) が必要となって三重点で矛盾する。
+
+これは標準familyのlog smooth base changeであり、
+中心fiberの自明な積へのbase changeではない。
+また \(c_a\varepsilon\ne0\) であることを、
+smoothな一般fiberの存在と同一視しない。
+\end{remark}
+
+\begin{remark}[\(V_Q\) の意味]
+\label{rem:VQ}
+\(V_Q\) はmonoid algebraの通常の一次方向である。
+自由monoidの生成元を用いれば
+\(V_Q\simeq\Hom_{\ZZ}(Q^{\mathrm{gp}},k)\) という表示も作れるが、
+この二つの構成は任意のmonoid写像について一致するわけではない。
+本稿ではlog tangentと混同しないよう \(V_Q\) を基本記号とする。
+\end{remark}
+
+\subsection{Affine Cartan obstructionの構成}
+% Source: II-12
+
+以下 \(\obf_f(c)=0\) と仮定し、\(\eta\in\mathcal P_c\) の代表を固定する。
+
+\begin{lemma}[局所Cartan liftsの存在]
+\label{lem:local-cartan-lift}
+十分細かいaffine étale cover \(\{U_i\}\) を取り、
+中心の \(H\)-torsorをtrivializeする。
+対応する \(\eta\) 上のétale opensを \(\mathcal U_i\) とすると、
+\(\mathcal U_i\) 上には \(\xi\) のstrictなCartan liftが存在する。
+さらにoverlap上では、中心の同定をliftするtorsor isomorphisms
+\[
+F_{ij}:E_j^\varepsilon\longrightarrow E_i^\varepsilon,
+\qquad F_{ji}=F_{ij}^{-1}
+\]
+を選べる。
+\end{lemma}
+
+\begin{proof}
+\(\mathcal U_i\) 上ではtrivialな \(H_{\Aeps}\)-torsorを使える。
+中心のCartan structureの局所形式 \(A_i\) は \(\Omega\otimes\g\) の切断であり、
+relative log differentialが局所自由なので、
+これを \(\mathcal U_i\) 上の形式 \(A_i^\varepsilon\) にliftできる。
+局所Atiyah splittingにおいて
+\[
+\theta_i^\varepsilon(v,\zeta)=A_i^\varepsilon(v)+\zeta
+\]
+と置くと縦方向の条件が成立し、特殊fiberで同型だから
+nilpotent厚み付け上でも同型である。
+従って局所strict Cartan liftsが存在する。
+ここではflatnessを課していないことが重要である。
+overlap上のtorsor isomorphismsのliftには \(H\) のsmoothnessを用いる。
+\end{proof}
+
+\begin{definition}[Affine Cartan obstruction]
+\label{def:affine-obstruction}
+補題\ref{lem:local-cartan-lift}の選択に対し、
+triple defectを、torsor actionの変数と区別して \(r\) と書く：
+\begin{equation}
+\label{eq:triple-defect-r}
+F_{ij}F_{jk}=(1+\varepsilon r_{ijk})F_{ik},
+\qquad r_{ijk}\in\shH(U_{ijk}).
+\end{equation}
+Cartan mismatchを
+\begin{equation}
+\label{eq:gamma}
+\gamma_{ij}:=
+\frac{\omega_j^\varepsilon-F_{ij}^*\omega_i^\varepsilon}{\varepsilon}
+\in\shV(U_{ij})
+\end{equation}
+と置く。すなわち
+\[
+r\in\check C^2(\shH),\qquad \gamma\in\check C^1(\shV).
+\]
+このとき \((r,\gamma)\) は選択によらないclassを定め、
+\begin{equation}
+\label{eq:Obs-def}
+\Obs_{\theta,c}(\eta):=[(r,\gamma)]\in\Hyp^2(\Kfix)
+\end{equation}
+と定義する。
+\end{definition}
+
+\begin{proof}[定義\ref{def:affine-obstruction}が整合することの証明]
+\eqref{eq:gamma}で「\(\varepsilon\) で割る」とは、
+flatnessと局所自由性による \(\varepsilon\shV_{\Aeps}\simeq\shV\) を用いる意味である。
+二つのCartan formsの差はvertical directionsで零なので、確かに \(\shV\) に属する。
+すべてのcochainsはmarkingを用いて中心対象上に表示する。
+
+合成の結合律から \(\delta r=0\) を得る。
+また三重交差でpullbackを比較すると
+\[
+\gamma_{jk}+\gamma_{ij}-\gamma_{ik}=-D_\theta r_{ijk},
+\]
+すなわち \(\delta\gamma+D_\theta r=0\) である。
+\eqref{eq:total-differential}により \((r,\gamma)\) は
+total degree \(2\) のcocycleである。
+
+選択を
+\[
+F'_{ij}=(1+\varepsilon u_{ij})F_{ij},
+\qquad
+(\omega_i^\varepsilon)'=\omega_i^\varepsilon+\varepsilon\beta_i
+\]
+と変更すると、直接計算により
+\[
+r'=r+\delta u,\qquad
+\gamma'=\gamma+\delta\beta-D_\theta u
+\]
+となるので、representativeの差は \(d_{\mathrm{Tot}}(u,\beta)\) である。
+異なる局所torsor liftsも、refinementの後にmarkingを保つ同型で比較でき、
+同じ計算に帰着する。
+coverのrefinement、および \(\eta\) のmarked isomorphismとも両立する。
+従って\eqref{eq:Obs-def}はcanonicalに定まる。
+\end{proof}
+
+\begin{remark}
+\label{rem:Obs-canonicity}
+\eqref{eq:Obs-def}がcanonicalなのは、
+固定した \(\xi\) と\emph{指定されたmarked realization} \(\eta\) に対してである。
+\(\eta\) を変えれば一般に値も変わる。
+方向 \(c\) だけから \(\Hyp^2(\Kfix)\) のcanonicalな元が得られる、とは主張しない。
+\end{remark}
+
+%======================================================================
+\section{一次smoothing方向に沿うCartan障害}
+\label{sec:main-obstruction}
+%======================================================================
+
+\subsection{Affine変換則と持ち上げ可能性}
+% Source: II-13
+
+\begin{proposition}[affine lawとliftability]
+\label{prop:affine-law}
+\(\obf_f(c)=0\) とする。任意の \(h\in H^1(T)\) に対し
+\begin{equation}
+\label{eq:affine-law}
+\Obs_{\theta,c}(\eta+h)=\Obs_{\theta,c}(\eta)+\partial_\theta(h).
+\end{equation}
+従って \(\Obs_{\theta,c}:\mathcal P_c\to\Hyp^2(\Kfix)\) は
+線形部分 \(\partial_\theta\) を持つcanonicalなaffine写像である。
+
+さらに各 \(\eta\in\mathcal P_c\) について
+\begin{equation}
+\label{eq:liftability}
+\eta\text{ がCartan liftを持つ}
+\iff
+\Obs_{\theta,c}(\eta)=0.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+まず\eqref{eq:affine-law}を示す。
+\(h\) を \(v=(v_{ij})\in\check C^1(T)\)、\(\delta v=0\) で表す。
+\(\eta+h\) は、\(\eta\) の局所piecesの貼合せを \(1+\varepsilon v_{ij}\) で
+変更して得られる。
+各 \(v_{ij}\) を \(a_{ij}\in\shA(U_{ij})\) にliftする。
+これは局所torsor lift上のinfinitesimal log automorphismを与える。
+局所Cartan formsは変更せず、\(F_{ij}\) をこのautomorphismで修正する。
+
+元のdefectを \((r^\eta,\gamma^\eta)\) とすると、新しいdefectは
+\[
+r^{\eta+h}=r^\eta+\delta a,
+\qquad
+\gamma^{\eta+h}=\gamma^\eta-\Dtot a
+\]
+である。
+\(\sigma(\delta a)=\delta v=0\) なので \(\delta a\) は \(\shH\)-valuedであり、
+obstruction classesの差は
+\[
+[(\delta a,-\Dtot a)]=\partial_\theta([v])
+\]
+となる。最後の等号は\eqref{eq:connecting-cocycle}による。
+
+次に\eqref{eq:liftability}を示す。
+大域的Cartan liftがあれば、それを局所的に制限して \(F_{ij}\) を選ぶことで
+\(r=0,\ \gamma=0\) とできるので、obstructionは零である。
+
+逆に \(\Obs_{\theta,c}(\eta)=0\) とする。
+acyclicなČech計算において
+\[
+(r,\gamma)=d_{\mathrm{Tot}}(u,\beta)=(\delta u,\ \delta\beta-D_\theta u)
+\]
+と書けるので、局所選択を
+\[
+F'_{ij}=(1-\varepsilon u_{ij})F_{ij},
+\qquad
+(\omega_i^\varepsilon)'=\omega_i^\varepsilon-\varepsilon\beta_i
+\]
+に変更すると \(r'=0,\ \gamma'=0\) となる。
+前者により、既に固定された \(\eta\) 上でtorsorsが貼り合い、
+後者によりCartan mapsも貼り合う。
+縦方向の条件は局所的に保存され、
+strictnessは特殊fiberでの同型性から保たれる。
+従って大域的Cartan liftが存在する。
+\end{proof}
+
+\begin{remark}[零方向との整合]
+\label{rem:zero-direction-consistency}
+\(c=0\) の自明なrealizationには中心Cartan geometryの自明なliftがあるため、
+\(v\) が定める \(\eta_v\in\mathcal P_0\) について
+\[
+\Obs_{\theta,0}(\eta_v)=\partial_\theta([v])
+\]
+となる。
+この意味で定義\ref{def:affine-obstruction}は
+命題\ref{prop:relative-obstruction}と整合する。
+\end{remark}
+
+\subsection{Secondary class}
+% Source: II-14
+
+\begin{definition}[canonical secondary obstruction]
+\label{def:secondary}
+\(\obf_f(c)=0\) の場合に限り、任意の \(\eta_0\in\mathcal P_c\) を選び
+\begin{equation}
+\label{eq:secondary}
+\overline{\Obs}_\theta(c):=
+\bigl[\Obs_{\theta,c}(\eta_0)\bigr]
+\in\coker\bigl(\partial_\theta:H^1(T)\to\Hyp^2(\Kfix)\bigr)
+\end{equation}
+と定める。
+命題\ref{prop:affine-law}により、これは \(\eta_0\) の選択に依存しない。
+\end{definition}
+
+実際、\(\mathcal P_c\) の任意の二点は \(\eta_0\)、\(\eta_0+h\) と書けるので
+\begin{equation}
+\label{eq:coset}
+\Obs_{\theta,c}(\mathcal P_c)
+=\Obs_{\theta,c}(\eta_0)+\im\partial_\theta
+\end{equation}
+であり、方向だけから定まるのはこのcoset、
+すなわちcokernelの元である。
+
+\begin{remark}[「secondary」の意味]
+\label{rem:secondary-meaning}
+ここでの「secondary」は、二段階の障害の第二段階という意味であり、
+second-order（二次）の変形を意味しない。
+本稿では二次以上の持ち上げを扱わない。
+また \(\obf_f(c)\ne0\) の方向に対して\eqref{eq:secondary}を定義しない。
+\end{remark}
+
+\subsection{主定理III}
+% Source: II-15 (Main Theorem III)
+
+\begin{theorem}[主定理III：一次smoothing方向に沿うCartan障害]
+\label{thm:first-order-cartan-obstruction}
+\(k\) を標数 \(p>0\) の代数閉体とし、
+projective SNCL log surface \(f:\Xlog\to\sQ\) と、
+固定したsmooth affine groups \(H\subset G\) 型の
+大域的strict logarithmic Cartan geometry \(\xi=(E_H,\theta)\) を固定する。
+flatnessは仮定しない。
+
+任意の \(c\in V_Q\) に対し、次が成立する。
+\begin{enumerate}
+\item
+方向 \(c\) のmarked underlying一次log realizationが存在することと
+\[
+\obf_f(c)=0
+\]
+は同値である。
+
+\item
+この条件のもとで、その realization classes は非空な
+\(H^1(T)\)-torsor \(\mathcal P_c\) をなす。
+
+\item
+canonicalなaffine写像
+\[
+\Obs_{\theta,c}:\mathcal P_c\longrightarrow\Hyp^2(\Kfix)
+\]
+があり、その線形部分は \(\partial_\theta\) である。
+
+\item
+各 \(\eta\in\mathcal P_c\) がCartan liftを持つ必要十分条件は
+\(\Obs_{\theta,c}(\eta)=0\) である。
+
+\item
+canonicalなclass
+\[
+\overline{\Obs}_\theta(c)\in\coker\partial_\theta
+\]
+が定まり、
+\[
+\overline{\Obs}_\theta(c)=0
+\iff
+\text{方向 }c\text{ を持つCartan-compatibleなmarked一次変形が存在する}.
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+第(1)、(2)項は命題\ref{prop:variable-base}による。
+第(3)項の構成と選択独立性は定義\ref{def:affine-obstruction}、
+affine lawは命題\ref{prop:affine-law}の\eqref{eq:affine-law}による。
+第(4)項は\eqref{eq:liftability}である。
+
+第(5)項を示す。
+定義\ref{def:secondary}と\eqref{eq:coset}により
+\(\overline{\Obs}_\theta(c)\) は代表の選択によらず定まり、
+\[
+\overline{\Obs}_\theta(c)=0
+\iff
+0\in\Obs_{\theta,c}(\mathcal P_c)
+\]
+である。
+実際、左辺が零なら、ある \(h\in H^1(T)\) を選んで
+\[
+\partial_\theta(h)=-\Obs_{\theta,c}(\eta_0)
+\]
+とできる。
+すると\eqref{eq:affine-law}により \(\eta_0+h\) のobstructionは零であり、
+第(4)項からCartan liftを得る。
+逆向きも第(4)項から従う。
+\end{proof}
+
+\begin{remark}[二段階の構造]
+\label{rem:two-stage}
+主定理IIIの内容は次の二段階として整理できる。
+\[
+c\in V_Q\xmapsto{\ \obf_f\ }\obf_f(c)\in H^2(T),
+\]
+\[
+\obf_f(c)=0\ \Longrightarrow\
+\mathcal P_c\xrightarrow{\ \Obs_{\theta,c}\ }\Hyp^2(\Kfix),
+\]
+\[
+\Obs_{\theta,c}(\eta)\bmod\im\partial_\theta
+=\overline{\Obs}_\theta(c).
+\]
+第一のclassは \(c\) のみに依存し、
+第二のclassは \(\eta\) に依存し、
+そのcokernel classが実現可能な \(c\) のみに依存する。
+三つの障害 \(\obf_f(c)\)、\(\Obs_{\theta,c}(\eta)\)、
+\(\overline{\Obs}_\theta(c)\) は互いに異なる対象であり、同一視しない。
+\end{remark}
+
+\begin{remark}[本定理が述べていないこと]
+\label{rem:main3-scope}
+主定理IIIは一次の範囲の主張である。
+特に、\(\Hyp^2(\Kfix)\) を一般のCartan obstruction space、
+\(\Hyp^2(\Ktot)\) をtotal obstruction spaceとは呼ばない。
+二次以上の持ち上げ、任意のsmall extensionに対するCartan障害理論、
+形式的持ち上げ、unobstructedness、algebraization、
+実際のsmoothing、smoothな一般fiberの存在、混標数のlifting、
+p-curvatureやflatnessの保存については、何も結論しない。
+また \(\Ktot\) 単独を可変基底問題全体の分類複体とも呼ばない。
+\end{remark}
+
+%======================================================================
+\section{議論と今後の課題}
+\label{sec:discussion}
+%======================================================================
+
+\subsection{既知理論との関係}
+
+semistable log structures、classical d-semistability、
+および基本的なrelative log tangentの記述は既存のlog geometryに属する
+\cite{Kato89,PB,CPV}。
+smooth pair上のlogarithmic Cartan geometryとresidueについては
+\cite{BDM}があり、branched Cartan geometryのdeterminantによる記述は
+\cite{BD}と関係する。
+
+補題\ref{lem:restriction}、
+補題\ref{lem:branch}、
+補題\ref{lem:p-curvature}は、
+これらの基本的機構を本稿のrelative-log settingで用いるための
+adaptationまたはpreliminary resultとして位置づける。
+定理\ref{thm:fixed-log-gluing}で用いたclosed gluingも、
+SNC局所環のfiber-product表示に基づくdescentの適用である。
+
+CPVのfoliated d-semistabilityでは、
+compatible log structuresに関するtorsorとcohomologyの方法が用いられる
+\cite{CPV}。
+本稿では大域的realizationの存在を条件とするため、
+例\ref{ex:compatible-presheaf}に示す大域的なtorsor同型の問題を
+区別する必要がある。
+
+第\ref{sec:first-order-complexes}節のfixed-log Cartan複体は、
+smooth caseの無限小Cartan理論の機構を、
+relative-logかつ正標数の設定で実行したものである
+\cite{BDS}。
+第\ref{sec:first-order-complexes}節のunderlying log側の一次データは、
+log smoothかつlog cotangent complexが局所自由な場合の
+既存のlog変形理論の範囲で用いる
+\cite{Kato89,Felten}。
+本稿ではその使用範囲を一次に限定し、
+これらのcohomology群だけから高次の変形構造を復元できるとは主張しない。
+
+\subsection{本稿の位置づけ}
+
+これまでに調査した文献では、以下の組合せについて
+この設定における直接の定式化を確認していない。
+\begin{itemize}
+\item SNCL settingにおけるfull boundary Cartan datum。
+\item full Cartan compatibilityによる大域的algebraic gluing criterion。
+\item residue matchingがfull gluingに不十分であること。
+\item 実際のboundary automorphismsによるtriple nonabelian descent obstruction。
+\item boundary automorphism sheafとresidue centralizerの差。
+\item unit variationによるnormal--tangent shear formula。
+\item Cartan d-semistabilityとrealization groupoidsによる存在条件の定式化。
+\item 実現可能な一次方向上のaffine Cartan obstructionと、
+そのcokernelによるsecondary class。
+\end{itemize}
+これは参照した文献の範囲における位置づけであり、
+網羅的な新規性の主張ではない。
+一方、基本完全列\eqref{eq:fundamental-ses}のdegreeごとのexactnessや、
+affine lawからの商構成\eqref{eq:secondary}は形式的であり、
+それ自体に強い新規性を主張しない。
+
+\subsection{今後の課題}
+
+本稿の定理の成立には不要だが、以下は残る課題である。
+\begin{itemize}
+\item 局所的にcompatibleなlog locusがtorsorになるための追加条件。
+\item \(H^1\) 型のCartan d-semistability obstructionの構成。
+\item boundary automorphism sheafのrepresentability、
+algebraicity、およびsmoothness。
+\item 非零のtriple obstructionを持つType IIIの大域的な具体例。
+\item toral residueの群スキーム的解釈。
+\item \(\obf_f\)、\(\partial_\theta\)、\(\overline{\Obs}_\theta\) の
+具体例における計算。
+\item 高次の持ち上げ、形式的変形、および実際のsmoothingの問題。
+\end{itemize}
+これらについて、本稿の定理から存在や消滅を結論するものではない。
+
+\begin{thebibliography}{BDM}
+
+\bibitem[BD]{BD}
+Indranil Biswas and Sorin Dumitrescu,
+\emph{Branched holomorphic Cartan geometries and Calabi--Yau manifolds},
+arXiv:1706.04407v2, 2018.
+
+\bibitem[BDM]{BDM}
+Indranil Biswas, Sorin Dumitrescu, and Benjamin McKay,
+\emph{Logarithmic Cartan geometry on complex manifolds},
+arXiv:1907.13006v1, 2019.
+
+% TODO: verify bibliography
+\bibitem[BDS]{BDS}
+TODO: bibliographic data to be verified.
+（smooth caseにおけるCartan geometryの無限小変形の記述として参照する。
+本稿の確定した計算はこの文献の記述と整合するが、
+書誌情報および定理番号は未確認である。）
+
+\bibitem[CPV]{CPV}
+Maur\'icio Corr\^ea, Pablo Perrella, and Sebasti\'an Velazquez,
+\emph{The logarithmic leaf complex and foliated d-semistability},
+arXiv:2605.00285v1, 2026.
+
+% TODO: verify bibliography
+\bibitem[Fel]{Felten}
+TODO: bibliographic data to be verified.
+（log smoothな場合のlog変形理論の入力として参照する。
+書誌情報および適用範囲は未確認である。）
+
+\bibitem[Kat]{Kato89}
+Kazuya Kato,
+\emph{Logarithmic structures of Fontaine--Illusie},
+in \emph{Algebraic analysis, geometry, and number theory
+(Baltimore, MD, 1988)},
+Johns Hopkins University Press, Baltimore, MD, 1989, pp.~191--224.
+書誌情報は \cite{PB} の参考文献による。
+
+\bibitem[PB]{PB}
+Jes\'us Rogelio P\'erez Buend\'ia,
+\emph{A Kulikov-type classification theorem for a one parameter family
+of K3-surfaces over a \(p\)-adic field and a good reduction criterion},
+arXiv:1802.03357v2, 2019.
+
+\end{thebibliography}
+
+%======================================================================
+\appendix
+%======================================================================
+
+\section{branchとp-curvatureに関する補助計算}
+\label{app:preliminary}
+
+本付録では、補題\ref{lem:branch}と補題\ref{lem:p-curvature}の証明を与える。
+いずれも本文の貼り合わせ定理および一次変形理論の証明には用いない。
+
+\subsection*{補題\ref{lem:branch}の証明}
+
+\begin{proof}
+\(\det\beta_\theta\) は
+\[
+\det(V)\otimes(\det\Tlog)^\vee
+=\det(V)\otimes\Omega^2_{X^{\log}/s_Q^{\log}}
+\]
+のsectionである。
+局所trivializationにおけるこのsectionを \(f\) とする。
+\(X\) はreducedであり、\(f\) は各minimal componentのgeneric pointで非零である。
+\(fa=0\) なら各componentの関数体で \(a=0\) となり、
+reducednessから \(a=0\) である。
+従って \(f\) はnonzerodivisorであり、\eqref{eq:branch-line}を得る。
+各 \(X_i\) でも同じdeterminantは恒等的に零ではないため、
+Cartier divisorに制限される。
+
+\eqref{eq:log-canonical-trivial}のもとで
+\(\det(V)^{\otimes n}\simeq\OO_X\) とする。
+determinant sectionの第 \(n\) 冪は、trivializationを選ぶと
+大域的なregular functionになる。
+これは各proper connected component上で定数であり、
+各既約成分のgeneric pointで非零なのでunitである。
+\(p\mid n\) の場合も同じ議論が使える。
+従って元のdeterminant sectionも至る所unitであり、\(B=0\) となる。
+
+最後に、Atiyah sequenceとそのtargetの縦方向のexact sequenceを比較すると、
+縦方向は恒等、商の \(\beta_\theta\) は同型である。
+従って \(\theta\) も同型となる。
+\end{proof}
+
+\subsection*{補題\ref{lem:p-curvature}の証明}
+
+\begin{proof}
+component上で \(D=(y=0)\)、\(\ell=y\partial_y\) とする。
+ordinary derivationとlog generator上で直接計算すると
+\(\ell^{[p]}=\ell\) である。
+
+faithful representationを取り、
+\[
+\nabla_\ell=\ell+A_\ell
+\]
+と書く。
+このoperatorは \(y\) で生成されるsubmoduleを保つ。
+\(D\) 上の商では \(\ell\) のordinary actionは零であり、
+反復計算における微分項も消えるため、
+\(\nabla_\ell\) はresidue matrix \(R=A_\ell|_D\) による作用になる。
+従って
+\[
+\bigl(\nabla_\ell^p-\nabla_\ell\bigr)|_D=R^p-R.
+\]
+群のrepresentationの微分はrestricted \(p\)-operationと両立するため、
+これは \(\rho^{[p]}-\rho\) の像である。
+faithfulnessから主張を得る。
+ここでflatnessは用いていない。
+
+\(R^p=R\) なら、その最小多項式は
+\[
+T^p-T=\prod_{a\in\FF_p}(T-a)
+\]
+を割る。
+右辺の根は相異なるので、各fiberで対角化可能となり、
+固有値は \(\FF_p\) に属する。
+\end{proof}
+
+\section{反例と符号の確認}
+\label{app:counterexamples}
+
+本付録では、本文で参照した反例を詳述する。
+本文で用いる符号規約と標数 \(2\) の規約自体は本文に残してある。
+
+\begin{example}[naiveな三項複体の失敗]
+\label{ex:naive-three-term}
+注意\ref{rem:naive-three-term}で述べた状況を具体化する。
+\(X=\mathbf A_k^2\) とし、
+\[
+G=\mathrm{Aff}_1\times\GG_a,\qquad H=\GG_a
+\]
+を平行移動部分群とする。
+Lie algebraの基底を
+\[
+[B,N]=N,\qquad Z\text{ は中心},\qquad\h=kN
+\]
+と取り、trivial \(H\)-torsor上の形式
+\[
+A=B(dx+x\,dy)+Z\,dy
+\]
+を考える。
+\(\g/\h\) への射影はcoframeなので、これはstrict Cartan structureを定める。
+
+しかし
+\[
+K=B\,dx\wedge dy,\qquad
+\nablaad D_\theta N=N\,dx\wedge dy\ne0
+\]
+である。
+従って \(\nablaad\) を第二のdifferentialとする三項の列は、
+無条件には複体にならない。
+この計算は \(p=2\) でも有効である。
+
+なお \(K=0\) は合成を零にする十分条件であるが、
+必要条件そのものは \([K,\h]=0\) であり、flatnessに限られない。
+また合成が偶然零になる場合でも、第二のdifferentialを加えると
+form variationに新たな条件を課すため、
+本稿の非平坦な変形問題をそのまま記述しない。
+\end{example}
+
+\begin{example}[曲率項を落とせない]
+\label{ex:curvature-term}
+注意\ref{rem:curvature-needed}の計算を詳述する。
+\(H=1\)、\(G=\GG_a^2\)、\(X=\mathbf A_k^2\) とし、
+\[
+\omega=(dx,\ dy+y\,dx),\qquad a=\partial_x
+\]
+とする。これはstrictなcoframeであり、
+\[
+\mathcal L_a\omega=0,\qquad
+\theta(a)=(1,y),\qquad
+\nablaad\theta(a)=(0,dy).
+\]
+一方
+\[
+K=(0,\ dy\wedge dx),\qquad
+\iota_aK=(0,-dy)
+\]
+である。
+従って\eqref{eq:curvature-formula}
+\[
+\Dtot(a)=\nablaad\theta(a)+\iota_{\sigma(a)}K=0
+\]
+は成立するが、曲率項を除いた式は成立しない。
+この計算も標数 \(2\) で有効である。
+\end{example}
+
+\begin{example}[非 \(\OO_X\)-線形性と二種類のfiberの差]
+\label{ex:non-linear}
+注意\ref{rem:two-fibers}の計算を詳述する。
+\(H=1\)、\(G=\GG_a^2\)、\(X=\mathbf A_k^2\) 上のflat coframe
+\(\omega=(dx,dy)\) を取ると、\(K=0\) であり
+\[
+\Dtot(\partial_x)=0,\qquad
+\Dtot(x\partial_x)=(dx,0)\ne0.
+\]
+従って \(\Dtot\) は \(\OO_X\)-linearではない。
+
+さらに \(x\partial_x\in H^0(T)\) は
+\[
+\partial_\theta^0(x\partial_x)=(dx,0)\ne0
+\]
+を与える。
+従って \(\im\partial_\theta^0\ne0\) であり、
+命題\ref{prop:relative-obstruction}の
+\(2\)-fiberと \(\pi_0\) fiberは一般に異なる。
+中心部分群を用いる例、例えば
+\(H=\GG_m\subset G=\GG_m\times\GG_a^2\) の自明なgeometryでは、
+中心方向で \(D_\theta=d\) となり、\(D_\theta(x\phi)=dx\otimes\phi\ne0\) となる。
+これは \(D_\theta\) 自身が \(\OO_X\)-linearでないことを示す。
+\end{example}
+
+\end{document}

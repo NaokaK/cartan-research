@@ -1,0 +1,464 @@
+--- a/sncl_log_cartan_mainI_proof_candidate_2026-10-24.tex
++++ b/sncl_log_cartan_mainI_proof_candidate_2026-10-24.tex
+@@ -947,7 +947,7 @@
+ 
+ 
+ %============================================================
+-% Main Theorem I: explicit proof candidate (requires independent audit)
++% Main Theorem I: proof with independent-audit amendments (2026-10-24)
+ %============================================================
+ \begin{lemma}[SNC局所環のequalizer表示]
+ \label{lem:snc-ring-equalizer}
+@@ -993,207 +993,283 @@
+ 
+ \begin{lemma}[smooth affine torsorのeffective closed gluing]
+ \label{lem:snc-torsor-gluing}
+-$H$ をsmooth affine $k$-groupとする。
+-各$X_i$上のprincipal $H$-torsor $E_i$ と、
++$H$をsmooth affine $k$-groupとする。
++各$X_i$上のprincipal $H$-torsor $E_i$と、
+ $D_{ij}$上のtorsor isomorphisms
+-$g_{ij}:E_i|_{D_{ij}}\to E_j|_{D_{ij}}$ が与えられ、
+-$g_{ji}=g_{ij}^{-1}$ および全triple pointで
+-$g_{ki}g_{jk}g_{ij}=1$ を満たすとする。
+-このとき、component identificationsと両立する
+-principal $H$-torsor $E$ が$X$上に存在し、
+-これらの同定を保つ同型を除き一意である。
++$g_{ij}:E_i|_{D_{ij}}\to E_j|_{D_{ij}}$が与えられ、
++$g_{ji}=g_{ij}^{-1}$および全triple pointで
++$g_{ki}g_{jk}g_{ij}=1$を満たすとする。
++このとき$X$上にprincipal $H$-torsor $E$と
++$E|_{X_i}\simeq E_i$が存在し、境界上の比較は$g_{ij}$である。
++この対象は、指定されたcomponent identificationsを保つ
++\emph{一意な}同型を除き一意である。
+ \end{lemma}
+ 
+ \begin{proof}
+-各$j_i:X_i\hookrightarrow X$はclosed immersionであり、
+-$H$のaffinenessから各$E_i\to X_i$はaffineである。
+-$\mathcal A_i=(p_i)_*\OO_{E_i}$ とし、$g_{ij}$による同定を用いて
++ここでtorsorはfppf torsorを意味する。
++$H$はaffineかつsmoothなので、通常のfppf descentにより
++$E_i\to X_i$はaffine、smooth、surjective、finite presentationである。
++この段階ではclosed gluingを用いていない。
++$\mathcal A_i=(p_i)_*\OO_{E_i}$とし、$g_{ij}$による同定を用いて
+ \begin{equation}\label{eq:torsor-algebra-equalizer}
+-\mathcal A:=\ker\left(
++\mathcal A=\ker\left(
+ \bigoplus_i(j_i)_*\mathcal A_i\longrightarrow
+ \bigoplus_{i<j}(j_{ij})_*(\mathcal A_i|_{D_{ij}})
+ \right)
+ \end{equation}
+-と置く。ここで矢印は同定後のrestrictionの差である。
+-これは単位元を含むquasi-coherent $\OO_X$-algebraであり、
+-各$H$-coactionはpairwise isomorphismsと可換であるため
+-$\mathcal A$上に右$H$-actionを誘導する。
+-$E=\operatorname{Spec}_X\mathcal A$と定める。
+-
+-この$E$が求めるtorsorであることはétale局所的に検査すればよい。
+-幾何点$\bar x$でのstrict henselian局所環を取る。
+-各component上の$H$-torsorは、そのstrict henselian局所環上で
+-trivialである。実際、special fiberはseparably closedな体上の
+-非空smooth $H$-torsorであり、smooth liftingによりsectionを持つ。
+-
+-まずdouble chartで、component trivializationsに関して
+-$g_{ij}$を$h\in H(S^{\mathrm{sh}}/(x,y))$で表示する。
+-$S^{\mathrm{sh}}/(x)$ はhenselian local ringであり、
+-そのイデアル$(y)$との組はhenselian pairである。
+-$H$のsmoothnessとhenselian-pair lifting
+-\emph{(Stacks Project, Lemma 15.13.3, Tag 0H74)}により
+-\[
+-H(S^{\mathrm{sh}}/(x))\longrightarrow
+-H(S^{\mathrm{sh}}/(x,y))
+-\]
+-は全射である。従って一方のtrivializationを変更して
+-$g_{ij}$を恒等比較にできる。\eqref{eq:double-ring-eq}から
+-\[\mathcal A_{\bar x}^{\mathrm{sh}}
+-\simeq S^{\mathrm{sh}}/(xy)\otimes_k k[H]\]
+-を得る。
+-
+-次にtriple chartでは最初に$x=0$と$y=0$の二成分を
+-上の方法で貼り合わせ、$S^{\mathrm{sh}}/(xy)$上のtrivial torsorを得る。
+-第三成分$z=0$とのintersectionは
+-\[
+-D=\operatorname{Spec}(S^{\mathrm{sh}}/(xy,z))
+-\]
+-である。二つの比較写像はそれぞれ
+-$S^{\mathrm{sh}}/(x,z)$と$S^{\mathrm{sh}}/(y,z)$上に定義される。
+-triple cocycleは、これらが$S^{\mathrm{sh}}/(x,y,z)$上で一致する条件
+-そのものである。$H$がaffineなので
+-\[
+-H(B_1\times_C B_2)
+-\simeq H(B_1)\times_{H(C)}H(B_2)
+-\]
+-が成り立つ。\eqref{eq:triple-intersection-eq}より比較写像は
+-一つの$h\in H(S^{\mathrm{sh}}/(xy,z))$へと貼り合わさる。
+-$(S^{\mathrm{sh}}/(z),(xy))$もhenselian pairなので、
+-再びsmooth liftingにより$h$を
+-$H(S^{\mathrm{sh}}/(z))$へ持ち上げられる。
+-第三成分のtrivializationを変更して比較を恒等にすると、
+-\eqref{eq:triple-ring-eq}により
+-\[
+-\mathcal A_{\bar x}^{\mathrm{sh}}
+-\simeq S^{\mathrm{sh}}/(xyz)\otimes_k k[H]
+-\]
+-を得る。$k[H]$は$k$上flatであるため、
+-ここではring equalizerと$-\otimes_k k[H]$が可換である。
+-
+-以上により、すべての幾何点で$E$のstrict henselizationは
+-trivial $H$-torsorである。さらに各成分へのbase changeは
+-$E_i$と一致する（上の局所表示で確認でき、faithfully flat descentで従う）。
+-quasi-coherence、finite presentationのfaithfully flat descent、および
+-torsor identity $E\times_X H\simeq E\times_X E$を
+-strict henselian局所環上で検査すると、
+-$E$は$X$上のprincipal $H$-torsorである。
+-構成に現れるequalizerはcanonicalであるから、
+-component identificationsを保つ同型を除いて一意である。
++と定める。矢印は、同定後のrestrictionの差である。
++成分数は有限であり、closed immersionによるpushforwardと
++quasi-coherent sheaf間のkernelはquasi-coherentである。
++compatibleなtupleの積もcompatibleであるから、
++$\mathcal A$は単位元を持つquasi-coherent $\OO_X$-algebraである。
++差分写像そのものをalgebra homomorphismとみなす必要はない。
++
++このequalizerの形成はflat base changeと可換である。
++実際、affine open上でflat tensorはkernelを保ち、
++closed immersionについてのbase changeはmoduleのtensorそのものである。
++また$k[H]$は$k$上flatである。各coactionの両立性と
++\eqref{eq:torsor-algebra-equalizer}を$k[H]$でtensorしたkernel表示により
++\[
++\mathcal A\longrightarrow\mathcal A\otimes_k k[H]
++\]
++が定まる。coassociativityとcounitも各成分で検査できる。
++従って$E=\Spec_X\mathcal A$は右$H$-actionを持つaffine $X$-schemeである。
++
++幾何点$\bar x$を固定し、$T=\OO^{\mathrm{sh}}_{X,\bar x}$と置く。
++点を通らない成分を除き、étale SNC chartを選ぶ。
++以下、$x,y,z$はその座標の$T$における像を表す。
++補題\ref{lem:snc-ring-equalizer}の表示は、
++strict henselizationのflatnessによって$T$上でも成立する。
++各component ring $T_i$は$T$の商なのでstrict henselian local ringである。
++その上の$E_i$のclosed fiberは非空smooth schemeであり、
++separably closedな剰余体上の有理点を持つ
++\emph{(Stacks Project, Lemma 33.25.6, Tag 056U)}。
++その点はsectionへ持ち上がる。実際、affine smooth $T_i$-schemeの
++coordinate algebraにTag 0H74を適用し、
++$T_i$の極大イデアルを法とする点を持ち上げればよい。
++従って各$E_i$は$T_i$上でtrivialである。
++
++用いるliftingを明記する。henselian local ring $B$の任意のproper ideal
++$J$について$(B,J)$はhenselian pairである
++\emph{(Stacks Project, Lemma 15.11.9, Tag 0DYDを
++$J\subset\mathfrak m_B$に適用)}。
++smooth $k$-algebra $k[H]$に
++\emph{Lemma 15.13.3, Tag 0H74}を適用すると
++\[
++H(B)\longrightarrow H(B/J)
++\]
++は全射である。$J$がnilpotentである必要はない。
++
++double chartでは、$T_x=T/(x)$、$T_y=T/(y)$、
++$T_{xy}=T/(x,y)$と書く。
++trivializations $\tau_i:H_{T_i}\to E_i$を選び、
++$g_{12}\tau_1=\tau_2L_{h_{12}}$と書く。
++ここで$L_h$はleft multiplicationであり、$h_{12}\in H(T_{xy})$である。
++$h_{12}$を$H(T_y)$へ持ち上げ、$\tau_2$を変更すると$h_{12}=1$となる。
++従って二つのtrivializationsは境界で一致する。
++
++triple chartでも、まず同じ操作で$h_{12}=1$とする。
++第三成分との比較を$h_{13}\in H(T/(x,z))$、
++$h_{23}\in H(T/(y,z))$と書くと、cocycleは
++\[
++h_{13}=h_{23}h_{12}=h_{23}\quad\text{in }H(T/(x,y,z))
++\]
++を与える。曲面のSNC triple intersectionはreducedな零次元schemeなので、
++全triple pointでの条件はこのscheme上での等式を意味する。
++補題\ref{lem:snc-ring-equalizer}と$H$のaffinenessから
++\[
++T/(xy,z)=T/(x,z)\times_{T/(x,y,z)}T/(y,z),
++\]
++\[
++H(T/(xy,z))=
++H(T/(x,z))\times_{H(T/(x,y,z))}H(T/(y,z))
++\]
++である。従って二つの比較は$h\in H(T/(xy,z))$を与える。
++henselian pair $(T/(z),(xy))$で$h$を$H(T/(z))$へ持ち上げ、
++第三のtrivializationを変更すると、全ての比較が恒等になる。
++一成分だけを通る点では最初のtrivializationだけでよい。
++
++次に、この\emph{compatibleなcomponent sections}を実際のétale近傍へ降ろす。
++affineなpointed étale近傍$U_\alpha$の系について
++$\Spec T=\varprojlim U_\alpha$であり、
++$\Spec T_i=\varprojlim(U_\alpha\times_X X_i)$である。
++各$E_i\to X_i$がfinite presentationであるため、上で選んだsectionは
++ある$U_\alpha\times_X X_i$上のsectionへ降りる。
++有限個の等式$g_{ij}(s_i)=s_j$も、さらに近傍を進めれば成立する。
++これはfinite presentationのlimit property
++\emph{(Stacks Project, Proposition 32.6.1, Tag 01ZC;
++affineの場合はLemma 10.127.3, Tag 00QO)}による。
++ここでfinite presentationを使う対象は既知の$E_i$であり、
++構成中の$E$ではない。
++
++こうして得たétale近傍$U\to X$上では、component torsorsは
++全境界で一致するtrivializationsを持つ。
++equalizerのflat base change、および
++\eqref{eq:snc-cech-equalizer}を$k[H]$でtensorした列から
++\[
++\mathcal A|_U\simeq\OO_U\otimes_k k[H]
++\]
++を$H$-coactionと両立するalgebra同型として得る。
++従って$E|_U\simeq U\times H$であり、これらの$U$は$X$をétaleに覆う。
++よって$E\to X$はfaithfully flatかつlocally of finite presentationであり、
++\[
++E\times_k H\longrightarrow E\times_X E,
++\qquad(e,h)\longmapsto(e,eh)
++\]
++は同型である。これは各$U$上で通常のtrivial torsor identityである。
++従って$E$はprincipal $H$-torsorである。
++また$E\to X$はaffineなのでquasi-compactかつquasi-separatedであり、
++finite presentationでもある。
++
++射影$\mathcal A\to(j_i)_*\mathcal A_i$から得るcanonical map
++$\mathcal A\otimes_{\OO_X}\OO_{X_i}\to\mathcal A_i$は、
++上の$U\times_X X_i$上でtrivial torsorの同型となる。
++従ってfaithfully flat descentにより大域的にも同型であり、
++比較は構成上$g_{ij}$に一致する。
++この議論は、nonflatなcomponent restrictionとkernelが
++一般に可換だと仮定していない。
++
++最後に任意の別のrealization $E'$のcoordinate algebraを$\mathcal B$とする。
++$E'\to X$はflat affineなので$\mathcal B$はflatな$\OO_X$-moduleである。
++\eqref{eq:snc-cech-equalizer}を$\mathcal B$でtensorすると、
++$\mathcal B$もそのcomponent restrictionsのequalizerとなる。
++指定された同定によりこのequalizerは\eqref{eq:torsor-algebra-equalizer}と同じであり、
++一意な$H$-equivariant algebra同型$\mathcal B\simeq\mathcal A$を得る。
++これが要求された一意性を証明する。
+ \end{proof}
+ 
+ \begin{lemma}[境界上のAtiyah comparisonの自然性]
+ \label{lem:snc-atiyah-comparison}
+-補題\ref{lem:snc-torsor-gluing}で得た$E_H$について、
+-補題\ref{lem:restriction}によるcomponent restrictionを
+-$D_{ij}$上で比較した写像は
++$X$上の任意のprincipal $H$-torsor $E_H$に対して、
++補題\ref{lem:restriction}によるcomponent restrictionsを
++境界で比較した写像は、その境界同定$g_{ij}$について
+ \begin{equation}\label{eq:snc-atiyah-natural-comparison}
+ (a,v)\longmapsto
+ \bigl(\At(g_{ij})a,\lambda^M_{ij}v\bigr)
+ =\Lambda^M_{ij}(a,v)
+ \end{equation}
+-に一致する。特にnormal方向での$g_{ij}$の延長や導関数の選択を要しない。
++である。特に補題\ref{lem:snc-torsor-gluing}で構成したtorsorにも適用できる。
++さらに、この右辺は任意のboundary torsor同型$g_{ij}$について定義でき、
++normal方向への延長やその導関数を要しない。
+ \end{lemma}
+ 
+ \begin{proof}
+-補題\ref{lem:boundary-atiyah}のfiber-product表示は
+-boundary torsor、log tangentのrestriction、およびanchorから
+-関手的に構成される。$g_{ij}$はboundary torsorに対する同型なので
+-第一因子に$\At(g_{ij})$を誘導し、固定$M$に対する共通の
+-relative log tangentは第二因子に$\lambda^M_{ij}$を誘導する。
+-両者は$Q_{ij}$へのanchorと両立するため、fiber product上で
+-\eqref{eq:snc-atiyah-natural-comparison}を得る。
+-
+-具体的には、前補題のstrict henselian局所trivializationを
+-両成分の境界で一致するように選ぶと、torsor側の比較は恒等であり、
+-log tangent側は共通の$\Tlog|_{D_{ij}}$を経由する
+-$\lambda^M_{ij}$である。一般のtrivializationへの変更は
+-boundary上の$H$-valued mapにより与えられ、
+-log vector fieldはboundary idealを保つため、
+-そのmapに対する導関数は$Q_{ij}$方向の作用だけで決まる。
+-したがってnormal方向の延長の取り方に依存せず、
+-この表示はすべての局所chartで一致する。
++$D=D_{ij}$、$Q=T_D(-\log P)$とする。
++relative log derivationは各component idealとその和を保つ。
++従って共通の$\Tlog|_D$から$Q$へのrestrictionが定まり、
++\[
++q_j\lambda^M_{ij}=q_i
++\]
++である。triple chartでは、このrestrictionは
++$(a_x,a_y,a_z)$、$a_x+a_y+a_z=0$に対して
++$a_z z\partial_z$を対応させ、両成分で同じである。
++double chartでは残るsmooth座標方向へのrestrictionである。
++これはderivationのrestrictionなのでchartの選択に依存しない。
++また$\At(g_{ij})$は$Q$上の恒等写像を被覆する。
++従って\eqref{eq:snc-atiyah-natural-comparison}は
++補題\ref{lem:boundary-atiyah}のfiber product上で定義される。
++
++大域的$E_H$がある場合、$F=E_H|_D$と置く。
++torsor上のlog derivationのrestrictionとbase anchorはcanonical map
++\[
++\Atlog(E_H)|_D\longrightarrow
++\At(F)(-\log P)\times_Q\Tlog|_D
++\]
++を与える。$E_H$をétale局所的にtrivializeすると、この写像は
++$(c,v)\mapsto((c,q(v)),v)$となり同型である。
++component側の同型も同じrestrictionから構成されるので、
++$E_H|_{X_i}\simeq E_{H,i}$による表示を変えたときの比較は
++まさに\eqref{eq:snc-atiyah-natural-comparison}である。
++この証明はtorsorのclosed gluingを使用しない。
++
++normal derivativeが不要なことを環上でも確認する。
++component上のboundary idealを$J$、log vector fieldを$v$とすると
++$v(J)\subset J$であり、任意のregular function $f$について
++\[
++v(f)\bmod J=q_i(v)(f\bmod J)
++\]
++となる。従って境界上で一致する二つの$H$-valued mapの延長は、
++$k[H]$の各関数に対して、境界上で同じ微分を与える。
++normal logarithmic generatorは$Q$で零なので、この項に寄与しない。
++triple pointでも$Q$の局所生成元は$z\partial_z$であり、同じ論証が成立する。
++必要なのは境界上の$\At(g_{ij})$に既に含まれる微分だけである。
+ \end{proof}
+ 
+ \begin{proof}[主定理Iの証明]
+-まず\eqref{eq:lambda-atiyah}が定義されることは
+-補題\ref{lem:boundary-atiyah}から従う。
+-必要性は、大域的$(E_H,\theta)$を各成分へ制限し、
+-その境界同定を比較することで従う。
+-すなわちtorsor同定の逆元および三重点でのcocycleが成立し、
+-補題\ref{lem:snc-atiyah-comparison}により
+-$\theta$の制限は\eqref{eq:full-compatibility}を満たす。
+-
+-十分性を示す。三つのtorsor descent条件から
+-補題\ref{lem:snc-torsor-gluing}を適用し、
+-各成分へのrestrictionが$E_{H,i}$となる
+-principal $H$-torsor $E_H$を得る。
+-$E_G=E_H\times^H G$と置くと、
+-$\ad(E_G)$は$X$上のlocally free sheafである。
+-補題\ref{lem:restriction}により
+-$\Atlog(E_H)|_{X_i}$も指定されたcomponent Atiyah bundleに一致する。
+-
+-そこでlocally freeなsheaf
+-\[
+-\mathscr F:=\mathcal{H}om_{\OO_X}
+-\bigl(\Atlog(E_H),\ad(E_G)\bigr)
+-\]
+-を考える。補題\ref{lem:snc-ring-equalizer}の
+-\eqref{eq:snc-cech-equalizer}を$\mathscr F$でtensorすると、
+-$\mathscr F$がlocally freeであることから
++\eqref{eq:lambda-atiyah}が定義されることは
++補題\ref{lem:boundary-atiyah}と
++$q_j\lambda^M_{ij}=q_i$から従う。
++必要性について、大域的$(E_H,\theta)$と指定成分への同定を取り、
++共通のboundary restrictionsから$g_{ij}$を得る。
++これらはinverse relationとtriple cocycleを満たす。
++任意の大域的torsorに適用できる
++補題\ref{lem:snc-atiyah-comparison}によって、
++$\theta$のrestrictionは\eqref{eq:full-compatibility}を満たす。
++
++逆に、条件を満たす大域的な$g_{ij}$が与えられたとする。
++補題\ref{lem:snc-torsor-gluing}により$E_H$を構成する。
++$\mathcal V=\ad(E_G)$、$\mathcal U=\Atlog(E_H)$と置く。
++前者はassociated vector bundleであり、後者は
++étale局所的に$\OO_X\otimes_k\h\oplus\Tlog$なので、両者はlocally freeである。
++補題\ref{lem:restriction}によってそのcomponent restrictionsは
++指定されたbundlesと一致する。
++従ってlocally free sheaf
++\[
++\mathscr F=\mathcal Hom_{\OO_X}(\mathcal U,\mathcal V)
++\]
++に\eqref{eq:snc-cech-equalizer}をtensorし、closed immersionのprojection formulaを使うと
+ \begin{equation}\label{eq:cartan-hom-equalizer}
+ 0\longrightarrow\mathscr F\longrightarrow
+-\bigoplus_i (j_i)_*(\mathscr F|_{X_i})
+-\longrightarrow
++\bigoplus_i(j_i)_*(\mathscr F|_{X_i})\longrightarrow
+ \bigoplus_{i<j}(j_{ij})_*(\mathscr F|_{D_{ij}})
+ \end{equation}
+-がexactとなる。補題\ref{lem:snc-atiyah-comparison}によって
+-この右辺への差分は、まさに
+-$\Ad(g_{ij})\Theta_i-\Theta_j\Lambda^M_{ij}$で表される。
+-従って\eqref{eq:full-compatibility}より各$\theta_i$は
+-\eqref{eq:cartan-hom-equalizer}のkernelのsectionを定め、
+-一意な$\OO_X$-linear morphism
+-\[
+-\theta:\Atlog(E_H)\longrightarrow\ad(E_G)
+-\]
+-に貼り合わさる。
+-各$X_i$上で$\theta_i\circ\iota=\iota_1$が成立するため、
+-\eqref{eq:snc-cech-equalizer}のinjectivityにより
+-$\theta\circ\iota=\iota_1$も成立する。
+-
+-$\theta$が同型であることを確かめる。
+-任意の点$x\in X$に対し、$x\in X_i$となる$i$を選ぶ。
+-$\theta\otimes\kappa(x)$は
+-$\theta_i\otimes\kappa(x)$に一致し、後者は同型である。
+-従って$\det(\theta)$は$\OO_{X,x}$のunitである。
+-よって$\theta$は大域的同型であり、
+-$(E_H,\theta)$は所望のstrict relative logarithmic Cartan geometryである。
+-
+-最後に同型の一意性とmorphism descentを確認する。
+-二つのtorsor間のmorphismは局所trivializationでは
+-$H$-valued mapである。$H$がaffineなので、
+-補題\ref{lem:snc-ring-equalizer}の環equalizerに$H(-)$を適用すれば
+-\[
+-H(R)\simeq
+-\operatorname{Eq}\left(
+-\prod_i H(R_i)\rightrightarrows\prod_{i<j}H(R_{ij})
+-\right)
+-\]
+-を得る。従ってcomponent morphismsはpairwise compatibilityの
+-もとで一意に貼り合わさる。
+-貼り合わされたmorphismがCartan mapsと可換であることも、
+-\eqref{eq:cartan-hom-equalizer}のinjectivityにより
+-各成分で検査すれば十分である。
+-固定したdescent datumに対する一意性とmorphism descentが従う。
++が左と中央でexactである。
++finite locally freeなsourceに対するHomのbase changeにより、
++各$\theta_i$は中央項のsectionとみなせる。
++補題\ref{lem:snc-atiyah-comparison}とfull compatibilityによって
++その差分は零である。大域切断関手の左完全性から、
++一意な$\theta:\mathcal U\to\mathcal V$を得る。
++同様に$\mathcal Hom(\ad(E_H),\mathcal V)$のequalizerのinjectivityから
++$\theta\iota=\iota_1$を得る。
++
++任意の$x\in X$と$x\in X_i$に対し、
++$\theta\otimes\kappa(x)=\theta_i\otimes\kappa(x)$は同型である。
++両bundleは同じrankを持つので、$\det\theta$は各局所環でunitであり、
++$\theta$は同型である。よって$(E_H,\theta)$は所望のstrict geometryである。
++
++morphism descentを確認する。二つの大域的torsor $E_H,E'_H$と、
++そのcomponent morphisms $f_i$が境界で
++$g'_{ij}f_i=f_jg_{ij}$を満たすとする。
++両torsorを同時に自明化するétale coverを選び、そのaffine openを$U$とする。
++補題\ref{lem:snc-ring-equalizer}の列はétale base change後もexactなので、
++$R=\Gamma(U,\OO_U)$、$R_i=\Gamma(U\times_X X_i,\OO)$、
++$R_{ij}=\Gamma(U\times_X D_{ij},\OO)$について
++\[
++H(R)=\operatorname{Eq}\left(
++\prod_iH(R_i)\rightrightarrows\prod_{i<j}H(R_{ij})\right).
++\]
++これは$H(R)=\Hom_{k\text{-alg}}(k[H],R)$が環のlimitを保つことによる。
++従って$f_i$は$U$上で一意なequivariant morphismを定める。
++二つのこのような$U$のoverlapでも、さらにaffineに細分して同じ一意性を適用できる。
++よって通常のétale descent for morphismsにより、大域的$f$を得る。
++equivariant torsor morphismは同型である。
++Cartan mapsとの可換性は対応するHom sheafのequalizerのinjectivityで
++componentごとに検査できる。
++最後にtorsorの一意性と$\theta$の一意性を合わせると、
++固定したdescent datumのrealizationはcomponent identificationsを保つ
++一意な同型を除いて一意である。
+ \end{proof}
+ 
+ \begin{remark}
+ \label{rem:gluing-proof-status}
+-本定理の証明では、SNC局所環のequalizer、smooth affine
+-$H$-torsorのeffective closed gluing、およびAtiyah comparisonの自然性を
+-それぞれ補題として明示した。torsorのhenselian-pair liftingは
+-Stacks Project, Lemma 15.13.3 (Tag 0H74) に依拠する。
+-本稿全体への正式採用前には、当該補題の仮定、$\OO_X$-algebraの
+-base-change、および全triple chartにおける比較の独立監査を行う。
++主定理Iのclosed gluingは、SNC局所環のequalizer、
++henselian-pair lifting、compatibleなcomponent sectionsのétale近傍への降下、
++および境界Atiyah comparisonによって証明される。
++liftingにはStacks Project, Tag 0H74を、近傍への降下にはTag 01ZCを用いる。
++componentへのnonflat base changeは局所自明化後に検証しており、
++任意のbase changeがkernelを保つという仮定を置かない。
++以上は本稿で指定したsemistable chartsとsmooth affine algebraic groupsの
++仮定のもとでの主定理Iの証明である。
+ \end{remark}
+ 
+ 
